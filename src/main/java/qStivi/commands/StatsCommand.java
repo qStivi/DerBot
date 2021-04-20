@@ -50,7 +50,7 @@ public class StatsCommand implements ICommand {
         var winLoseRatio = (double) blackJackWins / blackJackLoses;
 
         for (int i = 0; i < ranking.size(); i++) {
-            if (ranking.get(i) == event.getAuthor().getIdLong()) {
+            if (ranking.get(i) == user.getIdLong()) {
                 position = i;
             }
         }
