@@ -132,6 +132,7 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
     }
 
     private void displayGameState(BlackJack bj) {
+        bj.embed.setFooter(bj.user.getName());
         bj.embed.clearFields();
         bj.embed.addField("Dealer", String.valueOf(bj.count(bj.dealer)), true);
 
