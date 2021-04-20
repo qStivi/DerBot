@@ -37,6 +37,10 @@ public class Config {
                     fw.write(System.lineSeparator());
                     fw.write("CHANNEL_ID=Bot channel ID goes here");
                     fw.write(System.lineSeparator());
+                    fw.write("DEV_CHANNEL_ID=DevBot channel ID goes here");
+                    fw.write(System.lineSeparator());
+                    fw.write("DEV_MODE=false");
+                    fw.write(System.lineSeparator());
                     fw.write(System.lineSeparator());
                     fw.write("SPOTIFY_ID=Spotify ID goes here");
                     fw.write(System.lineSeparator());

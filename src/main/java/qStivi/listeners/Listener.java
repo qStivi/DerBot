@@ -31,6 +31,7 @@ public class Listener extends ListenerAdapter {
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+        if (!event.getChannel().getId().equals(Config.get("DEV_CHANNEL_ID")) && Boolean.parseBoolean(Config.get("DEV_MODE"))) return;
 
         event.getGuild().getTextChannelById(channelId).getManager().setName(String.valueOf(event.getGuild().getMemberCount())).queue();
         if (event.getAuthor().isBot() || event.isWebhookMessage()) return;

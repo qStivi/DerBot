@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import qStivi.Config;
 import qStivi.db.DB;
 
 import java.util.*;
@@ -48,6 +49,7 @@ public class UserManager extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+        if (!event.getChannel().getId().equals(Config.get("DEV_CHANNEL_ID")) && Boolean.parseBoolean(Config.get("DEV_MODE"))) return;
         if (event.getAuthor().isBot() || event.isWebhookMessage()) return;
         var id = Long.parseLong(event.getAuthor().getId());
         if (db.userDoesNotExists(id)) {
@@ -71,6 +73,7 @@ public class UserManager extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
+        if (!event.getChannel().getId().equals(Config.get("DEV_CHANNEL_ID")) && Boolean.parseBoolean(Config.get("DEV_MODE"))) return;
         if (event.getUser().isBot()) return;
         AtomicReference<User> isBotMessage = new AtomicReference<>();
         event.retrieveMessage().queue(message -> {
@@ -101,6 +104,7 @@ public class UserManager extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
+        if (!event.getChannelJoined().getId().equals(Config.get("DEV_VOICE_CHANNEL_ID")) && Boolean.parseBoolean(Config.get("DEV_MODE"))) return;
         if (event.getMember().getUser().isBot()) return;
 
         var id = Long.parseLong(event.getMember().getUser().getId());
@@ -127,6 +131,7 @@ public class UserManager extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceLeave(@NotNull GuildVoiceLeaveEvent event) {
+        if (!event.getChannelJoined().getId().equals(Config.get("DEV_VOICE_CHANNEL_ID")) && Boolean.parseBoolean(Config.get("DEV_MODE"))) return;
         var id = Long.parseLong(event.getMember().getId());
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);

@@ -27,6 +27,9 @@ public class Bot {
     private static final Timer timer2 = new Timer();
 
     public static void main(String[] args) throws LoginException {
+        if (Boolean.parseBoolean(Config.get("DEV_MODE"))){
+            logger.warn("Dev mode active!");
+        }
         logger.info("Booting...");
         var db = new DB();
         db.createNewDatabase("bot");
