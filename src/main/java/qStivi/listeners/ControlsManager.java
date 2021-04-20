@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import qStivi.Bot;
 import qStivi.Config;
 import qStivi.audioManagers.PlayerManager;
 
@@ -138,7 +139,8 @@ public class ControlsManager extends ListenerAdapter {
 
     @Override
     public void onGenericMessageReaction(@NotNull GenericMessageReactionEvent event) {
-        if (!event.getChannel().getId().equals(Config.get("DEV_CHANNEL_ID")) && Boolean.parseBoolean(Config.get("DEV_MODE"))) return;
+        if (Bot.DEV_MODE && !event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
+        if (!Bot.DEV_MODE && event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
         if (event.getUser() == null) return;
         if (event.retrieveMessage().complete().getContentRaw().contains("Currently playing..."))
             if (!event.getUser().isBot()) {

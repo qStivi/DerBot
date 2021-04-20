@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import qStivi.Bot;
 import qStivi.Config;
 
 import java.time.Duration;
@@ -18,22 +19,21 @@ public class Listener extends ListenerAdapter {
     private static final Logger logger = getLogger(Listener.class);
 //    private final CommandManager commandManager = new CommandManager();
 
-    String channelId = Config.get("CHANNEL_ID");
-
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         logger.info("Ready!");
-        event.getJDA().getGuildById("703363806356701295").getTextChannelById(channelId).sendMessage("Booting... Ready when message disappears.").delay(Duration.ofSeconds(10)).flatMap(Message::delete).queue();
+        event.getJDA().getGuildById("703363806356701295").getTextChannelById(Bot.DEV_MODE?Bot.DEV_CHANNEL_ID:Bot.CHANNEL_ID).sendMessage("Booting... Ready when message disappears.").delay(Duration.ofSeconds(10)).flatMap(Message::delete).queue();
     }
 
 
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        if (!event.getChannel().getId().equals(Config.get("DEV_CHANNEL_ID")) && Boolean.parseBoolean(Config.get("DEV_MODE"))) return;
+        if (Bot.DEV_MODE && !event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
+        if (!Bot.DEV_MODE && event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
 
-        event.getGuild().getTextChannelById(channelId).getManager().setName(String.valueOf(event.getGuild().getMemberCount())).queue();
+        event.getGuild().getTextChannelById(Bot.CHANNEL_ID).getManager().setName(String.valueOf(event.getGuild().getMemberCount())).queue();
         if (event.getAuthor().isBot() || event.isWebhookMessage()) return;
 
         String messageRaw = event.getMessage().getContentRaw();

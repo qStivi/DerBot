@@ -25,9 +25,15 @@ public class Bot {
     private static final Logger logger = getLogger(Bot.class);
     private static final Timer timer = new Timer();
     private static final Timer timer2 = new Timer();
+    public static final boolean DEV_MODE = false;
+    public static final String CHANNEL_ID = Config.get("CHANNEL_ID");
+    public static final String DEV_CHANNEL_ID = Config.get("DEV_CHANNEL_ID");
+    public static final String DEV_VOICE_CHANNEL_ID = Config.get("DEV_VOICE_CHANNEL_ID");
 
     public static void main(String[] args) throws LoginException {
-        if (Boolean.parseBoolean(Config.get("DEV_MODE"))){
+        var token = DEV_MODE?Config.get("DEV_TOKEN"):Config.get("TOKEN");
+
+        if (DEV_MODE){
             logger.warn("Dev mode active!");
         }
         logger.info("Booting...");
@@ -49,7 +55,8 @@ public class Bot {
                         "blackjack_draws integer default 0"
         );
 
-        var jda = JDABuilder.createDefault(Config.get("TOKEN"))
+        logger.info("Bot token: " + token);
+        var jda = JDABuilder.createDefault(token)
                 .addEventListeners(new ControlsManager())
                 .addEventListeners(new Listener())
                 .addEventListeners(new UserManager())
@@ -60,6 +67,8 @@ public class Bot {
         var cm = new CommandManager(jda);
         jda.addEventListener(cm);
         jda.updateCommands().addCommands().queue();
+
+        if (DEV_MODE) return; // Don't continue if in development mode.
 
         activityUpdate.schedule(new TimerTask() {
             @Override

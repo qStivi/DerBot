@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import qStivi.Bot;
 import qStivi.Config;
 import qStivi.ICommand;
 import qStivi.commands.*;
@@ -63,7 +64,8 @@ public class CommandManager extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
-        if (!event.getChannel().getId().equals(Config.get("DEV_CHANNEL_ID")) && Boolean.parseBoolean(Config.get("DEV_MODE"))) return;
+        if (Bot.DEV_MODE && !event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
+        if (!Bot.DEV_MODE && event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
         var message = event.getMessage().getContentRaw();
         if (!message.startsWith("/")) return;
         String[] args;
