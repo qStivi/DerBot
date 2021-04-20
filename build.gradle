@@ -47,4 +47,6 @@ dependencies {
     // https://github.com/thelinmichael/spotify-web-api-java
     compile 'se.michaelthelin.spotify:spotify-web-api-java:6.5.3'
 
+    compile 'org.junit.jupiter:junit-jupiter:5.7.0'
+
 }

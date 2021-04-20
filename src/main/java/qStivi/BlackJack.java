@@ -105,15 +105,19 @@ public class BlackJack {
         return count(dealer);
     }
 
-    public int count(List<Card> hand) {
+    public static int count(List<Card> hand) {
         int value = 0;
+        List<Card> tempHand = new ArrayList<>(hand);
         for (Card card : hand) {
             if (card.value != 0) {
                 value += card.value;
-            } else if (value <= 10) {
-                value += 11;
             } else {
-                value++;
+                tempHand.remove(card);
+                if (count(tempHand) <= 10) {
+                    value += 11;
+                } else {
+                    value++;
+                }
             }
         }
         return value;
