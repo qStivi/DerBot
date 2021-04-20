@@ -1,7 +1,11 @@
 package qStivi.commands;
 
+import net.dv8tion.jda.api.commands.CommandHook;
+import net.dv8tion.jda.api.entities.Command;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.requests.restaction.CommandUpdateAction;
+import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
 import qStivi.audioManagers.PlayerManager;
 import qStivi.listeners.ControlsManager;
@@ -70,27 +74,45 @@ public class DndCommand implements ICommand {
         pirateList.add("https://youtu.be/F8IQdzJuhxA"); // Assassin's Creed IV Black Flag - I'll Be with You (Track 15)
     }
 
+    @Override
+    @Nonnull
+    public CommandUpdateAction.@NotNull CommandData getCommand() {
+        return new CommandUpdateAction.CommandData(getName(), getDescription())
+                .addSubcommand(new CommandUpdateAction.SubcommandData("happy", "Happy/Traveling music")
+                        .addOption(new CommandUpdateAction.OptionData(Command.OptionType.INTEGER, "number", "Number of songs to play")
+                                .setRequired(true)))
+                .addSubcommand(new CommandUpdateAction.SubcommandData("fight", "Fighting music")
+                        .addOption(new CommandUpdateAction.OptionData(Command.OptionType.INTEGER, "number", "number of songs tp play")
+                                .setRequired(true)))
+                .addSubcommand(new CommandUpdateAction.SubcommandData("boss", "Boss music")
+                        .addOption(new CommandUpdateAction.OptionData(Command.OptionType.INTEGER, "number", "number of songs tp play")
+                                .setRequired(true)))
+                .addSubcommand(new CommandUpdateAction.SubcommandData("pirate", "Casual pirate music")
+                        .addOption(new CommandUpdateAction.OptionData(Command.OptionType.INTEGER, "number", "number of songs tp play")
+                                .setRequired(true)));
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) {
-        var hook = event.getChannel();
-        if (!join(event.getGuild(), event.getAuthor())) {
+    public void handle(SlashCommandEvent event) {
+        var hook = event.getHook();
+        if (!join(event.getGuild(), event.getUser())) {
             hook.sendMessage("Please join a channel, so I can play your request.").delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
             return;
         }
 
         PlayerManager.getINSTANCE().clearQueue(event.getGuild());
 
-        for (int i = 0; i < Integer.parseInt(args[2]); i++) {
-            JoinCommand.join(event.getGuild(), event.getAuthor());
-            PlayerManager.getINSTANCE().loadAndPlay(event.getChannel(), event.getGuild(), getSongByType(args[1]));
+        for (int i = 0; i < event.getOption("number").getAsLong(); i++) {
+            JoinCommand.join(event.getGuild(), event.getUser());
+            PlayerManager.getINSTANCE().loadAndPlay(event.getTextChannel(), event.getGuild(), getSongByType(event.getSubcommandName()));
         }
 
         PlayerManager.getINSTANCE().skip(event.getGuild());
 
         hook.sendMessage("Playing D&D music.").delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
 
-        ControlsManager.getINSTANCE().sendMessage(event.getChannel(), event.getGuild());
+        ControlsManager.getINSTANCE().sendMessage(event.getTextChannel(), event.getGuild());
     }
 
     private String getSongByType(String type) {
