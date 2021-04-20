@@ -1,12 +1,10 @@
 package qStivi.listeners;
 
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import qStivi.Bot;
-import qStivi.Config;
 import qStivi.ICommand;
 import qStivi.commands.*;
 import qStivi.db.DB;
@@ -24,7 +22,7 @@ public class CommandManager extends ListenerAdapter {
     public final List<ICommand> commandList = new ArrayList<>();
 //    public final Queue<SlashCommandEvent> events = new LinkedList<>();
 
-    public CommandManager(JDA jda) {
+    public CommandManager() {
         commandList.add(new TestCommand());
         commandList.add(new RollCommand());
         commandList.add(new StopCommand());
@@ -45,16 +43,8 @@ public class CommandManager extends ListenerAdapter {
         commandList.add(new WorkCommand());
         commandList.add(new BlackjackCommand());
         commandList.add(new moneyCommand());
-
-
-//        List<CommandUpdateAction.CommandData> commandDataList = new ArrayList<>();
-//        for (ICommand command : commandList) {
-//            commandDataList.add(command.getCommand());
-//        }
-//        jda.updateCommands().addCommands(commandDataList).queue();
-
-
     }
+
     public static String cleanForCommand(String str) {
         str = Normalizer.normalize(str, Normalizer.Form.NFKD);
         str = str.replaceAll("[^a-z0-9A-Z -]", ""); // Remove all non valid chars
@@ -72,13 +62,13 @@ public class CommandManager extends ListenerAdapter {
         if (!message.startsWith("/play")) {
             message = cleanForCommand(message);
             args = message.split(" ");
-        }else {
+        } else {
             args = message.split(" ");
             args[0] = cleanForCommand(args[0]);
         }
 
-        for (ICommand command: commandList){
-            if (command.getName().equals(args[0])){
+        for (ICommand command : commandList) {
+            if (command.getName().equals(args[0])) {
                 var db = new DB();
                 logger.info(event.getAuthor().getName() + " issued /" + args[0]);
                 db.update("users", "last_command", "id", event.getAuthor().getIdLong(), new Date().getTime() / 1000);

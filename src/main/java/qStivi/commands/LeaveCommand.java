@@ -9,7 +9,6 @@ import java.time.Duration;
 
 public class LeaveCommand implements ICommand {
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();

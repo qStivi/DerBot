@@ -4,21 +4,30 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 import qStivi.ICommand;
 import qStivi.db.DB;
 
 import java.time.Duration;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class StatsCommand implements ICommand {
+    private static final Logger logger = getLogger(StatsCommand.class);
 
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) {
+        if (event.isWebhookMessage()) return;
         var hook = event.getChannel();
         var db = new DB();
-        var commandUser = event.getMessage().getMentionedMembers().size()>0?event.getMessage().getMentionedMembers().get(0):null;
+        var commandUser = event.getMessage().getMentionedMembers().size() > 0 ? event.getMessage().getMentionedMembers().get(0) : null;
 
         var user = commandUser == null ? event.getMember() : commandUser;
-        var userID = user.getIdLong();
+        if (user == null) {
+            logger.error("userId is null!");
+            return;
+        }
+        long userID = user.getIdLong();
 
         if (db.userDoesNotExists(userID)) {
             db.insert("users", "id", user);
@@ -26,13 +35,18 @@ public class StatsCommand implements ICommand {
 
         var money = db.selectLong("users", "money", "id", userID);
         var xp = db.selectLong("users", "xp", "id", userID);
-        var lvl = (long) Math.floor(xp / 800);
+        xp = xp == null ? 0 : xp;
+        var lvl = (long) Math.floor((double) xp / 800);
         var userName = user.getEffectiveName();
         var ranking = db.getRanking();
         long position = 1337;
-        long blackJackWins = db.selectLong("users", "blackjack_wins", "id", userID);
-        long blackJackLoses = db.selectLong("users", "blackjack_loses", "id", userID);
-        if (blackJackLoses == 0) blackJackLoses = 1;
+        var blackJackWins = db.selectLong("users", "blackjack_wins", "id", userID);
+        var blackJackLoses = db.selectLong("users", "blackjack_loses", "id", userID);
+        if (blackJackLoses == null || blackJackLoses == 0) blackJackLoses = 1L;
+        if (blackJackWins == null) {
+            logger.error("userId is null!");
+            return;
+        }
         var winLoseRatio = (double) blackJackWins / blackJackLoses;
 
         for (int i = 0; i < ranking.size(); i++) {

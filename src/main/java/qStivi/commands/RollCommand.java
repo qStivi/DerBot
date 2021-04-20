@@ -15,7 +15,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class RollCommand implements ICommand {
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();

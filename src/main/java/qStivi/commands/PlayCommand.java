@@ -46,7 +46,7 @@ public class PlayCommand implements ICommand {
             YoutubeType youtubeType = getYouTubeType(song);
             if (youtubeType != null) {
                 switch (youtubeType) {
-                    case TRACK -> song = playYoutubeTrack(song, channel, guild);
+                    case TRACK -> song = playYoutubeTrack(song, guild);
                     case PLAYLIST -> song = playYoutubePlaylist(song, shuffle, channel);
                 }
             }
@@ -68,21 +68,23 @@ public class PlayCommand implements ICommand {
         return song;
     }
 
-    private String playSpotifyArtist(String arg0, Boolean randomizeOrder) {
+    private String playSpotifyArtist(String arg0, Boolean shuffle) {
 
-        logger.info(arg0);
+        logger.info(arg0 + shuffle);
         logger.error("NOT YET IMPLEMENTED!");
         return null;
     }
 
-    private String playSpotifyAlbum(String arg0, Boolean randomizeOrder) {
+    private String playSpotifyAlbum(String arg0, Boolean shuffle) {
 
+        logger.info(arg0 + shuffle);
         logger.error("NOT YET IMPLEMENTED!");
         return null;
     }
 
-    private String playSpotifyPlaylist(String arg0, Boolean randomizeOrder) {
+    private String playSpotifyPlaylist(String arg0, Boolean shuffle) {
 
+        logger.info(arg0 + shuffle);
         logger.error("NOT YET IMPLEMENTED!");
         return null;
     }
@@ -121,14 +123,14 @@ public class PlayCommand implements ICommand {
         List<String> ids = YouTube.getPlaylistItemsByLink(link);
         if (randomizeOrder) Collections.shuffle(ids);
         for (String id : ids) {
-            PlayerManager.getINSTANCE().loadAndPlay(channel, channel.getGuild(), "https://youtu.be/" + id);
+            PlayerManager.getINSTANCE().loadAndPlay(channel.getGuild(), "https://youtu.be/" + id);
         }
         channel.sendMessage("Added " + ids.size() + " songs to the queue.").queue();
         return link;
     }
 
-    private String playYoutubeTrack(String url, TextChannel channel, Guild guild) {
-        PlayerManager.getINSTANCE().loadAndPlay(channel, guild, url);
+    private String playYoutubeTrack(String url, Guild guild) {
+        PlayerManager.getINSTANCE().loadAndPlay(guild, url);
         return url;
     }
 
@@ -164,11 +166,10 @@ public class PlayCommand implements ICommand {
         search = cleanForURL(search);
         String id = YouTube.getVideoIdBySearchQuery(search);
         String link = "https://youtu.be/" + id;
-        PlayerManager.getINSTANCE().loadAndPlay(channel, channel.getGuild(), link);
+        PlayerManager.getINSTANCE().loadAndPlay(channel.getGuild(), link);
         return link;
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();

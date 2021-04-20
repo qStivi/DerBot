@@ -7,9 +7,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 import qStivi.Bot;
-import qStivi.Config;
 import qStivi.audioManagers.PlayerManager;
 
 import java.awt.*;
@@ -20,13 +18,7 @@ import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 public class ControlsManager extends ListenerAdapter {
-
-
-    private static final Logger logger = getLogger(ControlsManager.class);
-
     private static ControlsManager INSTANCE;
     private final EmbedBuilder embed = new EmbedBuilder();
     TimerTask task;

@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import qStivi.Bot;
-import qStivi.Config;
 
 import java.time.Duration;
 
@@ -23,13 +22,13 @@ public class Listener extends ListenerAdapter {
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         logger.info("Ready!");
-        event.getJDA().getGuildById("703363806356701295").getTextChannelById(Bot.DEV_MODE?Bot.DEV_CHANNEL_ID:Bot.CHANNEL_ID).sendMessage("Booting... Ready when message disappears.").delay(Duration.ofSeconds(10)).flatMap(Message::delete).queue();
+        event.getJDA().getGuildById("703363806356701295").getTextChannelById(Bot.DEV_MODE ? Bot.DEV_CHANNEL_ID : Bot.CHANNEL_ID).sendMessage("Booting... Ready when message disappears.").delay(Duration.ofSeconds(10)).flatMap(Message::delete).queue();
     }
 
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+    public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         if (Bot.DEV_MODE && !event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
         if (!Bot.DEV_MODE && event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
 

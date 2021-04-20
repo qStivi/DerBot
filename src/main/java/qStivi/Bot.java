@@ -1,9 +1,7 @@
 package qStivi;
 
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import org.slf4j.Logger;
 import qStivi.commands.BlackjackCommand;
 import qStivi.db.DB;
@@ -19,21 +17,19 @@ import java.util.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Bot {
+    public static final boolean DEV_MODE = true;
+    public static final String CHANNEL_ID = Config.get("CHANNEL_ID");
+    public static final String DEV_CHANNEL_ID = Config.get("DEV_CHANNEL_ID");
+    public static final String DEV_VOICE_CHANNEL_ID = Config.get("DEV_VOICE_CHANNEL_ID");
     private static final Timer reminder = new Timer();
     private static final Timer activityUpdate = new Timer();
     private static final String ACTIVITY = "Evolving...";
     private static final Logger logger = getLogger(Bot.class);
-    private static final Timer timer = new Timer();
-    private static final Timer timer2 = new Timer();
-    public static final boolean DEV_MODE = false;
-    public static final String CHANNEL_ID = Config.get("CHANNEL_ID");
-    public static final String DEV_CHANNEL_ID = Config.get("DEV_CHANNEL_ID");
-    public static final String DEV_VOICE_CHANNEL_ID = Config.get("DEV_VOICE_CHANNEL_ID");
 
     public static void main(String[] args) throws LoginException {
-        var token = DEV_MODE?Config.get("DEV_TOKEN"):Config.get("TOKEN");
+        var token = DEV_MODE ? Config.get("DEV_TOKEN") : Config.get("TOKEN");
 
-        if (DEV_MODE){
+        if (DEV_MODE) {
             logger.warn("Dev mode active!");
         }
         logger.info("Booting...");
@@ -64,8 +60,7 @@ public class Bot {
                 .setActivity(getActivity())
                 .build();
 
-        var cm = new CommandManager(jda);
-        jda.addEventListener(cm);
+        jda.addEventListener(new CommandManager());
         jda.updateCommands().addCommands().queue();
 
         if (DEV_MODE) return; // Don't continue if in development mode.
@@ -92,22 +87,6 @@ public class Bot {
                 }
             }
         }, 5 * 1000, 1000);
-
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//
-//                if (cm.events.isEmpty()) return;
-//                var event = cm.events.poll();
-//                for (ICommand command : cm.commandList) {
-//                    if (command.getCommand().getName().equals(event.getName())) {
-//                        command.handle(event);
-//                        logger.info("Event handled.");
-//                    }
-//                }
-//
-//            }
-//        }, 10*1000, 3*1000);
     }
 
     private static Activity getActivity() {

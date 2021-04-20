@@ -24,9 +24,9 @@ public class WorkCommand implements ICommand {
         var seconds = db.selectLong("users", "last_worked", "id", id);
         seconds = seconds == null ? 0 : seconds;
         var millis = seconds * 1000;
-        var lastWorked = new Date(millis);
+        var last = new Date(millis);
         var now = new Date();
-        var diff = (now.getTime() - lastWorked.getTime()) / 1000;
+        var diff = (now.getTime() - last.getTime()) / 1000;
         var xp = db.selectLong("users", "xp", "id", id);
         xp = xp == null ? 0 : xp;
         var lvl = (long) Math.floor(xp / (double) 800);

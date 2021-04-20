@@ -70,7 +70,6 @@ public class DndCommand implements ICommand {
         pirateList.add("https://youtu.be/F8IQdzJuhxA"); // Assassin's Creed IV Black Flag - I'll Be with You (Track 15)
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();
@@ -83,7 +82,7 @@ public class DndCommand implements ICommand {
 
         for (int i = 0; i < Integer.parseInt(args[2]); i++) {
             JoinCommand.join(event.getGuild(), event.getAuthor());
-            PlayerManager.getINSTANCE().loadAndPlay(event.getChannel(), event.getGuild(), getSongByType(args[1]));
+            PlayerManager.getINSTANCE().loadAndPlay(event.getGuild(), getSongByType(args[1]));
         }
 
         PlayerManager.getINSTANCE().skip(event.getGuild());

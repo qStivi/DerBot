@@ -7,9 +7,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 import qStivi.Bot;
-import qStivi.Config;
 import qStivi.db.DB;
 
 import java.util.*;
@@ -18,10 +16,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 public class UserManager extends ListenerAdapter {
-    private static final Logger logger = getLogger(UserManager.class);
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     DB db = new DB();
     Timer timer = new Timer();
@@ -60,11 +55,11 @@ public class UserManager extends ListenerAdapter {
 
 
         var seconds = db.selectLong("users", "last_chat_message", "id", id);
-        seconds = seconds==null?0:seconds;
+        seconds = seconds == null ? 0 : seconds;
         var millis = seconds * 1000;
-        var lastChatMessage = new Date(millis);
+        var last = new Date(millis);
         var now = new Date();
-        var diff = (now.getTime() - lastChatMessage.getTime()) / 1000;
+        var diff = (now.getTime() - last.getTime()) / 1000;
 
         if (diff > 8) {
             db.update("users", "last_chat_message", "id", id, now.getTime() / 1000);
@@ -79,9 +74,7 @@ public class UserManager extends ListenerAdapter {
         if (!Bot.DEV_MODE && event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
         if (event.getUser().isBot()) return;
         AtomicReference<User> isBotMessage = new AtomicReference<>();
-        event.retrieveMessage().queue(message -> {
-            isBotMessage.set(message.getAuthor());
-        });
+        event.retrieveMessage().queue(message -> isBotMessage.set(message.getAuthor()));
         while (isBotMessage.get() == null) Thread.onSpinWait();
         if (isBotMessage.get().isBot()) return;
 
@@ -92,11 +85,11 @@ public class UserManager extends ListenerAdapter {
 
 
         var seconds = db.selectLong("users", "last_reaction", "id", id);
-        seconds = seconds==null?0:seconds;
+        seconds = seconds == null ? 0 : seconds;
         var millis = seconds * 1000;
-        var lastReaction = new Date(millis);
+        var last = new Date(millis);
         var now = new Date();
-        var diff = (now.getTime() - lastReaction.getTime()) / 1000;
+        var diff = (now.getTime() - last.getTime()) / 1000;
 
         if (diff > 10) {
             db.update("users", "last_reaction", "id", id, now.getTime() / 1000);

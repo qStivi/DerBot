@@ -11,11 +11,16 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import qStivi.Config;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 public class Spotify {
 
@@ -34,9 +39,6 @@ public class Spotify {
         final ClientCredentials clientCredentials = clientCredentialsRequest.execute();
 
         spotifyApi.setAccessToken(clientCredentials.getAccessToken());
-
-//            System.out.println("Token: " + clientCredentials.getAccessToken());
-//            System.out.println("Expires in: " + clientCredentials.getExpiresIn());
     }
 
     public String getTrackName(String id) throws IOException, SpotifyWebApiException, ParseException {
@@ -45,9 +47,12 @@ public class Spotify {
         return track.getName();
     }
 
+    @Nullable
+    @CheckForNull
     public String getTrackArtists(String id) throws IOException, SpotifyWebApiException, ParseException {
         GetTrackRequest getTrackRequest = spotifyApi.getTrack(id).build();
         final Track track = getTrackRequest.execute();
+        if (Arrays.stream(track.getArtists()).findFirst().isEmpty()) return null;
         return Arrays.stream(track.getArtists()).findFirst().get().getName();
     }
 

@@ -30,7 +30,6 @@ public class RedditCommand implements ICommand {
     NetworkAdapter adapter = new OkHttpNetworkAdapter(userAgent);
     RedditClient reddit = OAuthHelper.automatic(adapter, credentials);
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();

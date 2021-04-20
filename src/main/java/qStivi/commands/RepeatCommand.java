@@ -9,11 +9,6 @@ import javax.annotation.Nonnull;
 import java.time.Duration;
 
 public class RepeatCommand implements ICommand {
-//    @Override
-//    @Nonnull
-//    public CommandUpdateAction.CommandData getCommand() {
-//        return new CommandUpdateAction.CommandData(getName(), getDescription());
-//    }
 
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) {
