@@ -91,6 +91,26 @@ public class BlackJack {
         player.add(draw());
     }
 
+    public static int count(List<Card> hand) {
+        int value = 0;
+        int numberOfAsses = 0;
+
+        for (Card card : hand) {
+            if (card.value == 0) numberOfAsses++;
+            if (card.value != 0) {
+                value += card.value;
+            } else {
+                value += 11;
+            }
+        }
+
+        while (value > 21 && numberOfAsses > 0) {
+            value -= 10;
+        }
+
+        return value;
+    }
+
     public int hit() {
         player.add(draw());
         return count(player);
@@ -103,24 +123,6 @@ public class BlackJack {
         }
 
         return count(dealer);
-    }
-
-    public static int count(List<Card> hand) {
-        int value = 0;
-        List<Card> tempHand = new ArrayList<>(hand);
-        for (Card card : hand) {
-            if (card.value != 0) {
-                value += card.value;
-            } else {
-                tempHand.remove(card);
-                if (count(tempHand) <= 10) {
-                    value += 11;
-                } else {
-                    value++;
-                }
-            }
-        }
-        return value;
     }
 
     /***
