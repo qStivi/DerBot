@@ -38,6 +38,10 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
             hook.editMessageById(String.valueOf(messageId), "You don't have enough money!").delay(Duration.ofMinutes(5)).flatMap(Message::delete).queue();
             return;
         }
+        if (Long.parseLong(args[1]) < 0) {
+            hook.editMessageById(String.valueOf(messageId), "You can't do that, sorry.").delay(Duration.ofMinutes(5)).flatMap(Message::delete).queue();
+            return;
+        }
         db.increment("users", "command_times_blackjack", "id", id, 1);
 
 
