@@ -56,8 +56,11 @@ public class CommandManager extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
-        if (Bot.DEV_MODE && !event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
-        if (!Bot.DEV_MODE && event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
+        var channelID = event.getChannel().getId();
+        if (Bot.DEV_MODE && !channelID.equals(Bot.DEV_CHANNEL_ID)) return;
+        if (!Bot.DEV_MODE && !event.getChannel().getParent().getId().equals("833734651070775338")) {
+            return;
+        }
         var message = event.getMessage().getContentRaw();
         if (!message.startsWith("/")) return;
         String[] args;

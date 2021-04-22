@@ -15,13 +15,13 @@ public class BegCommand implements ICommand {
         var luck = ThreadLocalRandom.current().nextFloat();
         var chance = .8;
 
-        if (luck > chance){
+        if (luck > chance) {
             var db = new DB();
             var id = event.getAuthor().getIdLong();
-            var earning = ThreadLocalRandom.current().nextInt(1,3);
+            var earning = ThreadLocalRandom.current().nextInt(1, 3);
             db.increment("users", "money", "id", id, earning);
             event.getChannel().sendMessage("Someone gave you " + earning + ":gem:").queue();
-        }else {
+        } else {
             event.getChannel().sendMessage("You didn't get anything!").delay(Duration.ofSeconds(3)).flatMap(Message::delete).queue();
         }
     }
