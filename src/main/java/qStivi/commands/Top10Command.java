@@ -43,13 +43,15 @@ public class Top10Command implements ICommand {
         }
         var userIDs = db.getRanking();
         double winLoseRatio = 0;
+        double wins = 0;
+        double loses = 0;
         for (Long id : userIDs) {
-            var wins = db.selectLong("users", "blackjack_wins", "id", id);
-            var loses = db.selectLong("users", "blackjack_loses", "id", id);
-            wins = wins == null ? 0 : wins;
-            loses = loses == null ? 0 : loses;
-            winLoseRatio = (double) wins / loses;
+            var selectWins = db.selectLong("users", "blackjack_wins", "id", id);
+            var selectLoses = db.selectLong("users", "blackjack_loses", "id", id);
+            wins += selectWins == null ? 0 : selectWins;
+            loses += selectLoses == null ? 0 : selectLoses;
         }
+        winLoseRatio = wins / loses;
         embed.setFooter("Average BlackJack win/lose ratio: " + winLoseRatio);
         hook.sendMessage(embed.build()).delay(Duration.ofMinutes(1)).flatMap(Message::delete).queue();
     }
