@@ -106,6 +106,7 @@ public class BlackJack {
 
         while (value > 21 && numberOfAsses > 0) {
             value -= 10;
+            numberOfAsses--;
         }
 
         return value;
