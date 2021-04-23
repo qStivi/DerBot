@@ -1,4 +1,4 @@
-package qStivi.commands;
+package qStivi.commands.rpg;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;

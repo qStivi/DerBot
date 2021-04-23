@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import qStivi.Bot;
 import qStivi.ICommand;
 import qStivi.commands.*;
+import qStivi.commands.music.*;
+import qStivi.commands.rpg.*;
 import qStivi.db.DB;
 
 import java.text.Normalizer;

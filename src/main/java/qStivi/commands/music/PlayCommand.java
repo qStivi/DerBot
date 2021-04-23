@@ -1,4 +1,4 @@
-package qStivi.commands;
+package qStivi.commands.music;
 
 import com.wrapper.spotify.exceptions.SpotifyWebApiException;
 import net.dv8tion.jda.api.entities.Guild;
@@ -31,7 +31,7 @@ public class PlayCommand implements ICommand {
 
     public static String cleanForURL(String str) {
         str = Normalizer.normalize(str, Normalizer.Form.NFKD);
-        str = str.replaceAll("[^a-z0-9A-Z -]", ""); // Remove all non valid chars
+        str = str.replaceAll("[^a-z0-9A-Z +-]", ""); // Remove all non valid chars
         str = str.replaceAll(" {2}", " ").trim(); // convert multiple spaces into one space
         str = str.replaceAll(" ", "+"); // //Replace spaces by dashes
         return str;
@@ -62,7 +62,7 @@ public class PlayCommand implements ICommand {
             if (spotifyType != null) {
                 switch (spotifyType) {
                     case TRACK -> song = playSpotifyTrack(song, channel);
-                    case PLAYLIST -> song = playSpotifyPlaylist(song, shuffle);
+                    case PLAYLIST -> song = playSpotifyPlaylist(song, shuffle, channel);
                     case ALBUM -> song = playSpotifyAlbum(song, shuffle);
                     case ARTIST -> song = playSpotifyArtist(song, shuffle);
                 }
@@ -89,11 +89,27 @@ public class PlayCommand implements ICommand {
         return null;
     }
 
-    private String playSpotifyPlaylist(String arg0, Boolean shuffle) {
+    private String playSpotifyPlaylist(String arg0, Boolean shuffle, TextChannel channel) throws IOException, ParseException, SpotifyWebApiException {
 
-        logger.info(arg0 + shuffle);
-        logger.error("NOT YET IMPLEMENTED!");
-        return null;
+        String id = null;
+        if (arg0.startsWith("spotify:playlist:")){
+            id = arg0.split(":")[2];
+        }
+        if (arg0.startsWith("open.spotify.com/playlist/")) {
+            var temp = arg0.split("/")[2];
+            id = temp.split("\\?")[0];
+        }
+        if (arg0.startsWith("https://open.spotify.com/playlist/")){
+            var temp = arg0.split("/")[4];
+            id = temp.split("\\?")[0];
+        }
+
+        var playlist = new Spotify().getPlaylist(id);
+        if (shuffle) Collections.shuffle(playlist);
+        for (String link : playlist) {
+            searchPlay(link, channel);
+        }
+        return arg0;
     }
 
     private String playSpotifyTrack(String link, TextChannel channel) throws IOException, ParseException, SpotifyWebApiException {
