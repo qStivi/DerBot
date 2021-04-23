@@ -25,4 +25,9 @@ public class TestCommand implements ICommand {
     String getDescription() {
         return "This is a test command";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

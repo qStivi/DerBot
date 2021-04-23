@@ -78,4 +78,9 @@ public class StatsCommand implements ICommand {
     public String getDescription() {
         return "See cool stuff.";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

@@ -28,4 +28,9 @@ public class PauseCommand implements ICommand {
     String getDescription() {
         return "Pauses music playback.";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

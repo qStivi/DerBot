@@ -13,4 +13,6 @@ public interface ICommand {
 
     @Nonnull
     String getDescription();
+
+    long getXp();
 }

@@ -27,4 +27,9 @@ public class LeaveCommand implements ICommand {
     public String getDescription() {
         return "Disconnects bot from any voice channel.";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

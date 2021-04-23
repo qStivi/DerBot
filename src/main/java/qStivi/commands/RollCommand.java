@@ -115,4 +115,9 @@ public class RollCommand implements ICommand {
     String getDescription() {
         return "Clickety-Clackety, I roll to attackety";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

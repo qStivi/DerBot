@@ -91,7 +91,7 @@ public class BlackJack {
         player.add(draw());
     }
 
-    public static int count(List<Card> hand) {
+    public int count(List<Card> hand) {
         int value = 0;
         int numberOfAsses = 0;
 

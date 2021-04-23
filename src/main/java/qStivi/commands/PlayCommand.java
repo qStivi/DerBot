@@ -37,8 +37,15 @@ public class PlayCommand implements ICommand {
         return str;
     }
 
-    public String playSong(String song, boolean shuffle, TextChannel channel, Guild guild) throws ParseException, SpotifyWebApiException, IOException {
+    public String playSong(String[] args, boolean shuffle, TextChannel channel, Guild guild) throws ParseException, SpotifyWebApiException, IOException {
 
+
+        StringBuilder query = new StringBuilder();
+        for (int i = 1; i < args.length; i++) {
+            String arg = args[i];
+            query.append(arg).append(" ");
+        }
+        var song = query.toString().trim();
 
         RequestType requestType = getRequestType(song);
 
@@ -183,7 +190,7 @@ public class PlayCommand implements ICommand {
 //                    hook.sendMessage(playSong(event.getOption("query").getAsString(), true, event.getTextChannel(), event.getGuild())).delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
 //                }
 //            } else {
-            var msg = playSong(args[1], false, event.getChannel(), event.getGuild());
+            var msg = playSong(args, false, event.getChannel(), event.getGuild());
             hook.sendMessage(Objects.requireNonNullElse(msg, "Something went wrong!")).delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
 //            }
         } catch (ParseException | SpotifyWebApiException | IOException e) {
@@ -202,6 +209,11 @@ public class PlayCommand implements ICommand {
     @Override
     public String getDescription() {
         return "Plays music.";
+    }
+
+    @Override
+    public long getXp() {
+        return 0;
     }
 
     private enum RequestType {

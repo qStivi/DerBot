@@ -56,4 +56,9 @@ public class JoinCommand implements ICommand {
     public String getDescription() {
         return "Connects or moves bot to your voice channel.";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

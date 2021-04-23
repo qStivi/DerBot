@@ -67,4 +67,9 @@ public class Top10Command implements ICommand {
     public String getDescription() {
         return "Top 10 Players with the most money.";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

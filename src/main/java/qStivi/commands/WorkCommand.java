@@ -53,4 +53,9 @@ public class WorkCommand implements ICommand {
     public String getDescription() {
         return "Get money by working.";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

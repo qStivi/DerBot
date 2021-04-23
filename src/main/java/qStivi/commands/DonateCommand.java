@@ -36,4 +36,9 @@ public class DonateCommand implements ICommand {
     public String getDescription() {
         return "Donate money to the poor ones.";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

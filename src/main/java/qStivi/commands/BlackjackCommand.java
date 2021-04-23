@@ -175,4 +175,9 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
     public String getDescription() {
         return "Don't count the cards!";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

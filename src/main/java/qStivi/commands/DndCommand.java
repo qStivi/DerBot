@@ -111,4 +111,9 @@ public class DndCommand implements ICommand {
     String getDescription() {
         return "Play background music for D&D";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

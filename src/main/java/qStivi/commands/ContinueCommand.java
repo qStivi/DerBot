@@ -28,4 +28,9 @@ public class ContinueCommand implements ICommand {
     String getDescription() {
         return "Continues to play paused music.";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

@@ -29,4 +29,9 @@ public class StopCommand implements ICommand {
     String getDescription() {
         return "Stop music from playing and clears queue";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

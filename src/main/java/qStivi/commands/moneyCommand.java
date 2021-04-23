@@ -43,4 +43,9 @@ public class moneyCommand implements ICommand {
     public String getDescription() {
         return "Manages money.";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

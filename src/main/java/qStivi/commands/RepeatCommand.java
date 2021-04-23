@@ -33,4 +33,9 @@ public class RepeatCommand implements ICommand {
     String getDescription() {
         return "Toggles repeating for playing song";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

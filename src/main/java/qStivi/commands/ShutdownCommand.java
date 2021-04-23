@@ -31,4 +31,9 @@ public class ShutdownCommand implements ICommand {
     String getDescription() {
         return "Shuts down the bot.";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

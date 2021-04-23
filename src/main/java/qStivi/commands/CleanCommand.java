@@ -43,4 +43,9 @@ public class CleanCommand implements ICommand {
     public String getDescription() {
         return "Deletes last 1000 messages. This takes quite some time.";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

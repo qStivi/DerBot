@@ -100,4 +100,9 @@ public class RedditCommand implements ICommand {
     public String getDescription() {
         return "Sends random post from given subreddit.";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

@@ -37,4 +37,9 @@ public class BegCommand implements ICommand {
     public String getDescription() {
         return "For the poor ones.";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }

@@ -80,6 +80,9 @@ public class CommandManager extends ListenerAdapter {
 
 //                events.offer(event);
                 command.handle(event, args);
+
+                db.increment("users", "xp", "id", event.getAuthor().getIdLong(), command.getXp());
+
                 logger.info("Event offered.");
             }
         }

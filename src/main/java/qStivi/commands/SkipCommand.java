@@ -27,4 +27,9 @@ public class SkipCommand implements ICommand {
     String getDescription() {
         return "Plays next song in queue.";
     }
+
+    @Override
+    public long getXp() {
+        return 0;
+    }
 }
