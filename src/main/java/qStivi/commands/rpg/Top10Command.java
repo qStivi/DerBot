@@ -9,17 +9,27 @@ import qStivi.ICommand;
 import qStivi.db.DB;
 
 import java.time.Duration;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Top10Command implements ICommand {
 
+    Timer timer = new Timer();
+
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) {
-        //TODO highlight own name in list
-        //TODO xp as tiebreaker
         var hook = event.getChannel();
         var db = new DB();
         var embed = new EmbedBuilder();
+
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                event.getMessage().delete().queue();
+            }
+        }, 3000);
 
         var list = db.getRanking();
         var size = Math.min(list.size(), 10);

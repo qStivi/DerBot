@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 import qStivi.BlackJack;
 import qStivi.Card;
 import qStivi.ICommand;
@@ -14,19 +13,26 @@ import qStivi.db.DB;
 import java.awt.*;
 import java.time.Duration;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 @SuppressWarnings("ConstantConditions")
 public class BlackjackCommand extends ListenerAdapter implements ICommand {
-    private static final Logger logger = getLogger(BlackjackCommand.class);
+
+    Timer timer = new Timer();
 
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();
         AtomicReference<String> messageId = new AtomicReference<>();
         hook.sendMessage("Loading...").queue(message -> messageId.set(message.getId()));
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                event.getMessage().delete().queue();
+            }
+        }, 3000);
         while (messageId.get() == null) Thread.onSpinWait();
         var db = new DB();
         long id = event.getAuthor().getIdLong();
@@ -47,7 +53,6 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
 
         var removed = BlackJack.games.removeIf(game -> game.user.getIdLong() == id);
         if (removed) db.increment("users", "blackjack_loses", "id", id, 1);
-        logger.info(messageId.get());
         BlackJack.games.add(new BlackJack(1, messageId.get(), event.getAuthor(), hook, Long.parseLong(args[1])));
         BlackJack bj = null;
         for (BlackJack game : BlackJack.games) {
@@ -57,6 +62,7 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
         }
 
         db.decrement("users", "money", "id", id, bj.bet);
+
 
         displayGameState(bj);
 
@@ -72,6 +78,7 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
             event.getChannel().addReactionById(bj.id, "✋\uD83C\uDFFD").queue();
         }
 
+        hook.editMessageById(String.valueOf(messageId), "Playing").queue();
         hook.editMessageById(String.valueOf(messageId), bj.embed.build()).delay(Duration.ofMinutes(5)).flatMap(Message::delete).queue();
     }
 

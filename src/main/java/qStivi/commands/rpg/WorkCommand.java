@@ -8,14 +8,24 @@ import qStivi.db.DB;
 
 import java.time.Duration;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class WorkCommand implements ICommand {
+    Timer timer = new Timer();
 
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();
         var id = event.getAuthor().getIdLong();
         var db = new DB();
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                event.getMessage().delete().queue();
+            }
+        }, 3000);
 
         if (db.userDoesNotExists(id)) {
             db.insert("users", "id", id);

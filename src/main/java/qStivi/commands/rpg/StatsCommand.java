@@ -9,11 +9,15 @@ import qStivi.ICommand;
 import qStivi.db.DB;
 
 import java.time.Duration;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class StatsCommand implements ICommand {
     private static final Logger logger = getLogger(StatsCommand.class);
+
+    Timer timer = new Timer();
 
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) {
@@ -21,6 +25,13 @@ public class StatsCommand implements ICommand {
         var hook = event.getChannel();
         var db = new DB();
         var commandUser = event.getMessage().getMentionedMembers().size() > 0 ? event.getMessage().getMentionedMembers().get(0) : null;
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                event.getMessage().delete().queue();
+            }
+        }, 3000);
 
         var user = commandUser == null ? event.getMember() : commandUser;
         if (user == null) {
