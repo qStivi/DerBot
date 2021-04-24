@@ -22,7 +22,7 @@ public class BegCommand implements ICommand {
             db.increment("users", "money", "id", id, earning);
             event.getChannel().sendMessage("Someone gave you " + earning + ":gem:").queue();
         } else {
-            event.getChannel().sendMessage("You didn't get anything!").delay(Duration.ofSeconds(3)).flatMap(Message::delete).queue();
+            event.getChannel().sendMessage("You didn't get anything!").delay(DURATION).flatMap(Message::delete).queue();
         }
     }
 

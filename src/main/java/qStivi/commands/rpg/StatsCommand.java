@@ -75,7 +75,7 @@ public class StatsCommand implements ICommand {
         embed.addField("XP", String.valueOf(xp), true);
         embed.setFooter("BlackJack win/lose ratio: " + winLoseRatio);
 
-        hook.sendMessage(embed.build()).delay(Duration.ofMinutes(1)).flatMap(Message::delete).queue();
+        hook.sendMessage(embed.build()).delay(DURATION).flatMap(Message::delete).queue();
     }
 
     @NotNull

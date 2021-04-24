@@ -14,7 +14,7 @@ public class moneyCommand implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();
         if (!(event.getAuthor().getIdLong() == 219108246143631364L)) {
-            hook.sendMessage("You don't have the permission to do that").delay(Duration.ofSeconds(5)).flatMap(Message::delete).queue();
+            hook.sendMessage("You don't have the permission to do that").delay(DURATION).flatMap(Message::delete).queue();
             return;
         }
 
@@ -29,7 +29,7 @@ public class moneyCommand implements ICommand {
         if (subcommand.equals("remove")) {
             db.decrement("users", "money", "id", userID, amount);
         }
-        hook.sendMessage("Done!").delay(Duration.ofSeconds(5)).flatMap(Message::delete).queue();
+        hook.sendMessage("Done!").delay(DURATION).flatMap(Message::delete).queue();
     }
 
     @NotNull

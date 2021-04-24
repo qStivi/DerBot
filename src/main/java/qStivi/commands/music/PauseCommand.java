@@ -14,7 +14,7 @@ public class PauseCommand implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();
         PlayerManager.getINSTANCE().pause(event.getGuild());
-        hook.sendMessage("Playback paused.").delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
+        hook.sendMessage("Playback paused.").delay(DURATION).flatMap(Message::delete).queue();
     }
 
     @Override

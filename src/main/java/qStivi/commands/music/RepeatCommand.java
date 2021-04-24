@@ -16,9 +16,9 @@ public class RepeatCommand implements ICommand {
         PlayerManager playerManager = PlayerManager.getINSTANCE();
         playerManager.setRepeat(event.getGuild(), !playerManager.isRepeating(event.getGuild()));
         if (playerManager.isRepeating(event.getGuild())) {
-            hook.sendMessage("Repeat: ON").delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
+            hook.sendMessage("Repeat: ON").delay(DURATION).flatMap(Message::delete).queue();
         } else {
-            hook.sendMessage("Repeat: OFF").delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
+            hook.sendMessage("Repeat: OFF").delay(DURATION).flatMap(Message::delete).queue();
         }
     }
 

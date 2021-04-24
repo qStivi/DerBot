@@ -11,7 +11,7 @@ public class TestCommand implements ICommand {
 
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) {
-        event.getChannel().sendMessage("k").delay(Duration.ofSeconds(3)).flatMap(Message::delete).queue();
+        event.getChannel().sendMessage("k").delay(DURATION).flatMap(Message::delete).queue();
     }
 
     @Override

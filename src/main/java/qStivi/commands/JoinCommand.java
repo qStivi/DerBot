@@ -38,9 +38,9 @@ public class JoinCommand implements ICommand {
 
         var success = join(guild, author);
         if (success) {
-            hook.sendMessage("Hi").delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
+            hook.sendMessage("Hi").delay(DURATION).flatMap(Message::delete).queue();
         } else {
-            hook.sendMessage("Something went wrong :(").delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
+            hook.sendMessage("Something went wrong :(").delay(DURATION).flatMap(Message::delete).queue();
         }
 
     }

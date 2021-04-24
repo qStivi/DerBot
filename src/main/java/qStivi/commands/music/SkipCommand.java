@@ -13,7 +13,7 @@ public class SkipCommand implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();
         PlayerManager.getINSTANCE().skip(event.getGuild());
-        hook.sendMessage("Skipping...").delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
+        hook.sendMessage("Skipping...").delay(DURATION).flatMap(Message::delete).queue();
     }
 
     @Override

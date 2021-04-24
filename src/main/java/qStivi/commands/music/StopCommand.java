@@ -15,7 +15,7 @@ public class StopCommand implements ICommand {
         var hook = event.getChannel();
         PlayerManager.getINSTANCE().clearQueue(event.getGuild());
         PlayerManager.getINSTANCE().skip(event.getGuild());
-        hook.sendMessage("Playback stopped.").delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
+        hook.sendMessage("Playback stopped.").delay(DURATION).flatMap(Message::delete).queue();
     }
 
     @Override

@@ -74,7 +74,7 @@ public class DndCommand implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();
         if (!join(event.getGuild(), event.getAuthor())) {
-            hook.sendMessage("Please join a channel, so I can play your request.").delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
+            hook.sendMessage("Please join a channel, so I can play your request.").delay(DURATION).flatMap(Message::delete).queue();
             return;
         }
 
@@ -87,7 +87,7 @@ public class DndCommand implements ICommand {
 
         PlayerManager.getINSTANCE().skip(event.getGuild());
 
-        hook.sendMessage("Playing D&D music.").delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
+        hook.sendMessage("Playing D&D music.").delay(DURATION).flatMap(Message::delete).queue();
 
         ControlsManager.getINSTANCE().sendMessage(event.getChannel(), event.getGuild());
     }

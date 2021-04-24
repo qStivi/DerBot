@@ -44,10 +44,10 @@ public class WorkCommand implements ICommand {
 
         if (diff > 1200) {
             db.increment("users", "money", "id", id, lone);
-            hook.sendMessage("You earned " + lone + " gems").delay(Duration.ofMinutes(1)).flatMap(Message::delete).queue();
+            hook.sendMessage("You earned " + lone + " gems").delay(DURATION).flatMap(Message::delete).queue();
             db.update("users", "last_worked", "id", id, now.getTime() / 1000);
         } else {
-            hook.sendMessage("You need to wait " + Math.subtractExact(1200L, diff) + " seconds before you can work again").delay(Duration.ofMinutes(1)).flatMap(Message::delete).queue();
+            hook.sendMessage("You need to wait " + Math.subtractExact(1200L, diff) + " seconds before you can work again").delay(DURATION).flatMap(Message::delete).queue();
         }
 
     }

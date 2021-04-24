@@ -14,7 +14,7 @@ public class ContinueCommand implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();
         PlayerManager.getINSTANCE().continueTrack(event.getGuild());
-        hook.sendMessage("Continuing...").delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
+        hook.sendMessage("Continuing...").delay(DURATION).flatMap(Message::delete).queue();
     }
 
     @Override

@@ -63,7 +63,7 @@ public class Top10Command implements ICommand {
         }
         winLoseRatio = wins / loses;
         embed.setFooter("Average BlackJack win/lose ratio: " + winLoseRatio);
-        hook.sendMessage(embed.build()).delay(Duration.ofMinutes(1)).flatMap(Message::delete).queue();
+        hook.sendMessage(embed.build()).delay(DURATION).flatMap(Message::delete).queue();
     }
 
     @NotNull

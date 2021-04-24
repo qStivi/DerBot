@@ -197,21 +197,21 @@ public class PlayCommand implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();
         if (!join(event.getGuild(), event.getAuthor())) {
-            hook.sendMessage("Please join a channel, so I can play your request.").delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
+            hook.sendMessage("Please join a channel, so I can play your request.").delay(DURATION).flatMap(Message::delete).queue();
             return;
         }
         try {
 //            if (event.getOption("shuffle") != null) {
 //                if (event.getOption("shuffle").getAsBoolean()) {
-//                    hook.sendMessage(playSong(event.getOption("query").getAsString(), true, event.getTextChannel(), event.getGuild())).delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
+//                    hook.sendMessage(playSong(event.getOption("query").getAsString(), true, event.getTextChannel(), event.getGuild())).delay(DURATION).flatMap(Message::delete).queue();
 //                }
 //            } else {
             var msg = playSong(args, false, event.getChannel(), event.getGuild());
-            hook.sendMessage(Objects.requireNonNullElse(msg, "Something went wrong!")).delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
+            hook.sendMessage(Objects.requireNonNullElse(msg, "Something went wrong!")).delay(DURATION).flatMap(Message::delete).queue();
 //            }
         } catch (ParseException | SpotifyWebApiException | IOException e) {
             e.printStackTrace();
-            hook.sendMessage("Something went wrong :(").delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
+            hook.sendMessage("Something went wrong :(").delay(DURATION).flatMap(Message::delete).queue();
         }
     }
 

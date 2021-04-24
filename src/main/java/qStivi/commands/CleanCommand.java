@@ -3,7 +3,9 @@ package qStivi.commands;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import org.slf4j.Logger;
 import qStivi.ICommand;
+import qStivi.listeners.CommandManager;
 
 import javax.annotation.Nonnull;
 import java.time.Duration;
@@ -11,7 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class CleanCommand implements ICommand {
+    private static final Logger logger = getLogger(CommandManager.class);
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -28,8 +33,9 @@ public class CleanCommand implements ICommand {
         } else {
             messages = event.getChannel().getIterableHistory().stream().limit(1000).filter(message -> message.getAuthor().getId().equals(event.getAuthor().getId())).collect(Collectors.toList());
         }
-        event.getChannel().purgeMessages(messages);
-        hook.sendMessage("Cleaning...").delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
+        var numberOfMessages = event.getChannel().purgeMessages(messages).size();
+        logger.info(String.valueOf(numberOfMessages));
+        hook.sendMessage("Cleaning...").delay(DURATION).flatMap(Message::delete).queue();
     }
 
     @Nonnull

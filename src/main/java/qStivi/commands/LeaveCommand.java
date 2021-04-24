@@ -14,7 +14,7 @@ public class LeaveCommand implements ICommand {
         var hook = event.getChannel();
         event.getGuild().getAudioManager();
         event.getGuild().getAudioManager().closeAudioConnection();
-        hook.sendMessage("Bye Bye").delay(Duration.ofSeconds(60)).flatMap(Message::delete).queue();
+        hook.sendMessage("Bye Bye").delay(DURATION).flatMap(Message::delete).queue();
     }
 
     @Override

@@ -41,11 +41,11 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
         }
         var money = db.selectLong("users", "money", "id", id);
         if (money < Long.parseLong(args[1])) {
-            hook.editMessageById(String.valueOf(messageId), "You don't have enough money!").delay(Duration.ofMinutes(5)).flatMap(Message::delete).queue();
+            hook.editMessageById(String.valueOf(messageId), "You don't have enough money!").delay(DURATION).flatMap(Message::delete).queue();
             return;
         }
         if (Long.parseLong(args[1]) < 0) {
-            hook.editMessageById(String.valueOf(messageId), "You can't do that, sorry.").delay(Duration.ofMinutes(5)).flatMap(Message::delete).queue();
+            hook.editMessageById(String.valueOf(messageId), "You can't do that, sorry.").delay(DURATION).flatMap(Message::delete).queue();
             return;
         }
         db.increment("users", "command_times_blackjack", "id", id, 1);
@@ -79,7 +79,7 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
         }
 
         hook.editMessageById(String.valueOf(messageId), "Playing").queue();
-        hook.editMessageById(String.valueOf(messageId), bj.embed.build()).delay(Duration.ofMinutes(5)).flatMap(Message::delete).queue();
+        hook.editMessageById(String.valueOf(messageId), bj.embed.build()).delay(DURATION).flatMap(Message::delete).queue();
     }
 
     @Override
