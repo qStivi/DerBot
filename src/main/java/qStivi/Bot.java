@@ -42,10 +42,13 @@ public class Bot {
                         "last_chat_message integer default 0," +
                         "last_command integer default 0," +
                         "last_reaction integer default 0," +
+                        "last_command_xp integer default 0," +
+                        "last_donated integer default 0," +
                         "command_times_blackjack integer default 0," +
                         "xp_reaction integer default 0," +
                         "xp_voice integer default 0," +
                         "xp_chat integer default 0," +
+                        "xp_command integer default 0," +
                         "blackjack_wins integer default 0," +
                         "blackjack_loses integer default 0," +
                         "blackjack_draws integer default 0"

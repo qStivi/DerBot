@@ -1,5 +1,6 @@
 package qStivi.listeners;
 
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -83,7 +84,19 @@ public class CommandManager extends ListenerAdapter {
 //                events.offer(event);
                 command.handle(event, args);
 
-                db.increment("users", "xp", "id", event.getAuthor().getIdLong(), command.getXp());
+
+                var id = event.getAuthor().getIdLong();
+                var seconds = db.selectLong("users", "last_command_xp", "id", id);
+                seconds = seconds == null ? 0 : seconds;
+                var millis = seconds * 1000;
+                var last = new Date(millis);
+                var now = new Date();
+                var diff = (now.getTime() - last.getTime()) / 1000;
+                if (diff > 10) {
+                    db.increment("users", "xp", "id", id, command.getXp());
+                    db.increment("users", "xp_command", "id", id, command.getXp());
+                    db.update("users", "last_command_xp", "id", id, now.getTime() / 1000);
+                }
 
                 logger.info("Event offered.");
             }

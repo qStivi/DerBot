@@ -12,6 +12,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class WorkCommand implements ICommand {
+    long xp = 0;
     Timer timer = new Timer();
 
     @Override
@@ -46,6 +47,7 @@ public class WorkCommand implements ICommand {
             db.increment("users", "money", "id", id, lone);
             hook.sendMessage("You earned " + lone + " gems").delay(DURATION).flatMap(Message::delete).queue();
             db.update("users", "last_worked", "id", id, now.getTime() / 1000);
+            xp= 10L;
         } else {
             hook.sendMessage("You need to wait " + Math.subtractExact(1200L, diff) + " seconds before you can work again").delay(DURATION).flatMap(Message::delete).queue();
         }
@@ -66,6 +68,6 @@ public class WorkCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 0;
+        return xp;
     }
 }

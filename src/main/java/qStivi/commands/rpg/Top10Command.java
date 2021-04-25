@@ -80,6 +80,6 @@ public class Top10Command implements ICommand {
 
     @Override
     public long getXp() {
-        return 0;
+        return 1;
     }
 }

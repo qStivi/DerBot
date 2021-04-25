@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class BegCommand implements ICommand {
+    long xp = 0;
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var luck = ThreadLocalRandom.current().nextFloat();
@@ -21,6 +22,7 @@ public class BegCommand implements ICommand {
             var earning = ThreadLocalRandom.current().nextInt(1, 3);
             db.increment("users", "money", "id", id, earning);
             event.getChannel().sendMessage("Someone gave you " + earning + ":gem:").queue();
+            xp = 2;
         } else {
             event.getChannel().sendMessage("You didn't get anything!").delay(DURATION).flatMap(Message::delete).queue();
         }
@@ -40,6 +42,6 @@ public class BegCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 0;
+        return xp;
     }
 }

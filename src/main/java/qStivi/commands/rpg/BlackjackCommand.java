@@ -27,6 +27,7 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
         var hook = event.getChannel();
         AtomicReference<String> messageId = new AtomicReference<>();
         hook.sendMessage("Loading...").queue(message -> messageId.set(message.getId()));
+        // TODO put this in CommandManager
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -78,7 +79,7 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
             event.getChannel().addReactionById(bj.id, "✋\uD83C\uDFFD").queue();
         }
 
-        hook.editMessageById(String.valueOf(messageId), "Playing").queue();
+        hook.editMessageById(String.valueOf(messageId), args[1]).queue();
         hook.editMessageById(String.valueOf(messageId), bj.embed.build()).delay(DURATION).flatMap(Message::delete).queue();
     }
 
@@ -185,6 +186,6 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
 
     @Override
     public long getXp() {
-        return 0;
+        return 1;
     }
 }

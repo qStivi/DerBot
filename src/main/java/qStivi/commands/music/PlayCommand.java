@@ -26,7 +26,7 @@ import static qStivi.commands.JoinCommand.join;
 
 public class PlayCommand implements ICommand {
 
-
+long xp = 0;
     private static final Logger logger = getLogger(PlayCommand.class);
 
     public static String cleanForURL(String str) {
@@ -207,7 +207,13 @@ public class PlayCommand implements ICommand {
 //                }
 //            } else {
             var msg = playSong(args, false, event.getChannel(), event.getGuild());
-            hook.sendMessage(Objects.requireNonNullElse(msg, "Something went wrong!")).delay(DURATION).flatMap(Message::delete).queue();
+            if (msg != null){
+                hook.sendMessage(msg).delay(DURATION).flatMap(Message::delete).queue();
+                xp = 10;
+            }else {
+
+                hook.sendMessage("Something went wrong!").delay(DURATION).flatMap(Message::delete).queue();
+            }
 //            }
         } catch (ParseException | SpotifyWebApiException | IOException e) {
             e.printStackTrace();
@@ -229,7 +235,7 @@ public class PlayCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 0;
+        return xp;
     }
 
     private enum RequestType {

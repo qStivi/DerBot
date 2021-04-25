@@ -23,7 +23,7 @@ public class CleanCommand implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();
         List<Message> messages = new ArrayList<>();
-        var option = args.length >= 1 && Boolean.parseBoolean(args[1]);
+        var option = args.length > 1 && Boolean.parseBoolean(args[1]);
         if (option) {
             if (event.getMember().hasPermission(Permission.ADMINISTRATOR)) {
                 messages = event.getChannel().getIterableHistory().stream().limit(1000).collect(Collectors.toList());
@@ -52,6 +52,6 @@ public class CleanCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 0;
+        return 3;
     }
 }

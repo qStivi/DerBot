@@ -60,6 +60,7 @@ public class UserManager extends ListenerAdapter {
         var last = new Date(millis);
         var now = new Date();
         var diff = (now.getTime() - last.getTime()) / 1000;
+        // TODO improve by only disallowing many consecutive messages
 
         if (diff > 8) {
             db.update("users", "last_chat_message", "id", id, now.getTime() / 1000);
@@ -111,8 +112,10 @@ public class UserManager extends ListenerAdapter {
         Task task = new Task(new TimerTask() {
             @Override
             public void run() {
-                db.increment("users", "xp", "id", id, 5);
-                db.increment("users", "xp_voice", "id", id, 5);
+                var amountOfUsers = event.getChannelJoined().getMembers().size();
+                var xp = (3 * amountOfUsers) + 2;
+                db.increment("users", "xp", "id", id, xp);
+                db.increment("users", "xp_voice", "id", id, xp);
             }
         }, id);
 

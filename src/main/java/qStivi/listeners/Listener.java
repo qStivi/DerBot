@@ -22,7 +22,7 @@ public class Listener extends ListenerAdapter {
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         logger.info("Ready!");
-        event.getJDA().getGuildById("703363806356701295").getTextChannelById(Bot.DEV_MODE ? Bot.DEV_CHANNEL_ID : Bot.CHANNEL_ID).sendMessage("Booting... Ready when message disappears.").delay(DURATION).flatMap(Message::delete).queue();
+//        event.getJDA().getGuildById("703363806356701295").getTextChannelById(Bot.DEV_MODE ? Bot.DEV_CHANNEL_ID : Bot.CHANNEL_ID).sendMessage("Booting... Ready when message disappears.").delay(DURATION).flatMap(Message::delete).queue();
     }
 
 

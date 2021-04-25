@@ -31,6 +31,6 @@ public class ContinueCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 0;
+        return 1;
     }
 }
