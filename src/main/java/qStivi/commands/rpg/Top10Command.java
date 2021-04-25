@@ -35,9 +35,7 @@ public class Top10Command implements ICommand {
         for (int i = 0; i < size; i++) {
             Long id = list.get(i);
             var money = db.selectLong("users", "money", "id", id);
-            var xp = db.selectLong("users", "xp", "id", id);
-            xp = xp == null ? 0 : xp;
-            var lvl = (int) Math.floor((double) xp / 800);
+            var lvl = db.getLevel(id);
 
             AtomicReference<String> name = new AtomicReference<>();
 
@@ -48,6 +46,7 @@ public class Top10Command implements ICommand {
             while (name.get() == null) {
                 Thread.onSpinWait();
             }
+            var xp = db.selectLong("users", "xp", "id", id);
             embed.addField("", "#" + i + " [" + name.get() + "](https://youtu.be/dQw4w9WgXcQ) " + money + " :gem: :white_small_square: " + xp + "xp LVL: " + lvl, false);
         }
         var userIDs = db.getRanking();

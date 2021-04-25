@@ -44,6 +44,12 @@ public class DB {
         }
     }
 
+    public Long getLevel(Long id) {
+        var xp = selectLong("users", "xp", "id", id);
+        xp = xp == null ? 0 : xp;
+        return (long) Math.floor((double) xp / 800);
+    }
+
     /**
      * Create a new table in the test database
      *

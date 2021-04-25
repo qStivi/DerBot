@@ -85,10 +85,10 @@ public class BlackJack {
         this.user = user;
         this.id = id;
 
-        dealer.add(draw());
+        player.add(draw());
+        player.add(draw());
 
-        player.add(draw());
-        player.add(draw());
+        dealer.add(draw());
     }
 
     public int count(List<Card> hand) {

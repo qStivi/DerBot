@@ -79,7 +79,7 @@ public class DndCommand implements ICommand {
 
         PlayerManager.getINSTANCE().clearQueue(event.getGuild());
 
-        for (int i = 0; i < Integer.parseInt(args[2]); i++) {
+        for (long i = 0; i < Integer.parseInt(args[2]); i++) {
             JoinCommand.join(event.getGuild(), event.getAuthor());
             PlayerManager.getINSTANCE().loadAndPlay(event.getGuild(), getSongByType(args[1]));
         }

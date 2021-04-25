@@ -33,7 +33,7 @@ public class RollCommand implements ICommand {
 
     MessageEmbed normalRoll(String query) {
         String[] input = query.split("d");
-        int numOfDice;
+        long numOfDice;
         int numOfSides;
         try {
             numOfDice = Integer.parseInt(input[0]);
@@ -42,11 +42,11 @@ public class RollCommand implements ICommand {
             return null;
         }
 
-        List<Integer> rolls = new ArrayList<>();
-        int sum = 0;
+        List<Long> rolls = new ArrayList<>();
+        long sum = 0;
 
         for (int i = 0; i < numOfDice; i++) {
-            int rand = ThreadLocalRandom.current().nextInt(1, numOfSides + 1);
+            long rand = ThreadLocalRandom.current().nextInt(1, numOfSides + 1);
             rolls.add(rand);
             sum += rand;
         }
@@ -67,7 +67,7 @@ public class RollCommand implements ICommand {
             embed.setFooter("Notice: Not all Dice could be displayed!");
         }
 
-        for (int roll : rolls) {
+        for (long roll : rolls) {
             embed.addField("", String.valueOf(roll), true); // Embeds can hold a max. of 25 Fields so this will just stop after 25 Fields for now.
             if (embed.getFields().size() > 25) {
                 break;
@@ -81,12 +81,12 @@ public class RollCommand implements ICommand {
 
         // 6*(2d6+6)
 
-        List<Integer> rolls = new ArrayList<>();
-        int sum = 0;
+        List<Long> rolls = new ArrayList<>();
+        long sum = 0;
 
-        for (int i = 0; i < 6; i++) {
-            int rand = ThreadLocalRandom.current().nextInt(1, 7);
-            int rand2 = ThreadLocalRandom.current().nextInt(1, 7);
+        for (long i = 0; i < 6; i++) {
+            long rand = ThreadLocalRandom.current().nextInt(1, 7);
+            long rand2 = ThreadLocalRandom.current().nextInt(1, 7);
             rand += rand2;
             rand += 6;
             rolls.add(rand);
@@ -95,7 +95,7 @@ public class RollCommand implements ICommand {
 
         EmbedBuilder embed = new EmbedBuilder().setDescription("∑=" + sum);
 
-        for (int roll : rolls) {
+        for (long roll : rolls) {
             embed.addField("", String.valueOf(roll), true);
         }
 

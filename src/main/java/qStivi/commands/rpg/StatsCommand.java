@@ -43,10 +43,8 @@ public class StatsCommand implements ICommand {
             db.insert("users", "id", user);
         }
 
+        var lvl = db.getLevel(userID);
         var money = db.selectLong("users", "money", "id", userID);
-        var xp = db.selectLong("users", "xp", "id", userID);
-        xp = xp == null ? 0 : xp;
-        var lvl = (long) Math.floor((double) xp / 800);
         var userName = user.getEffectiveName();
         var ranking = db.getRanking();
         long position = 1337;
@@ -71,6 +69,7 @@ public class StatsCommand implements ICommand {
         if (position != 1337) embed.addField("Rank", "#" + position, false);
         embed.addField("Level", String.valueOf(lvl), true);
         embed.addField("Money", money + " :gem:", true);
+        var xp = db.selectLong("users", "xp", "id", userID);
         embed.addField("XP", String.valueOf(xp), true);
         embed.setFooter("BlackJack win/lose ratio: " + winLoseRatio);
 
