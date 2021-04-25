@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
 import qStivi.db.DB;
 
-import java.time.Duration;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
@@ -52,7 +51,6 @@ public class Top10Command implements ICommand {
             embed.addField("", "#" + i + " [" + name.get() + "](https://youtu.be/dQw4w9WgXcQ) " + money + " :gem: :white_small_square: " + xp + "xp LVL: " + lvl, false);
         }
         var userIDs = db.getRanking();
-        double winLoseRatio = 0;
         double wins = 0;
         double loses = 0;
         for (Long id : userIDs) {
@@ -61,7 +59,7 @@ public class Top10Command implements ICommand {
             wins += selectWins == null ? 0 : selectWins;
             loses += selectLoses == null ? 0 : selectLoses;
         }
-        winLoseRatio = wins / loses;
+        double winLoseRatio = wins / loses;
         embed.setFooter("Average BlackJack win/lose ratio: " + winLoseRatio);
         hook.sendMessage(embed.build()).delay(DURATION).flatMap(Message::delete).queue();
     }

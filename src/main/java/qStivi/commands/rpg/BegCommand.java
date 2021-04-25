@@ -6,11 +6,11 @@ import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
 import qStivi.db.DB;
 
-import java.time.Duration;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class BegCommand implements ICommand {
     long xp = 0;
+
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var luck = ThreadLocalRandom.current().nextFloat();

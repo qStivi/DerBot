@@ -54,16 +54,11 @@ public class UserManager extends ListenerAdapter {
         }
 
 
-        var seconds = db.selectLong("users", "last_chat_message", "id", id);
-        seconds = seconds == null ? 0 : seconds;
-        var millis = seconds * 1000;
-        var last = new Date(millis);
-        var now = new Date();
-        var diff = (now.getTime() - last.getTime()) / 1000;
+        var diff = db.getLast("last_chat_message", id);
         // TODO improve by only disallowing many consecutive messages
 
         if (diff > 8) {
-            db.update("users", "last_chat_message", "id", id, now.getTime() / 1000);
+            db.update("users", "last_chat_message", "id", id, new Date().getTime() / 1000);
             db.increment("users", "xp", "id", id, 1);
             db.increment("users", "xp_chat", "id", id, 1);
         }
@@ -85,15 +80,10 @@ public class UserManager extends ListenerAdapter {
         }
 
 
-        var seconds = db.selectLong("users", "last_reaction", "id", id);
-        seconds = seconds == null ? 0 : seconds;
-        var millis = seconds * 1000;
-        var last = new Date(millis);
-        var now = new Date();
-        var diff = (now.getTime() - last.getTime()) / 1000;
+        var diff = db.getLast("last_reaction", id);
 
         if (diff > 10) {
-            db.update("users", "last_reaction", "id", id, now.getTime() / 1000);
+            db.update("users", "last_reaction", "id", id, new Date().getTime() / 1000);
             db.increment("users", "xp", "id", id, 5);
             db.increment("users", "xp_reaction", "id", id, 5);
         }

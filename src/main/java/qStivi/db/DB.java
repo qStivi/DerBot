@@ -6,6 +6,7 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -154,6 +155,15 @@ public class DB {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public Long getLast(String col, long id){
+        var seconds = selectLong("users", col, "id", id);
+        seconds = seconds == null ? 0 : seconds;
+        var millis = seconds * 1000;
+        var last = new java.util.Date(millis);
+        var now = new Date();
+        return (now.getTime() - last.getTime()) / 1000;
     }
 
     /**

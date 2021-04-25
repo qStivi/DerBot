@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import qStivi.ICommand;
 
 import javax.annotation.Nonnull;
-import java.time.Duration;
 
 public class TestCommand implements ICommand {
 

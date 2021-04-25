@@ -6,7 +6,6 @@ import qStivi.ICommand;
 import qStivi.audioManagers.PlayerManager;
 
 import javax.annotation.Nonnull;
-import java.time.Duration;
 
 public class StopCommand implements ICommand {
 

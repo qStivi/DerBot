@@ -6,13 +6,12 @@ import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
 import qStivi.db.DB;
 
-import java.time.Duration;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class WorkCommand implements ICommand {
-    long xp = 0;
+    long xpGain = 0;
     Timer timer = new Timer();
 
     @Override
@@ -32,12 +31,7 @@ public class WorkCommand implements ICommand {
             db.insert("users", "id", id);
         }
 
-        var seconds = db.selectLong("users", "last_worked", "id", id);
-        seconds = seconds == null ? 0 : seconds;
-        var millis = seconds * 1000;
-        var last = new Date(millis);
-        var now = new Date();
-        var diff = (now.getTime() - last.getTime()) / 1000;
+        var diff = db.getLast("last_worked", id);
         var xp = db.selectLong("users", "xp", "id", id);
         xp = xp == null ? 0 : xp;
         var lvl = (long) Math.floor(xp / (double) 800);
@@ -46,8 +40,8 @@ public class WorkCommand implements ICommand {
         if (diff > 1200) {
             db.increment("users", "money", "id", id, lone);
             hook.sendMessage("You earned " + lone + " gems").delay(DURATION).flatMap(Message::delete).queue();
-            db.update("users", "last_worked", "id", id, now.getTime() / 1000);
-            xp= 10L;
+            db.update("users", "last_worked", "id", id, new Date().getTime() / 1000);
+            xpGain = 10L;
         } else {
             hook.sendMessage("You need to wait " + Math.subtractExact(1200L, diff) + " seconds before you can work again").delay(DURATION).flatMap(Message::delete).queue();
         }
@@ -68,6 +62,6 @@ public class WorkCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return xp;
+        return xpGain;
     }
 }

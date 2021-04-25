@@ -1,6 +1,5 @@
 package qStivi.listeners;
 
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -61,6 +60,7 @@ public class CommandManager extends ListenerAdapter {
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         var channelID = event.getChannel().getId();
         if (Bot.DEV_MODE && !channelID.equals(Bot.DEV_CHANNEL_ID)) return;
+        //noinspection ConstantConditions
         if (!Bot.DEV_MODE && !event.getChannel().getParent().getId().equals("833734651070775338")) {
             return;
         }
@@ -86,16 +86,11 @@ public class CommandManager extends ListenerAdapter {
 
 
                 var id = event.getAuthor().getIdLong();
-                var seconds = db.selectLong("users", "last_command_xp", "id", id);
-                seconds = seconds == null ? 0 : seconds;
-                var millis = seconds * 1000;
-                var last = new Date(millis);
-                var now = new Date();
-                var diff = (now.getTime() - last.getTime()) / 1000;
+                var diff = db.getLast("last_command", id);
                 if (diff > 10) {
                     db.increment("users", "xp", "id", id, command.getXp());
                     db.increment("users", "xp_command", "id", id, command.getXp());
-                    db.update("users", "last_command_xp", "id", id, now.getTime() / 1000);
+                    db.update("users", "last_command_xp", "id", id, new Date().getTime() / 1000);
                 }
 
                 logger.info("Event offered.");

@@ -1,6 +1,5 @@
 package qStivi.listeners;
 
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -9,8 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import qStivi.Bot;
 
-import java.time.Duration;
-
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Listener extends ListenerAdapter {
@@ -18,7 +15,6 @@ public class Listener extends ListenerAdapter {
     private static final Logger logger = getLogger(Listener.class);
 //    private final CommandManager commandManager = new CommandManager();
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         logger.info("Ready!");

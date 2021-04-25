@@ -5,8 +5,6 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
 
-import java.time.Duration;
-
 public class LeaveCommand implements ICommand {
 
     @Override

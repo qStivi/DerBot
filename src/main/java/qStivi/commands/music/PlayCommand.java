@@ -16,18 +16,16 @@ import qStivi.listeners.ControlsManager;
 
 import java.io.IOException;
 import java.text.Normalizer;
-import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import static org.slf4j.LoggerFactory.getLogger;
 import static qStivi.commands.JoinCommand.join;
 
 public class PlayCommand implements ICommand {
 
-long xp = 0;
     private static final Logger logger = getLogger(PlayCommand.class);
+    long xp = 0;
 
     public static String cleanForURL(String str) {
         str = Normalizer.normalize(str, Normalizer.Form.NFKD);
@@ -92,14 +90,14 @@ long xp = 0;
     private String playSpotifyPlaylist(String arg0, Boolean shuffle, TextChannel channel) throws IOException, ParseException, SpotifyWebApiException {
 
         String id = null;
-        if (arg0.startsWith("spotify:playlist:")){
+        if (arg0.startsWith("spotify:playlist:")) {
             id = arg0.split(":")[2];
         }
         if (arg0.startsWith("open.spotify.com/playlist/")) {
             var temp = arg0.split("/")[2];
             id = temp.split("\\?")[0];
         }
-        if (arg0.startsWith("https://open.spotify.com/playlist/")){
+        if (arg0.startsWith("https://open.spotify.com/playlist/")) {
             var temp = arg0.split("/")[4];
             id = temp.split("\\?")[0];
         }
@@ -207,10 +205,10 @@ long xp = 0;
 //                }
 //            } else {
             var msg = playSong(args, false, event.getChannel(), event.getGuild());
-            if (msg != null){
+            if (msg != null) {
                 hook.sendMessage(msg).delay(DURATION).flatMap(Message::delete).queue();
                 xp = 10;
-            }else {
+            } else {
 
                 hook.sendMessage("Something went wrong!").delay(DURATION).flatMap(Message::delete).queue();
             }
