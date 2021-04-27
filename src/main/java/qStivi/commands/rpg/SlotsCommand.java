@@ -12,9 +12,9 @@ import java.awt.*;
 public class SlotsCommand implements ICommand {
     static final Symbol[] symbols = new Symbol[]{
             new Symbol(0.00564f, ":gem:", 15),
-            new Symbol(0.18821f, "<:Cherry:836664853392785448>", 75),
+            new Symbol(0.18821f, "<:seven:836662334729617517>", 75),
             new Symbol(0.342f, "<:FourLeafClover:836663888480436255>", 3),
-            new Symbol(0.46415f, "<:seven:836662334729617517>", 2)
+            new Symbol(0.46415f, "<:Cherry:836664853392785448>", 2)
     };
 
     public static Symbol getRandomSymbol() {
