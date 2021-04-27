@@ -28,6 +28,6 @@ public class LeaveCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 1;
+        return 3;
     }
 }

@@ -117,6 +117,6 @@ public class RollCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 5;
+        return 15;
     }
 }

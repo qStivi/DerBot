@@ -41,7 +41,7 @@ public class WorkCommand implements ICommand {
             db.increment("users", "money", "id", id, lone);
             hook.sendMessage("You earned " + lone + " gems").delay(DURATION).flatMap(Message::delete).queue();
             db.update("users", "last_worked", "id", id, new Date().getTime() / 1000);
-            xpGain = 10L;
+            xpGain = 50;
         } else {
             hook.sendMessage("You need to wait " + Math.subtractExact(1200L, diff) + " seconds before you can work again").delay(DURATION).flatMap(Message::delete).queue();
         }

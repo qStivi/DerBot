@@ -33,7 +33,7 @@ public class DonateCommand implements ICommand {
         var diff = db.getLast("last_worked", id);
 
         if (diff > 1200) {
-            xp = (long) Math.floor(Math.sqrt(money));
+            xp = (long) Math.floor(Math.sqrt(money)) + 5;
             db.update("users", "last_donated", "id", id, new Date().getTime() / 1000);
         }
     }

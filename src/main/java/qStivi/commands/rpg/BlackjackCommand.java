@@ -185,6 +185,6 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
 
     @Override
     public long getXp() {
-        return 1;
+        return 3;
     }
 }

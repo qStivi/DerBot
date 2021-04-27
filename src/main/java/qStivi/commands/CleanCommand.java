@@ -51,6 +51,6 @@ public class CleanCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 3;
+        return 9;
     }
 }

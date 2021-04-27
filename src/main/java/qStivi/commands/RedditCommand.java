@@ -103,6 +103,6 @@ public class RedditCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 15;
+        return 30;
     }
 }

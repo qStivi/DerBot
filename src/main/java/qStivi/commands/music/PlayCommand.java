@@ -207,7 +207,7 @@ public class PlayCommand implements ICommand {
             var msg = playSong(args, false, event.getChannel(), event.getGuild());
             if (msg != null) {
                 hook.sendMessage(msg).delay(DURATION).flatMap(Message::delete).queue();
-                xp = 10;
+                xp = 30;
             } else {
 
                 hook.sendMessage("Something went wrong!").delay(DURATION).flatMap(Message::delete).queue();
