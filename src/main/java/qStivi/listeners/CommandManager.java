@@ -47,6 +47,7 @@ public class CommandManager extends ListenerAdapter {
         commandList.add(new moneyCommand());
         commandList.add(new DonateCommand());
         commandList.add(new BegCommand());
+        commandList.add(new SlotsCommand());
     }
 
     public static String cleanForCommand(String str) {

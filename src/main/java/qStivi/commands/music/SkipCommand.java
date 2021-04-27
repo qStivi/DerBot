@@ -29,6 +29,6 @@ public class SkipCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 10;
+        return 1;
     }
 }
