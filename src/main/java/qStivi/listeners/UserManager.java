@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 import qStivi.Bot;
 import qStivi.db.DB;
 
@@ -16,7 +17,11 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class UserManager extends ListenerAdapter {
+//    private static final Logger logger = getLogger(UserManager.class);
+
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     DB db = new DB();
     Timer timer = new Timer();
@@ -93,6 +98,7 @@ public class UserManager extends ListenerAdapter {
     public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
         if (Bot.DEV_MODE && !event.getChannelJoined().getId().equals(Bot.DEV_VOICE_CHANNEL_ID)) return;
         if (event.getMember().getUser().isBot()) return;
+//        logger.info("join");
 
         var id = Long.parseLong(event.getMember().getUser().getId());
         if (db.userDoesNotExists(id)) {
@@ -102,10 +108,11 @@ public class UserManager extends ListenerAdapter {
         Task task = new Task(new TimerTask() {
             @Override
             public void run() {
-                var amountOfUsers = event.getChannelJoined().getMembers().size();
+                var amountOfUsers = event.getMember().getVoiceState().getChannel().getMembers().size();
                 var xp = (3 * amountOfUsers) + 2;
                 db.increment("users", "xp", "id", id, xp);
                 db.increment("users", "xp_voice", "id", id, xp);
+//                logger.info(String.valueOf(amountOfUsers));
             }
         }, id);
 
@@ -121,6 +128,7 @@ public class UserManager extends ListenerAdapter {
     @Override
     public void onGuildVoiceLeave(@NotNull GuildVoiceLeaveEvent event) {
         if (Bot.DEV_MODE && !event.getChannelLeft().getId().equals(Bot.DEV_VOICE_CHANNEL_ID)) return;
+//        logger.info("leave");
         var id = Long.parseLong(event.getMember().getId());
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);
