@@ -66,21 +66,21 @@ public class SlotsCommand implements ICommand {
         if (first.getEmote().equals(second.getEmote()) && second.getEmote().equals(third.getEmote())) {
             embed.setColor(Color.green);
             var gain = bet * first.getMultiplier();
-            db.decrement("users", "money", "id", id, gain);
+            db.increment("users", "money", "id", id, gain);
             channel.sendMessage("You won " + gain + ":gem:").delay(DURATION).flatMap(Message::delete).queue();
         }
 
         if (first.getEmote().equals(symbols[0].getEmote()) || second.getEmote().equals(symbols[0].getEmote()) || third.getEmote().equals(symbols[0].getEmote())) {
             embed.setColor(Color.green);
             var gain = bet * symbols[0].getMultiplier();
-            db.decrement("users", "money", "id", id, gain);
+            db.increment("users", "money", "id", id, gain);
             channel.sendMessage("You won " + gain + ":gem:").delay(DURATION).flatMap(Message::delete).queue();
         }
 
         if (first.getEmote().equals(symbols[0].getEmote()) && first.getEmote().equals(second.getEmote()) && second.getEmote().equals(third.getEmote())) {
             embed.setColor(Color.green);
             var gain = bet * 1000;
-            db.decrement("users", "money", "id", id, gain);
+            db.increment("users", "money", "id", id, gain);
             channel.sendMessage("You won " + gain + ":gem:").delay(DURATION).flatMap(Message::delete).queue();
         }
 
@@ -105,26 +105,3 @@ public class SlotsCommand implements ICommand {
     }
 }
 
-class Symbol {
-    private final float weight;
-    private final String emote;
-    private final int multiplier;
-
-    public Symbol(float weight, String emote, int multiplier) {
-        this.weight = weight;
-        this.emote = emote;
-        this.multiplier = multiplier;
-    }
-
-    public float getWeight() {
-        return weight;
-    }
-
-    public String getEmote() {
-        return emote;
-    }
-
-    public int getMultiplier() {
-        return multiplier;
-    }
-}

@@ -30,7 +30,7 @@ public class DonateCommand implements ICommand {
         event.getChannel().sendMessage("You donated " + money + ":gem: to " + user.getName()).queue();
 
         var id = event.getAuthor().getIdLong();
-        var diff = db.getLast("last_worked", id);
+        var diff = db.getLast("last_donated", id);
 
         if (diff > 1200) {
             xp = (long) Math.floor(Math.sqrt(money)) + 5;

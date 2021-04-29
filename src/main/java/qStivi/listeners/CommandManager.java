@@ -80,7 +80,6 @@ public class CommandManager extends ListenerAdapter {
             if (command.getName().equals(args[0])) {
                 var db = new DB();
                 logger.info(event.getAuthor().getName() + " issued /" + args[0]);
-                db.update("users", "last_command", "id", event.getAuthor().getIdLong(), new Date().getTime() / 1000);
 
 //                events.offer(event);
                 command.handle(event, args);
@@ -94,6 +93,7 @@ public class CommandManager extends ListenerAdapter {
                     db.update("users", "last_command_xp", "id", id, new Date().getTime() / 1000);
                 }
 
+                db.update("users", "last_command", "id", event.getAuthor().getIdLong(), new Date().getTime() / 1000);
                 logger.info("Event offered.");
             }
         }
