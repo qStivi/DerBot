@@ -65,6 +65,7 @@ public class CommandManager extends ListenerAdapter {
         if (!Bot.DEV_MODE && !event.getChannel().getParent().getId().equals("833734651070775338")) {
             return;
         }
+        if (!Bot.DEV_MODE && channelID.equals(Bot.DEV_CHANNEL_ID)) return;
         var message = event.getMessage().getContentRaw();
         if (!message.startsWith("/")) return;
         String[] args;

@@ -11,10 +11,9 @@ import java.awt.*;
 
 public class SlotsCommand implements ICommand {
     static final Symbol[] symbols = new Symbol[]{
-            new Symbol(0.00564f, ":gem:", 15),
-            new Symbol(0.18821f, "<:seven:836662334729617517>", 75),
-            new Symbol(0.342f, "<:FourLeafClover:836663888480436255>", 3),
-            new Symbol(0.46415f, "<:Cherry:836664853392785448>", 2)
+            new Symbol(0.0933666574889f, ":gem:", 2),
+            new Symbol(0.321829794869f, "<:seven:836662334729617517>", 7),
+            new Symbol(0.584803547643f, "<:Cherry:836664853392785448>", 1.5)
     };
 
     public static Symbol getRandomSymbol() {
@@ -63,23 +62,36 @@ public class SlotsCommand implements ICommand {
         embed.setFooter(bet + "\uD83D\uDC8E");
         embed.setColor(Color.red);
 
+        // Three
         if (first.getEmote().equals(second.getEmote()) && second.getEmote().equals(third.getEmote())) {
             embed.setColor(Color.green);
-            var gain = bet * first.getMultiplier();
+            var gain = Math.round(bet * first.getMultiplier());
             db.increment("users", "money", "id", id, gain);
             channel.sendMessage("You won " + gain + ":gem:").delay(DURATION).flatMap(Message::delete).queue();
         }
 
+        // Gem
         if (first.getEmote().equals(symbols[0].getEmote()) || second.getEmote().equals(symbols[0].getEmote()) || third.getEmote().equals(symbols[0].getEmote())) {
             embed.setColor(Color.green);
-            var gain = bet * symbols[0].getMultiplier();
+            var gain = Math.round(bet * symbols[0].getMultiplier());
+            db.increment("users", "money", "id", id, gain);
+            channel.sendMessage("You won " + gain + ":gem:").delay(DURATION).flatMap(Message::delete).queue();
+        }
+
+        if (
+                (first.getEmote().equals(symbols[0].getEmote()) && second.getEmote().equals(symbols[0].getEmote())) ||
+                        (second.getEmote().equals(symbols[0].getEmote()) && third.getEmote().equals(symbols[0].getEmote())) ||
+                        (first.getEmote().equals(symbols[0].getEmote()) && third.getEmote().equals(symbols[0].getEmote()))
+        ) {
+            embed.setColor(Color.green);
+            var gain = Math.round(bet * symbols[0].getMultiplier());
             db.increment("users", "money", "id", id, gain);
             channel.sendMessage("You won " + gain + ":gem:").delay(DURATION).flatMap(Message::delete).queue();
         }
 
         if (first.getEmote().equals(symbols[0].getEmote()) && first.getEmote().equals(second.getEmote()) && second.getEmote().equals(third.getEmote())) {
             embed.setColor(Color.green);
-            var gain = bet * 1000;
+            var gain = bet * 100;
             db.increment("users", "money", "id", id, gain);
             channel.sendMessage("You won " + gain + ":gem:").delay(DURATION).flatMap(Message::delete).queue();
         }
