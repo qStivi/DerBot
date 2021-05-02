@@ -2,11 +2,8 @@ package qStivi.db;
 
 import org.slf4j.Logger;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nullable;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,7 +18,7 @@ public class DB {
         Class.forName("org.sqlite.JDBC");
 
         String url = "jdbc:sqlite:bot.db";
-        Connection conn = DriverManager.getConnection(url);
+        Connection connection = DriverManager.getConnection(url);
         String enableForeignKeys = "PRAGMA foreign_keys = ON;";
         String setupUserDataTable = """
                 CREATE TABLE IF NOT EXISTS "UserData"
@@ -67,36 +64,23 @@ public class DB {
                 """;
 
 
-        if (conn != null) {
-            DatabaseMetaData meta = conn.getMetaData();
+        if (connection != null) {
+            DatabaseMetaData meta = connection.getMetaData();
             logger.info("The driver name is " + meta.getDriverName());
             logger.info("Database connection ok.");
-            conn.createStatement().execute(enableForeignKeys);
-            conn.createStatement().execute(setupUserDataTable);
-            conn.createStatement().execute(setupCommandsStatisticsTable);
-            conn.createStatement().execute(setupGameStatisticsTable);
+            connection.createStatement().execute(enableForeignKeys);
+            connection.createStatement().execute(setupUserDataTable);
+            connection.createStatement().execute(setupCommandsStatisticsTable);
+            connection.createStatement().execute(setupGameStatisticsTable);
+            connection.close();
         }
 
     }
 
-    public Long getLevel(Long id) {
-        var xp = selectLong("users", "xp", "id", id);
+    public Long getLevel(Long id) throws SQLException {
+        var xp = getXP(id);
         xp = xp == null ? 0 : xp;
         return (long) Math.floor((double) xp / 800);
-    }
-
-    /**
-     * Insert a new row into the warehouses table
-     *
-     * @param table   name of table to insert to
-     * @param colName name of column to insert to
-     * @param value   value to insert to
-     */
-    @Deprecated
-    public void insert(String table, String colName, Object value) {
-        String sql = "INSERT INTO %s(%s) VALUES(?)".formatted(table, colName);
-
-        executeUpdate(value, sql);
     }
 
     private void executeUpdate(Object value, String sql) {
@@ -125,76 +109,12 @@ public class DB {
         executeUpdate(value, sql);
     }
 
-    /**
-     * Update data of a warehouse specified by the id
-     *
-     * @param tblName    name of table to update
-     * @param colName    name of column to update
-     * @param whereName  name of column to use as identifier
-     * @param whereValue value of identifier
-     * @param value      new value
-     */
-    public void update(String tblName, String colName, String whereName, Object whereValue, Object value) {
-        String sql = "UPDATE %s SET %s = ? WHERE %s = ?".formatted(tblName, colName, whereName);
-
-        try (Connection conn = this.connect()) {
-            PreparedStatement pstmt;
-            if (conn != null) {
-                pstmt = conn.prepareStatement(sql);
-                pstmt.setObject(1, value);
-                pstmt.setObject(2, whereValue);
-                pstmt.executeUpdate();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Update data of a warehouse specified by the id
-     *
-     * @param tblName    name of table to update
-     * @param colName    name of column to update
-     * @param whereName  name of column to use as identifier
-     * @param whereValue value of identifier
-     * @param value      new value
-     */
-    @Deprecated
-    public void increment(String tblName, String colName, String whereName, Object whereValue, long value) throws SQLException {
-        String sql = "UPDATE %s SET %s = %s + ? WHERE %s = ?".formatted(tblName, colName, colName, whereName);
-
-        inDeCrement(whereValue, value, sql);
-    }
-
-    /**
-     * Update data of a warehouse specified by the id
-     *
-     * @param tblName    name of table to update
-     * @param colName    name of column to update
-     * @param whereName  name of column to use as identifier
-     * @param whereValue value of identifier
-     * @param value      new value
-     */
-    @Deprecated
-    public void decrement(String tblName, String colName, String whereName, Object whereValue, long value) throws SQLException {
-        String sql = "UPDATE %s SET %s = %s - ? WHERE %s = ?".formatted(tblName, colName, colName, whereName);
-
-        inDeCrement(whereValue, value, sql);
-    }
-
-    @Deprecated
-    public void incrementUserDataValue(String column, String at, long amount, long value) throws SQLException {
-        String sql = "INSERT INTO \"UserData\"(\"%s\", \"%s\") VALUES(%s, %s) ON CONFLICT(\"%s\") DO UPDATE SET \"%s\" = \"%s\" + %s WHERE \"%s\" = %s".formatted(at, column, value, amount, at, column, column, amount, at, value);
-
-        Objects.requireNonNull(connect()).createStatement().execute(sql);
-    }
-
     public boolean commandNameAlreadyExists(String CommandName, long UserID) throws SQLException {
         var connection = connect();
         var select = """
                 SELECT "CommandName"
                 FROM "CommandStatistics"
-                WHERE "UserID" = '%s';
+                WHERE "UserID" = '%s'
                 """.formatted(UserID);
         var list = new ArrayList<String>();
         if (connection != null) {
@@ -204,8 +124,108 @@ public class DB {
                 list.add(temp);
                 logger.info(temp);
             }
+            connection.close();
         }
         return list.contains(CommandName);
+    }
+
+    public void setCommandLastRecognized(long value, long UserID) throws SQLException {
+        var upsert = """
+                INSERT INTO "CommandStatistics"("UserID", "LastRecognized")
+                VALUES (%s, %s)
+                ON CONFLICT("UserID") DO UPDATE SET "LastRecognized" = %s
+                WHERE "UserID" = %s;
+                """.formatted(UserID, value, value, UserID);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
+    }
+
+    public void setCommandLastHandled(String name, long value, long UserID) throws SQLException {
+        var upsert = """
+                INSERT INTO "CommandStatistics"("UserID", "LastHandled", "CommandName")
+                VALUES (%s, %s, %s)
+                ON CONFLICT("UserID") DO UPDATE SET "LastHandled" = %s
+                WHERE "UserID" = %s
+                AND "CommandName" = %s;
+                """.formatted(UserID, value, name, value, UserID, name);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
+    }
+
+    public void setGameLastPlayed(long value, long UserID) throws SQLException {
+        var upsert = """
+                INSERT INTO "GameStatistics"("UserID", "LastPlayed")
+                VALUES (%s, %s)
+                ON CONFLICT("UserID") DO UPDATE SET "LastPlayed" = %s
+                WHERE "UserID" = %s;
+                """.formatted(UserID, value, value, UserID);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
+    }
+
+    public void setLastChat(long value, long UserID) throws SQLException {
+        var upsert = """
+                INSERT INTO "UserData"("UserID", "LastChat")
+                VALUES (%s, %s)
+                ON CONFLICT("UserID") DO UPDATE SET "LastChat" = %s
+                WHERE "UserID" = %s;
+                """.formatted(UserID, value, value, UserID);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
+    }
+
+    public void setLastReaction(long value, long UserID) throws SQLException {
+        var upsert = """
+                INSERT INTO "UserData"("UserID", "LastReaction")
+                VALUES (%s, %s)
+                ON CONFLICT("UserID") DO UPDATE SET "LastReaction" = %s
+                WHERE "UserID" = %s;
+                """.formatted(UserID, value, value, UserID);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
+    }
+
+    public void setLastCommand(long value, long UserID) throws SQLException {
+        var upsert = """
+                INSERT INTO "UserData"("UserID", "LastCommand")
+                VALUES (%s, %s)
+                ON CONFLICT("UserID") DO UPDATE SET "LastCommand" = %s
+                WHERE "UserID" = %s;
+                """.formatted(UserID, value, value, UserID);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
+    }
+
+    public void setLastVoiceJoin(long value, long UserID) throws SQLException {
+        var upsert = """
+                INSERT INTO "UserData"("UserID", "LastVoiceJoin")
+                VALUES (%s, %s)
+                ON CONFLICT("UserID") DO UPDATE SET "LastVoiceJoin" = %s
+                WHERE "UserID" = %s;
+                """.formatted(UserID, value, value, UserID);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
     }
 
     public void incrementXP(long amount, long UserID) throws SQLException {
@@ -215,7 +235,11 @@ public class DB {
                 ON CONFLICT("UserID") DO UPDATE SET "XP" = "XP" + %s
                 WHERE "UserID" = %s;
                 """.formatted(UserID, amount, amount, UserID);
-        Objects.requireNonNull(connect()).createStatement().execute(upsert);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
     }
 
     public void incrementMoney(long amount, long UserID) throws SQLException {
@@ -225,7 +249,11 @@ public class DB {
                 ON CONFLICT("UserID") DO UPDATE SET "Money" = "Money" + %s
                 WHERE "UserID" = %s;
                 """.formatted(UserID, amount, amount, UserID);
-        Objects.requireNonNull(connect()).createStatement().execute(upsert);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
     }
 
     public void incrementXPChat(long amount, long UserID) throws SQLException {
@@ -235,7 +263,11 @@ public class DB {
                 ON CONFLICT("UserID") DO UPDATE SET "XPChat" = "XPChat" + %s
                 WHERE "UserID" = %s;
                 """.formatted(UserID, amount, amount, UserID);
-        Objects.requireNonNull(connect()).createStatement().execute(upsert);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
     }
 
     public void incrementXPReaction(long amount, long UserID) throws SQLException {
@@ -245,7 +277,11 @@ public class DB {
                 ON CONFLICT("UserID") DO UPDATE SET "XPReaction" = "XPReaction" + %s
                 WHERE "UserID" = %s;
                 """.formatted(UserID, amount, amount, UserID);
-        Objects.requireNonNull(connect()).createStatement().execute(upsert);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
     }
 
     public void incrementXPCommand(long amount, long UserID) throws SQLException {
@@ -255,7 +291,11 @@ public class DB {
                 ON CONFLICT("UserID") DO UPDATE SET "XPCommand" = "XPCommand" + %s
                 WHERE "UserID" = %s;
                 """.formatted(UserID, amount, amount, UserID);
-        Objects.requireNonNull(connect()).createStatement().execute(upsert);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
     }
 
     public void incrementXPVoice(long amount, long UserID) throws SQLException {
@@ -265,7 +305,11 @@ public class DB {
                 ON CONFLICT("UserID") DO UPDATE SET "XPVoice" = "XPVoice" + %s
                 WHERE "UserID" = %s;
                 """.formatted(UserID, amount, amount, UserID);
-        Objects.requireNonNull(connect()).createStatement().execute(upsert);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
     }
 
     public void incrementCommandTimesRecognized(String name, long amount, long UserID) throws SQLException {
@@ -286,7 +330,11 @@ public class DB {
                     """.formatted(UserID, name, amount);
             logger.info("insert");
         }
-        Objects.requireNonNull(connect()).createStatement().execute(query);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(query);
+            connection.close();
+        }
     }
 
     public void incrementCommandXP(String name, long amount, long UserID) throws SQLException {
@@ -307,7 +355,11 @@ public class DB {
                     """.formatted(UserID, name, amount);
             logger.info("insert");
         }
-        Objects.requireNonNull(connect()).createStatement().execute(query);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(query);
+            connection.close();
+        }
     }
 
     public void incrementCommandMoney(String name, long amount, long UserID) throws SQLException {
@@ -328,7 +380,11 @@ public class DB {
                     """.formatted(UserID, name, amount);
             logger.info("insert");
         }
-        Objects.requireNonNull(connect()).createStatement().execute(query);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(query);
+            connection.close();
+        }
     }
 
     public void incrementGamePlays(String name, long amount, long UserID) throws SQLException {
@@ -349,7 +405,11 @@ public class DB {
                     """.formatted(UserID, name, amount);
             logger.info("insert");
         }
-        Objects.requireNonNull(connect()).createStatement().execute(query);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(query);
+            connection.close();
+        }
     }
 
     public void incrementGameWins(String name, long amount, long UserID) throws SQLException {
@@ -370,7 +430,11 @@ public class DB {
                     """.formatted(UserID, name, amount);
             logger.info("insert");
         }
-        Objects.requireNonNull(connect()).createStatement().execute(query);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(query);
+            connection.close();
+        }
     }
 
     public void incrementGameLoses(String name, long amount, long UserID) throws SQLException {
@@ -391,7 +455,11 @@ public class DB {
                     """.formatted(UserID, name, amount);
             logger.info("insert");
         }
-        Objects.requireNonNull(connect()).createStatement().execute(query);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(query);
+            connection.close();
+        }
     }
 
     public void incrementGameDraws(String name, long amount, long UserID) throws SQLException {
@@ -412,7 +480,11 @@ public class DB {
                     """.formatted(UserID, name, amount);
             logger.info("insert");
         }
-        Objects.requireNonNull(connect()).createStatement().execute(query);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(query);
+            connection.close();
+        }
     }
 
     public void decrementXP(long amount, long UserID) throws SQLException {
@@ -422,7 +494,11 @@ public class DB {
                 ON CONFLICT("UserID") DO UPDATE SET "XP" = "XP" - %s
                 WHERE "UserID" = %s;
                 """.formatted(UserID, amount, amount, UserID);
-        Objects.requireNonNull(connect()).createStatement().execute(upsert);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
     }
 
     public void decrementMoney(long amount, long UserID) throws SQLException {
@@ -432,7 +508,11 @@ public class DB {
                 ON CONFLICT("UserID") DO UPDATE SET "Money" = "Money" - %s
                 WHERE "UserID" = %s;
                 """.formatted(UserID, amount, amount, UserID);
-        Objects.requireNonNull(connect()).createStatement().execute(upsert);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
     }
 
     public void decrementXPChat(long amount, long UserID) throws SQLException {
@@ -442,7 +522,11 @@ public class DB {
                 ON CONFLICT("UserID") DO UPDATE SET "XPChat" = "XPChat" - %s
                 WHERE "UserID" = %s;
                 """.formatted(UserID, amount, amount, UserID);
-        Objects.requireNonNull(connect()).createStatement().execute(upsert);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
     }
 
     public void decrementXPReaction(long amount, long UserID) throws SQLException {
@@ -452,7 +536,11 @@ public class DB {
                 ON CONFLICT("UserID") DO UPDATE SET "XPReaction" = "XPReaction" - %s
                 WHERE "UserID" = %s;
                 """.formatted(UserID, amount, amount, UserID);
-        Objects.requireNonNull(connect()).createStatement().execute(upsert);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
     }
 
     public void decrementXPCommand(long amount, long UserID) throws SQLException {
@@ -462,7 +550,11 @@ public class DB {
                 ON CONFLICT("UserID") DO UPDATE SET "XPCommand" = "XPCommand" - %s
                 WHERE "UserID" = %s;
                 """.formatted(UserID, amount, amount, UserID);
-        Objects.requireNonNull(connect()).createStatement().execute(upsert);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
     }
 
     public void decrementXPVoice(long amount, long UserID) throws SQLException {
@@ -472,7 +564,11 @@ public class DB {
                 ON CONFLICT("UserID") DO UPDATE SET "XPVoice" = "XPVoice" - %s
                 WHERE "UserID" = %s;
                 """.formatted(UserID, amount, amount, UserID);
-        Objects.requireNonNull(connect()).createStatement().execute(upsert);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
     }
 
     public void decrementCommandTimesRecognized(String name, long amount, long UserID) throws SQLException {
@@ -493,7 +589,11 @@ public class DB {
                     """.formatted(UserID, name, amount);
             logger.info("insert");
         }
-        Objects.requireNonNull(connect()).createStatement().execute(query);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(query);
+            connection.close();
+        }
     }
 
     public void decrementCommandXP(String name, long amount, long UserID) throws SQLException {
@@ -514,7 +614,11 @@ public class DB {
                     """.formatted(UserID, name, amount);
             logger.info("insert");
         }
-        Objects.requireNonNull(connect()).createStatement().execute(query);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(query);
+            connection.close();
+        }
     }
 
     public void decrementCommandMoney(String name, long amount, long UserID) throws SQLException {
@@ -535,7 +639,11 @@ public class DB {
                     """.formatted(UserID, name, amount);
             logger.info("insert");
         }
-        Objects.requireNonNull(connect()).createStatement().execute(query);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(query);
+            connection.close();
+        }
     }
 
     public void decrementGamePlays(String name, long amount, long UserID) throws SQLException {
@@ -556,7 +664,11 @@ public class DB {
                     """.formatted(UserID, name, amount);
             logger.info("insert");
         }
-        Objects.requireNonNull(connect()).createStatement().execute(query);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(query);
+            connection.close();
+        }
     }
 
     public void decrementGameWins(String name, long amount, long UserID) throws SQLException {
@@ -577,7 +689,11 @@ public class DB {
                     """.formatted(UserID, name, amount);
             logger.info("insert");
         }
-        Objects.requireNonNull(connect()).createStatement().execute(query);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(query);
+            connection.close();
+        }
     }
 
     public void decrementGameLoses(String name, long amount, long UserID) throws SQLException {
@@ -598,7 +714,11 @@ public class DB {
                     """.formatted(UserID, name, amount);
             logger.info("insert");
         }
-        Objects.requireNonNull(connect()).createStatement().execute(query);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(query);
+            connection.close();
+        }
     }
 
     public void decrementGameDraws(String name, long amount, long UserID) throws SQLException {
@@ -619,94 +739,222 @@ public class DB {
                     """.formatted(UserID, name, amount);
             logger.info("insert");
         }
-        Objects.requireNonNull(connect()).createStatement().execute(query);
-    }
-
-    @Deprecated
-    public void incrementCommandStatisticsOrGameStatisticsValue(String table, String column, String nameColumn, String at, long amount, String name, long value) throws SQLException {
-        List<String> list = new ArrayList<>();
-        String select = "SELECT \"%s\" FROM \"%s\" WHERE \"%s\" = '%s'".formatted(column, table, at, value);
-        String query;
-
-        Connection conn = connect();
-        if (conn != null) {
-            var result = conn.prepareStatement(select).executeQuery();
-            while (result.next()) {
-                list.add(result.getString(nameColumn));
-            }
-        }
-        if (list.contains(name)) {
-            query = "UPDATE \"%s\" SET \"%s\" = \"%s\" + %s WHERE \"%s\" = %s".formatted(table, column, column, amount, at, value);
-        } else {
-            query = "INSERT INTO \"%s\"(\"%s\", \"%s\", \"%s\") VALUES (%s, '%s', %s);".formatted(table, at, nameColumn, column, value, name, amount);
-        }
-        Objects.requireNonNull(conn).createStatement().execute(query);
-    }
-
-    @Deprecated
-    private void inDeCrement(Object whereValue, long value, String sql) throws SQLException {
-        Connection conn = this.connect();
-        PreparedStatement pstmt;
-        if (conn != null) {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setLong(1, value);
-            pstmt.setObject(2, whereValue);
-            pstmt.executeUpdate();
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(query);
+            connection.close();
         }
     }
 
-    public Long getLast(String col, long id) {
-        var seconds = selectLong("users", col, "id", id);
-        seconds = seconds == null ? 0 : seconds;
-        var millis = seconds * 1000;
-        var last = new java.util.Date(millis);
-        var now = new Date();
-        return (now.getTime() - last.getTime()) / 1000;
+    public Long getCommandTimesRecognized(String CommandName, long UserID) throws SQLException {
+        String query = "select \"TimesRecognized\" from \"CommandStatistics\" where \"UserID\" = %s AND \"CommandName\" = '%s'".formatted(UserID, CommandName);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("TimesRecognized");
+        connection.close();
+        return value;
     }
 
-    /**
-     * Update data of a warehouse specified by the id
-     *
-     * @param tblName    name of table to update
-     * @param colName    name of column to update
-     * @param whereName  name of column to use as identifier
-     * @param whereValue value of identifier
-     * @return value
-     */
-    @Nullable
-    @CheckForNull
-    public Long selectLong(String tblName, String colName, String whereName, Object whereValue) {
-        String sql = "select %s from %s where %s = ?".formatted(colName, tblName, whereName);
-
-        try (Connection conn = this.connect()) {
-            PreparedStatement pstmt;
-            if (conn != null) {
-                pstmt = conn.prepareStatement(sql);
-                pstmt.setObject(1, whereValue);
-                var rs = pstmt.executeQuery();
-                if (rs.next()) {
-                    return rs.getLong(colName);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public Long getCommandLastRecognized(String CommandName, long UserID) throws SQLException {
+        String query = "select \"LastRecognized\" from \"CommandStatistics\" where \"UserID\" = %s AND \"CommandName\" = '%s'".formatted(UserID, CommandName);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("LastRecognized");
+        connection.close();
+        return value;
     }
+
+    public Long getCommandLastHandled(String CommandName, long UserID) throws SQLException {
+        String query = "select \"LastHandled\" from \"CommandStatistics\" where \"UserID\" = %s AND \"CommandName\" = '%s'".formatted(UserID, CommandName);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("LastHandled");
+        connection.close();
+        return value;
+    }
+
+    public Long getCommandXP(String CommandName, long UserID) throws SQLException {
+        String query = "select \"XP\" from \"CommandStatistics\" where \"UserID\" = %s AND \"CommandName\" = '%s'".formatted(UserID, CommandName);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("XP");
+        connection.close();
+        return value;
+    }
+
+    public Long getCommandMoney(String CommandName, long UserID) throws SQLException {
+        String query = "select \"Money\" from \"CommandStatistics\" where \"UserID\" = %s AND \"CommandName\" = '%s'".formatted(UserID, CommandName);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("Money");
+        connection.close();
+        return value;
+    }
+
+    public Long getGamePlays(String CommandName, long UserID) throws SQLException {
+        String query = "select \"Plays\" from \"GameStatistics\" where \"UserID\" = %s AND \"GameName\" = '%s'".formatted(UserID, CommandName);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("Plays");
+        connection.close();
+        return value;
+    }
+
+    public Long getGameWins(String CommandName, long UserID) throws SQLException {
+        String query = "select \"Wins\" from \"GameStatistics\" where \"UserID\" = %s AND \"GameName\" = '%s'".formatted(UserID, CommandName);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("Wins");
+        connection.close();
+        return value;
+    }
+
+    public Long getGameLoses(String CommandName, long UserID) throws SQLException {
+        String query = "select \"Loses\" from \"GameStatistics\" where \"UserID\" = %s AND \"GameName\" = '%s'".formatted(UserID, CommandName);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("Loses");
+        connection.close();
+        return value;
+    }
+
+    public Long getGameDraws(String CommandName, long UserID) throws SQLException {
+        String query = "select \"Draws\" from \"GameStatistics\" where \"UserID\" = %s AND \"GameName\" = '%s'".formatted(UserID, CommandName);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("Draws");
+        connection.close();
+        return value;
+    }
+
+    public Long getGameLastPlayed(String CommandName, long UserID) throws SQLException {
+        String query = "select \"LastPlayed\" from \"GameStatistics\" where \"UserID\" = %s AND \"GameName\" = '%s'".formatted(UserID, CommandName);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("LastPlayed");
+        connection.close();
+        return value;
+    }
+
+    public Long getXP(long UserID) throws SQLException {
+        String query = "select \"XP\" from \"UserData\" where \"UserID\" = %s".formatted(UserID);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("XP");
+        connection.close();
+        return value;
+    }
+
+    public Long getMoney(long UserID) throws SQLException {
+        String query = "select \"Money\" from \"UserData\" where \"UserID\" = %s".formatted(UserID);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("Money");
+        connection.close();
+        return value;
+    }
+
+    public Long getLastChat(long UserID) throws SQLException {
+        String query = "select \"LastChat\" from \"UserData\" where \"UserID\" = %s".formatted(UserID);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("LastChat");
+        connection.close();
+        return value;
+    }
+
+    public Long getLastReaction(long UserID) throws SQLException {
+        String query = "select \"LastReaction\" from \"UserData\" where \"UserID\" = %s".formatted(UserID);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("LastReaction");
+        connection.close();
+        return value;
+    }
+
+    public Long getLastCommand(long UserID) throws SQLException {
+        String query = "select \"LastCommand\" from \"UserData\" where \"UserID\" = %s".formatted(UserID);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("LastCommand");
+        connection.close();
+        return value;
+    }
+
+    public Long getLastVoiceJoin(long UserID) throws SQLException {
+        String query = "select \"LastVoiceJoin\" from \"UserData\" where \"UserID\" = %s".formatted(UserID);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("LastVoiceJoin");
+        connection.close();
+        return value;
+    }
+
+    public Long getXPChat(long UserID) throws SQLException {
+        String query = "select \"XPChat\" from \"UserData\" where \"UserID\" = %s".formatted(UserID);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("XPChat");
+        connection.close();
+        return value;
+    }
+
+    public Long getXPReaction(long UserID) throws SQLException {
+        String query = "select \"XPReaction\" from \"UserData\" where \"UserID\" = %s".formatted(UserID);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("XPReaction");
+        connection.close();
+        return value;
+    }
+
+    public Long getXPCommand(long UserID) throws SQLException {
+        String query = "select \"XPCommand\" from \"UserData\" where \"UserID\" = %s".formatted(UserID);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("XPCommand");
+        connection.close();
+        return value;
+    }
+
+    public Long getXPVoice(long UserID) throws SQLException {
+        String query = "select \"XPVoice\" from \"UserData\" where \"UserID\" = %s".formatted(UserID);
+        var connection = connect();
+        var result = Objects.requireNonNull(connection).createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("XPVoice");
+        connection.close();
+        return value;
+    }
+
 
     /**
      * Connect to the test.db database
      *
      * @return the Connection object
      */
-    private Connection connect() {
+    private Connection connect() throws SQLException {
         String url = "jdbc:sqlite:bot.db";
-        try {
-            return DriverManager.getConnection(url);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return DriverManager.getConnection(url);
     }
 
     public boolean userDoesNotExists(long id) {
@@ -728,8 +976,9 @@ public class DB {
         return true;
     }
 
+    @Deprecated
     public List<Long> getRanking() {
-        String sql = "select id from users order by money DESC, xp desc";
+        String sql = "select \"UserID\" from \"UserData\" order by \"Money\" DESC, \"XP\" desc";
         List<Long> list = new ArrayList<>();
 
         try (Connection conn = this.connect()) {
@@ -738,7 +987,7 @@ public class DB {
                 pstmt = conn.prepareStatement(sql);
                 var rs = pstmt.executeQuery();
                 while (rs.next()) {
-                    list.add(rs.getLong("id"));
+                    list.add(rs.getLong("UserID"));
                 }
             }
         } catch (SQLException e) {

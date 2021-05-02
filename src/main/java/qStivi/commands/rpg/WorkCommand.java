@@ -28,20 +28,18 @@ public class WorkCommand implements ICommand {
             }
         }, 3000);
 
-        if (db.userDoesNotExists(id)) {
-            db.insert("users", "id", id);
-        }
-
-        var diff = db.getLast("last_worked", id);
-        var xp = db.selectLong("users", "xp", "id", id);
+        var diff = db.getCommandLastHandled(getName(), id);
+        var xp = db.getXP(id);
         xp = xp == null ? 0 : xp;
         var lvl = (long) Math.floor(xp / (double) 800);
-        long lone = 1000 + (lvl * 10);
+        long salary = 1000 + (lvl * 10);
 
         if (diff > 1200) {
-            db.increment("users", "money", "id", id, lone);
-            hook.sendMessage("You earned " + lone + " gems").delay(DURATION).flatMap(Message::delete).queue();
-            db.update("users", "last_worked", "id", id, new Date().getTime() / 1000);
+//            db.increment("users", "money", "id", id, salary);
+            db.incrementMoney(salary, id);
+            hook.sendMessage("You earned " + salary + " gems").delay(DURATION).flatMap(Message::delete).queue();
+//            db.update("users", "last_worked", "id", id, new Date().getTime() / 1000);
+            db.setCommandLastHandled(getName(), new Date().getTime(), id);
             xpGain = 50;
         } else {
             hook.sendMessage("You need to wait " + Math.subtractExact(1200L, diff) + " seconds before you can work again").delay(DURATION).flatMap(Message::delete).queue();

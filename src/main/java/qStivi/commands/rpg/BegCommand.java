@@ -21,7 +21,7 @@ public class BegCommand implements ICommand {
             var db = new DB();
             var id = event.getAuthor().getIdLong();
             var earning = ThreadLocalRandom.current().nextInt(1, 3);
-            db.incrementUserDataValue("Money", "UserID", earning, id);
+            db.incrementMoney(earning, id);
             event.getChannel().sendMessage("Someone gave you " + earning + ":gem:").queue();
             xp = 6;
         } else {

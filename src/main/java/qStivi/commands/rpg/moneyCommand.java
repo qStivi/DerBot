@@ -24,10 +24,12 @@ public class moneyCommand implements ICommand {
 
         var db = new DB();
         if (subcommand.equals("give")) {
-            db.increment("users", "money", "id", userID, amount);
+//            db.increment("users", "money", "id", userID, amount);
+            db.incrementMoney(amount, userID);
         }
         if (subcommand.equals("remove")) {
-            db.decrement("users", "money", "id", userID, amount);
+//            db.decrement("users", "money", "id", userID, amount);
+            db.decrementMoney(amount, userID);
         }
         hook.sendMessage("Done!").delay(DURATION).flatMap(Message::delete).queue();
     }

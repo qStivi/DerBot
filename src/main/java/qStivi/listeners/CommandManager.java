@@ -97,22 +97,39 @@ public class CommandManager extends ListenerAdapter {
 
 
                 var id = event.getAuthor().getIdLong();
-                var diff = db.getLast("last_command", id);
+                Long diff = null;
+                try {
+                    diff = db.getLastCommand(id);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
                 if (diff > 10) {
                     try {
-                        db.increment("users", "xp", "id", id, command.getXp());
+//                        db.increment("users", "xp", "id", id, command.getXp());
+                        db.incrementXP(command.getXp(), id);
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
                     }
                     try {
-                        db.increment("users", "xp_command", "id", id, command.getXp());
+//                        db.increment("users", "xp_command", "id", id, command.getXp());
+                        db.incrementCommandXP(command.getName(), command.getXp(), id);
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
                     }
-                    db.update("users", "last_command_xp", "id", id, new Date().getTime() / 1000);
+//                    db.update("users", "last_command_xp", "id", id, new Date().getTime() / 1000);
+                    try {
+                        db.setLastCommand(new Date().getTime(), id);
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                 }
 
-                db.update("users", "last_command", "id", event.getAuthor().getIdLong(), new Date().getTime() / 1000);
+//                db.update("users", "last_command", "id", event.getAuthor().getIdLong(), new Date().getTime() / 1000);
+                try {
+                    db.setLastCommand(new Date().getTime(), id);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
                 logger.info("Event offered.");
             }
         }

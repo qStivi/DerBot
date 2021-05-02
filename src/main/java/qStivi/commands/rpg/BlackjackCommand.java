@@ -37,10 +37,7 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
         while (messageId.get() == null) Thread.onSpinWait();
         var db = new DB();
         long id = event.getAuthor().getIdLong();
-        if (db.userDoesNotExists(id)) {
-            db.insert("users", "id", id);
-        }
-        var money = db.selectLong("users", "money", "id", id);
+        var money = db.getMoney(id);
         if (money < Long.parseLong(args[1])) {
             hook.editMessageById(String.valueOf(messageId), "You don't have enough money!").delay(DURATION).flatMap(Message::delete).queue();
             return;
@@ -50,12 +47,11 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
             return;
         }
 //        db.increment("users", "command_times_blackjack", "id", id, 1);
-        db.incrementCommandStatisticsOrGameStatisticsValue("CommandStatistics", "TimeRecognized", "CommandName", "UserID", 1, "BlackJack", id);
-
+        db.incrementGamePlays(getName(), 1, id);
 
         var removed = BlackJack.games.removeIf(game -> game.user.getIdLong() == id);
 //        if (removed) db.increment("users", "blackjack_loses", "id", id, 1);
-        if (removed) db.incrementCommandStatisticsOrGameStatisticsValue("GameStatistics", "Loses", "GameName", "UserID", 1, "BlackJack", id);
+        if (removed) db.incrementGameLoses(getName(), 1, id);
         BlackJack.games.add(new BlackJack(1, messageId.get(), event.getAuthor(), hook, Long.parseLong(args[1])));
         BlackJack bj = null;
         for (BlackJack game : BlackJack.games) {
@@ -64,7 +60,8 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
             }
         }
 
-        db.decrement("users", "money", "id", id, bj.bet);
+//        db.decrement("users", "money", "id", id, bj.bet);
+        db.decrementMoney(bj.bet, id);
 
 
         displayGameState(bj);
@@ -74,10 +71,10 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
             BlackJack.games.remove(bj);
             bj.embed.setTitle("You won!");
 //            db.increment("users", "money", "id", id, (long) Math.floor(bj.bet * 2.5));
-            db.incrementUserDataValue("Money", "UserID", (long) Math.floor(bj.bet * 2.5), id);
+            db.incrementMoney((long) Math.floor(bj.bet * 2.5), id);
             bj.embed.setColor(Color.green.brighter());
 //            db.increment("users", "blackjack_wins", "id", id, 1);
-            db.incrementCommandStatisticsOrGameStatisticsValue("GameStatistics", "Wins", "GameName", "UserID", 1, "BlackJack", id);
+            db.incrementGameWins("BlackJack", 1, id);
         } else {
             event.getChannel().addReactionById(bj.id, "\uD83E\uDD19\uD83C\uDFFD").queue();
             event.getChannel().addReactionById(bj.id, "✋\uD83C\uDFFD").queue();
@@ -141,23 +138,23 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
         var messageId = event.getMessageId();
         bj.embed.setTitle(title);
 //        db.increment("users", "money", "id", id, reward);
-        db.incrementUserDataValue("Money", "UserID", reward, id);
+        db.incrementMoney(reward, id);
         event.getChannel().clearReactionsById(messageId).queue();
         BlackJack.games.remove(bj);
         if (title.equalsIgnoreCase("you won!")) {
             bj.embed.setColor(Color.green.brighter());
 //            db.increment("users", "blackjack_wins", "id", id, 1);
-            db.incrementCommandStatisticsOrGameStatisticsValue("GameStatistics", "Wins", "GameName", "UserID", 1, "BlackJack", id);
+            db.incrementGameWins("blackjack", 1, id);
         }
         if (title.equalsIgnoreCase("you lost!")) {
             bj.embed.setColor(Color.red.brighter());
 //            db.increment("users", "blackjack_loses", "id", id, 1);
-            db.incrementCommandStatisticsOrGameStatisticsValue("GameStatistics", "Loses", "GameName", "UserID", 1, "BlackJack", id);
+            db.incrementGameLoses("blackjack", 1, id);
         }
         if (title.equalsIgnoreCase("draw.")) {
             bj.embed.setColor(Color.magenta.darker());
 //            db.increment("users", "blackjack_draws", "id", id, 1);
-            db.incrementCommandStatisticsOrGameStatisticsValue("GameStatistics", "Draws", "GameName", "UserID", 1, "BlackJack", id);
+            db.incrementGameDraws("blackjack", 1, id);
         }
     }
 

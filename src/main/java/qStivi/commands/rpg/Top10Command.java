@@ -35,7 +35,7 @@ public class Top10Command implements ICommand {
         var size = Math.min(list.size(), 10);
         for (int i = 0; i < size; i++) {
             Long id = list.get(i);
-            var money = db.selectLong("users", "money", "id", id);
+            var money = db.getMoney(id);
             var lvl = db.getLevel(id);
 
             AtomicReference<String> name = new AtomicReference<>();
@@ -47,15 +47,15 @@ public class Top10Command implements ICommand {
             while (name.get() == null) {
                 Thread.onSpinWait();
             }
-            var xp = db.selectLong("users", "xp", "id", id);
+            var xp = db.getXP(id);
             embed.addField("", "#" + i + " [" + name.get() + "](https://youtu.be/dQw4w9WgXcQ) " + money + " :gem: :white_small_square: " + xp + "xp LVL: " + lvl, false);
         }
         var userIDs = db.getRanking();
         double wins = 0;
         double loses = 0;
         for (Long id : userIDs) {
-            var selectWins = db.selectLong("users", "blackjack_wins", "id", id);
-            var selectLoses = db.selectLong("users", "blackjack_loses", "id", id);
+            var selectWins = db.getGameWins("blackjack", id);
+            var selectLoses = db.getGameLoses("blackjack", id);
             wins += selectWins == null ? 0 : selectWins;
             loses += selectLoses == null ? 0 : selectLoses;
         }

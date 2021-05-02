@@ -38,7 +38,7 @@ public class SlotsCommand implements ICommand {
         var db = new DB();
         var id = event.getAuthor().getIdLong();
         var bet = Integer.parseInt(args[1]);
-        var money = db.selectLong("users", "money", "id", id);
+        var money = db.getMoney(id);
         var channel = event.getChannel();
 
         if (bet < 0) return;
@@ -52,7 +52,8 @@ public class SlotsCommand implements ICommand {
             return;
         }
 
-        db.decrement("users", "money", "id", id, bet);
+//        db.decrement("users", "money", "id", id, bet);
+        db.decrementMoney(bet, id);
 
         EmbedBuilder embed = new EmbedBuilder();
         //noinspection ConstantConditions
@@ -67,7 +68,8 @@ public class SlotsCommand implements ICommand {
         if (first.getEmote().equals(second.getEmote()) && second.getEmote().equals(third.getEmote())) {
             embed.setColor(Color.green);
             var gain = Math.round(bet * first.getMultiplier());
-            db.increment("users", "money", "id", id, gain);
+//            db.increment("users", "money", "id", id, gain);
+            db.incrementMoney(gain, id);
             channel.sendMessage("You won " + gain + ":gem:").delay(DURATION).flatMap(Message::delete).queue();
         }
 
@@ -75,7 +77,8 @@ public class SlotsCommand implements ICommand {
         if (first.getEmote().equals(symbols[0].getEmote()) || second.getEmote().equals(symbols[0].getEmote()) || third.getEmote().equals(symbols[0].getEmote())) {
             embed.setColor(Color.green);
             var gain = Math.round(bet * symbols[0].getMultiplier());
-            db.increment("users", "money", "id", id, gain);
+//            db.increment("users", "money", "id", id, gain);
+            db.incrementMoney(gain, id);
             channel.sendMessage("You won " + gain + ":gem:").delay(DURATION).flatMap(Message::delete).queue();
         }
 
@@ -86,14 +89,16 @@ public class SlotsCommand implements ICommand {
         ) {
             embed.setColor(Color.green);
             var gain = Math.round(bet * symbols[0].getMultiplier());
-            db.increment("users", "money", "id", id, gain);
+//            db.increment("users", "money", "id", id, gain);
+            db.incrementMoney(gain, id);
             channel.sendMessage("You won " + gain + ":gem:").delay(DURATION).flatMap(Message::delete).queue();
         }
 
         if (first.getEmote().equals(symbols[0].getEmote()) && first.getEmote().equals(second.getEmote()) && second.getEmote().equals(third.getEmote())) {
             embed.setColor(Color.green);
             var gain = bet * 100;
-            db.increment("users", "money", "id", id, gain);
+//            db.increment("users", "money", "id", id, gain);
+            db.incrementMoney(gain, id);
             channel.sendMessage("You won " + gain + ":gem:").delay(DURATION).flatMap(Message::delete).queue();
         }
 

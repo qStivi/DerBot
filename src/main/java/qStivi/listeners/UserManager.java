@@ -55,23 +55,33 @@ public class UserManager extends ListenerAdapter {
         if (!Bot.DEV_MODE && event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
         if (event.getAuthor().isBot() || event.isWebhookMessage()) return;
         var id = Long.parseLong(event.getAuthor().getId());
-        if (db.userDoesNotExists(id)) {
-            db.insert("users", "id", id);
+
+
+        Long diff = null;
+        try {
+            diff = db.getLastChat(id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-
-
-        var diff = db.getLast("last_chat_message", id);
         // TODO improve by only disallowing many consecutive messages
 
         if (diff > 8) {
-            db.update("users", "last_chat_message", "id", id, new Date().getTime() / 1000);
+//            db.update("users", "last_chat_message", "id", id, new Date().getTime() / 1000);
             try {
-                db.increment("users", "xp", "id", id, 1);
+                db.setLastChat(new Date().getTime(), id);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
+            try {
+//                db.increment("users", "xp", "id", id, 1);
+                db.incrementXP(1, id);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
             try {
-                db.increment("users", "xp_chat", "id", id, 1);
+//                db.increment("users", "xp_chat", "id", id, 1);
+                db.incrementXPChat(1, id);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -89,22 +99,31 @@ public class UserManager extends ListenerAdapter {
         if (isBotMessage.get().isBot()) return;
 
         var id = Long.parseLong(event.getUser().getId());
-        if (db.userDoesNotExists(id)) {
-            db.insert("users", "id", id);
+
+
+        Long diff = null;
+        try {
+            diff = db.getLastReaction(id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
 
-
-        var diff = db.getLast("last_reaction", id);
-
         if (diff > 10) {
-            db.update("users", "last_reaction", "id", id, new Date().getTime() / 1000);
+//            db.update("users", "last_reaction", "id", id, new Date().getTime() / 1000);
             try {
-                db.increment("users", "xp", "id", id, 5);
+                db.setLastReaction(new Date().getTime(), id);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
             try {
-                db.increment("users", "xp_reaction", "id", id, 5);
+//                db.increment("users", "xp", "id", id, 5);
+                db.incrementXP(5, id);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            try {
+//                db.increment("users", "xp_reaction", "id", id, 5);
+                db.incrementXPReaction(5, id);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -118,9 +137,6 @@ public class UserManager extends ListenerAdapter {
 //        logger.info("join");
 
         var id = Long.parseLong(event.getMember().getUser().getId());
-        if (db.userDoesNotExists(id)) {
-            db.insert("users", "id", id);
-        }
 
         Task task = new Task(new TimerTask() {
             @Override
@@ -128,12 +144,14 @@ public class UserManager extends ListenerAdapter {
                 var amountOfUsers = event.getMember().getVoiceState().getChannel().getMembers().size();
                 var xp = (3 * amountOfUsers) + 2;
                 try {
-                    db.increment("users", "xp", "id", id, xp);
+//                    db.increment("users", "xp", "id", id, xp);
+                    db.incrementXP(xp, id);
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
                 try {
-                    db.increment("users", "xp_voice", "id", id, xp);
+//                    db.increment("users", "xp_voice", "id", id, xp);
+                    db.incrementXPVoice(xp, id);
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }

@@ -20,7 +20,7 @@ public class DonateCommand implements ICommand {
         if (money < 0) return;
 
         //noinspection ConstantConditions
-        if (db.selectLong("users", "money", "id", event.getAuthor().getIdLong()) < money) {
+        if (db.getMoney(event.getAuthor().getIdLong()) < money) {
             event.getChannel().sendMessage("You don't have enough money to do that!").queue();
             return;
         }
@@ -33,11 +33,12 @@ public class DonateCommand implements ICommand {
         event.getChannel().sendMessage("You donated " + money + ":gem: to " + user.getName()).queue();
 
         var id = event.getAuthor().getIdLong();
-        var diff = db.getLast("last_donated", id);
+        var diff = db.getCommandLastHandled(getName(), id);
 
         if (diff > 1200) {
             xp = (long) Math.floor(Math.sqrt(money)) + 5;
-            db.update("users", "last_donated", "id", id, new Date().getTime() / 1000);
+//            db.update("users", "last_donated", "id", id, new Date().getTime() / 1000);
+            db.setCommandLastHandled(getName(), new Date().getTime(), id);
         }
     }
 

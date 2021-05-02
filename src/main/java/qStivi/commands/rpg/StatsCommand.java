@@ -40,17 +40,13 @@ public class StatsCommand implements ICommand {
         }
         long userID = user.getIdLong();
 
-        if (db.userDoesNotExists(userID)) {
-            db.insert("users", "id", user);
-        }
-
         var lvl = db.getLevel(userID);
-        var money = db.selectLong("users", "money", "id", userID);
+        var money = db.getMoney(userID);
         var userName = user.getEffectiveName();
         var ranking = db.getRanking();
         long position = 1337;
-        var blackJackWins = db.selectLong("users", "blackjack_wins", "id", userID);
-        var blackJackLoses = db.selectLong("users", "blackjack_loses", "id", userID);
+        var blackJackWins = db.getGameWins("blackjack", userID);
+        var blackJackLoses = db.getGameWins("blackjack", userID);
         if (blackJackLoses == null || blackJackLoses == 0) blackJackLoses = 1L;
         if (blackJackWins == null) {
             logger.error("userId is null!");
@@ -70,7 +66,7 @@ public class StatsCommand implements ICommand {
         if (position != 1337) embed.addField("Rank", "#" + position, false);
         embed.addField("Level", String.valueOf(lvl), true);
         embed.addField("Money", money + " :gem:", true);
-        var xp = db.selectLong("users", "xp", "id", userID);
+        var xp = db.getXP(userID);
         embed.addField("XP", String.valueOf(xp), true);
         embed.setFooter("BlackJack win/lose ratio: " + winLoseRatio);
 
