@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import qStivi.Bot;
 import qStivi.db.DB;
 
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
@@ -27,7 +28,7 @@ public class UserManager extends ListenerAdapter {
     Timer timer = new Timer();
     List<Task> tasks = new ArrayList<>();
 
-    public UserManager() {
+    public UserManager() throws SQLException, ClassNotFoundException {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -64,8 +65,16 @@ public class UserManager extends ListenerAdapter {
 
         if (diff > 8) {
             db.update("users", "last_chat_message", "id", id, new Date().getTime() / 1000);
-            db.increment("users", "xp", "id", id, 1);
-            db.increment("users", "xp_chat", "id", id, 1);
+            try {
+                db.increment("users", "xp", "id", id, 1);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            try {
+                db.increment("users", "xp_chat", "id", id, 1);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
     }
 
@@ -89,8 +98,16 @@ public class UserManager extends ListenerAdapter {
 
         if (diff > 10) {
             db.update("users", "last_reaction", "id", id, new Date().getTime() / 1000);
-            db.increment("users", "xp", "id", id, 5);
-            db.increment("users", "xp_reaction", "id", id, 5);
+            try {
+                db.increment("users", "xp", "id", id, 5);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            try {
+                db.increment("users", "xp_reaction", "id", id, 5);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
     }
 
@@ -110,8 +127,16 @@ public class UserManager extends ListenerAdapter {
             public void run() {
                 var amountOfUsers = event.getMember().getVoiceState().getChannel().getMembers().size();
                 var xp = (3 * amountOfUsers) + 2;
-                db.increment("users", "xp", "id", id, xp);
-                db.increment("users", "xp_voice", "id", id, xp);
+                try {
+                    db.increment("users", "xp", "id", id, xp);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+                try {
+                    db.increment("users", "xp_voice", "id", id, xp);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
 //                logger.info(String.valueOf(amountOfUsers));
             }
         }, id);

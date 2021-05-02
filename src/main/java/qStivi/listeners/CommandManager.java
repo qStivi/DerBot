@@ -11,6 +11,7 @@ import qStivi.commands.music.*;
 import qStivi.commands.rpg.*;
 import qStivi.db.DB;
 
+import java.sql.SQLException;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Date;
@@ -79,18 +80,35 @@ public class CommandManager extends ListenerAdapter {
 
         for (ICommand command : commandList) {
             if (command.getName().equals(args[0])) {
-                var db = new DB();
+                DB db = null;
+                try {
+                    db = new DB();
+                } catch (ClassNotFoundException | SQLException e) {
+                    e.printStackTrace();
+                }
                 logger.info(event.getAuthor().getName() + " issued /" + args[0]);
 
 //                events.offer(event);
-                command.handle(event, args);
+                try {
+                    command.handle(event, args);
+                } catch (SQLException | ClassNotFoundException throwables) {
+                    throwables.printStackTrace();
+                }
 
 
                 var id = event.getAuthor().getIdLong();
                 var diff = db.getLast("last_command", id);
                 if (diff > 10) {
-                    db.increment("users", "xp", "id", id, command.getXp());
-                    db.increment("users", "xp_command", "id", id, command.getXp());
+                    try {
+                        db.increment("users", "xp", "id", id, command.getXp());
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                    try {
+                        db.increment("users", "xp_command", "id", id, command.getXp());
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                     db.update("users", "last_command_xp", "id", id, new Date().getTime() / 1000);
                 }
 

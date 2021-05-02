@@ -8,11 +8,12 @@ import qStivi.ICommand;
 import qStivi.db.DB;
 
 import java.awt.*;
+import java.sql.SQLException;
 
 public class SlotsCommand implements ICommand {
     static final Symbol[] symbols = new Symbol[]{
             new Symbol(0.0933666574889f, ":gem:", 2),
-            new Symbol(0.321829794869f, "<:seven:836662334729617517>", 7),
+            new Symbol(0.321829794869f, "<:seven:836662334729617517>", 5),
             new Symbol(0.584803547643f, "<:Cherry:836664853392785448>", 1.5)
     };
 
@@ -32,7 +33,7 @@ public class SlotsCommand implements ICommand {
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) {
+    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         if (event.isWebhookMessage()) return;
         var db = new DB();
         var id = event.getAuthor().getIdLong();

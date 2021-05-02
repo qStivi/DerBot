@@ -6,10 +6,12 @@ import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
 import qStivi.db.DB;
 
+import java.sql.SQLException;
+
 public class moneyCommand implements ICommand {
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) {
+    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         var hook = event.getChannel();
         if (!(event.getAuthor().getIdLong() == 219108246143631364L)) {
             hook.sendMessage("You don't have the permission to do that").delay(DURATION).flatMap(Message::delete).queue();

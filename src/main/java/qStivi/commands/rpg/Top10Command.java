@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
 import qStivi.db.DB;
 
+import java.sql.SQLException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
@@ -17,7 +18,7 @@ public class Top10Command implements ICommand {
     Timer timer = new Timer();
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) {
+    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         var hook = event.getChannel();
         var db = new DB();
         var embed = new EmbedBuilder();

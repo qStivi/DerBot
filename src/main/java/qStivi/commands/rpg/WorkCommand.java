@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
 import qStivi.db.DB;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -15,7 +16,7 @@ public class WorkCommand implements ICommand {
     Timer timer = new Timer();
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) {
+    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         var hook = event.getChannel();
         var id = event.getAuthor().getIdLong();
         var db = new DB();

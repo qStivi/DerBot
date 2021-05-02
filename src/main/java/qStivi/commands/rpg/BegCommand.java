@@ -6,13 +6,14 @@ import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
 import qStivi.db.DB;
 
+import java.sql.SQLException;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class BegCommand implements ICommand {
     long xp = 0;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) {
+    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         var luck = ThreadLocalRandom.current().nextFloat();
         var chance = .8;
 
@@ -20,7 +21,7 @@ public class BegCommand implements ICommand {
             var db = new DB();
             var id = event.getAuthor().getIdLong();
             var earning = ThreadLocalRandom.current().nextInt(1, 3);
-            db.increment("users", "money", "id", id, earning);
+            db.incrementUserDataValue("Money", "UserID", earning, id);
             event.getChannel().sendMessage("Someone gave you " + earning + ":gem:").queue();
             xp = 6;
         } else {

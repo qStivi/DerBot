@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import qStivi.ICommand;
 import qStivi.db.DB;
 
+import java.sql.SQLException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,7 +20,7 @@ public class StatsCommand implements ICommand {
     Timer timer = new Timer();
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) {
+    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         if (event.isWebhookMessage()) return;
         var hook = event.getChannel();
         var db = new DB();

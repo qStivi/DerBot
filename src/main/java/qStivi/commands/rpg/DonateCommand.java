@@ -5,13 +5,14 @@ import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
 import qStivi.db.DB;
 
+import java.sql.SQLException;
 import java.util.Date;
 
 public class DonateCommand implements ICommand {
     long xp = 0;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) {
+    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         var user = event.getMessage().getMentionedUsers().get(0);
         var money = Long.parseLong(args[2]);
         var db = new DB();
@@ -24,8 +25,10 @@ public class DonateCommand implements ICommand {
             return;
         }
 
-        db.decrement("users", "money", "id", event.getAuthor().getIdLong(), money);
-        db.increment("users", "money", "id", user.getIdLong(), money);
+//        db.decrement("users", "money", "id", event.getAuthor().getIdLong(), money);
+        db.decrementMoney(money, event.getAuthor().getIdLong());
+//        db.increment("users", "money", "id", user.getIdLong(), money);
+        db.incrementMoney(money, user.getIdLong());
 
         event.getChannel().sendMessage("You donated " + money + ":gem: to " + user.getName()).queue();
 

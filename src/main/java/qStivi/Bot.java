@@ -1,5 +1,6 @@
 package qStivi;
 
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import org.slf4j.Logger;
@@ -11,13 +12,14 @@ import qStivi.listeners.Listener;
 import qStivi.listeners.UserManager;
 
 import javax.security.auth.login.LoginException;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Bot {
-    public static final boolean DEV_MODE = false;
+    public static final boolean DEV_MODE = true;
     public static final String CHANNEL_ID = Config.get("CHANNEL_ID");
     public static final String DEV_CHANNEL_ID = Config.get("DEV_CHANNEL_ID");
     public static final String DEV_VOICE_CHANNEL_ID = Config.get("DEV_VOICE_CHANNEL_ID");
@@ -26,42 +28,23 @@ public class Bot {
     private static final String ACTIVITY = "Evolving...";
     private static final Logger logger = getLogger(Bot.class);
 
-    public static void main(String[] args) throws LoginException {
+    public static void main(String[] args) throws LoginException, ClassNotFoundException {
         var token = DEV_MODE ? Config.get("DEV_TOKEN") : Config.get("TOKEN");
 
         if (DEV_MODE) {
             logger.warn("Dev mode active!");
         }
         logger.info("Booting...");
-        var db = new DB();
-        db.createNewDatabase("bot");
-        db.createNewTable("users",
-                "money integer default 1000," +
-                        "xp integer default 0," +
-                        "last_worked integer default 0," +
-                        "last_chat_message integer default 0," +
-                        "last_command integer default 0," +
-                        "last_reaction integer default 0," +
-                        "last_command_xp integer default 0," +
-                        "last_donated integer default 0," +
-                        "command_times_blackjack integer default 0," +
-                        "xp_reaction integer default 0," +
-                        "xp_voice integer default 0," +
-                        "xp_chat integer default 0," +
-                        "xp_command integer default 0," +
-                        "blackjack_wins integer default 0," +
-                        "blackjack_loses integer default 0," +
-                        "blackjack_draws integer default 0"
-        );
 
         logger.info("Bot token: " + token);
-        var jda = JDABuilder.createDefault(token)
-                .addEventListeners(new ControlsManager())
-                .addEventListeners(new Listener())
-                .addEventListeners(new UserManager())
-                .addEventListeners(new BlackjackCommand())
-                .setActivity(getActivity())
-                .build();
+        try {
+            JDA jda = JDABuilder.createDefault(token)
+                    .addEventListeners(new ControlsManager())
+                    .addEventListeners(new Listener())
+                    .addEventListeners(new UserManager())
+                    .addEventListeners(new BlackjackCommand())
+                    .setActivity(getActivity())
+                    .build();
 
         jda.addEventListener(new CommandManager());
         jda.updateCommands().addCommands().queue();
@@ -75,21 +58,23 @@ public class Bot {
             }
         }, 10 * 1000, 10 * 1000);
 
-
         reminder.schedule(new TimerTask() {
             @Override
             public void run() {
                 var now = LocalDateTime.now();
-                var tag = now.getDayOfWeek().name();
-                var stunde = now.getHour();
+                var day = now.getDayOfWeek().name();
+                var hour = now.getHour();
                 var minute = now.getMinute();
                 var seconds = now.getSecond();
-                if (tag.equals("WEDNESDAY") && stunde == 18 && minute == 18 && seconds == 0) {
+                if (day.equals("WEDNESDAY") && hour == 18 && minute == 18 && seconds == 0) {
                     var channel = jda.getTextChannelById("755490778922352801");
                     if (channel != null) channel.sendMessage("D&D Today!").mentionRoles("755490137118474270").queue();
                 }
             }
         }, 5 * 1000, 1000);
+    } catch (SQLException throwables) {
+        throwables.printStackTrace();
+    }
     }
 
     private static Activity getActivity() {
