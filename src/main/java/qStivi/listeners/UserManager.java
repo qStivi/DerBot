@@ -24,7 +24,6 @@ public class UserManager extends ListenerAdapter {
 //    private static final Logger logger = getLogger(UserManager.class);
 
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
-    DB db = new DB();
     Timer timer = new Timer();
     List<Task> tasks = new ArrayList<>();
 
@@ -55,7 +54,15 @@ public class UserManager extends ListenerAdapter {
         if (!Bot.DEV_MODE && event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
         if (event.getAuthor().isBot() || event.isWebhookMessage()) return;
         var id = Long.parseLong(event.getAuthor().getId());
+        // TODO make that you only het xp when it's not a command
+        try {
+            var db = new DB();
 
+        } catch (ClassNotFoundException e){
+
+        } catch (SQLException e){
+
+        }
 
         Long diff = null;
         try {

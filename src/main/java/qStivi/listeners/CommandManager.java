@@ -91,6 +91,7 @@ public class CommandManager extends ListenerAdapter {
 //                events.offer(event);
                 try {
                     command.handle(event, args);
+                    db.incrementCommandTimesRecognized(command.getName(), 1, event.getAuthor().getIdLong());
                 } catch (SQLException | ClassNotFoundException throwables) {
                     throwables.printStackTrace();
                 }
