@@ -49,53 +49,6 @@ public class UserManager extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
-        if (Bot.DEV_MODE && !event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
-        if (!Bot.DEV_MODE && event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
-        if (event.getAuthor().isBot() || event.isWebhookMessage()) return;
-        var id = Long.parseLong(event.getAuthor().getId());
-        // TODO make that you only het xp when it's not a command
-        try {
-            var db = new DB();
-
-        } catch (ClassNotFoundException e){
-
-        } catch (SQLException e){
-
-        }
-
-        Long diff = null;
-        try {
-            diff = db.getLastChat(id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        // TODO improve by only disallowing many consecutive messages
-
-        if (diff > 8) {
-//            db.update("users", "last_chat_message", "id", id, new Date().getTime() / 1000);
-            try {
-                db.setLastChat(new Date().getTime(), id);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-
-            try {
-//                db.increment("users", "xp", "id", id, 1);
-                db.incrementXP(1, id);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-            try {
-//                db.increment("users", "xp_chat", "id", id, 1);
-                db.incrementXPChat(1, id);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-        }
-    }
-
-    @Override
     public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
         if (Bot.DEV_MODE && !event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
         if (!Bot.DEV_MODE && event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;

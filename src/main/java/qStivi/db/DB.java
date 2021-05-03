@@ -28,11 +28,9 @@ public class DB {
                     "Money"         INTEGER             NOT NULL DEFAULT 0,
                     "LastChat"      INTEGER             NOT NULL DEFAULT 0,
                     "LastReaction"  INTEGER             NOT NULL DEFAULT 0,
-                    "LastCommand"   INTEGER             NOT NULL DEFAULT 0,
                     "LastVoiceJoin" INTEGER             NOT NULL DEFAULT 0,
                     "XPChat"        INTEGER             NOT NULL DEFAULT 0,
                     "XPReaction"    INTEGER             NOT NULL DEFAULT 0,
-                    "XPCommand"     INTEGER             NOT NULL DEFAULT 0,
                     "XPVoice"       INTEGER             NOT NULL DEFAULT 0
                 );
                 """;
@@ -41,8 +39,7 @@ public class DB {
                 (
                     "UserID"          INTEGER NOT NULL,
                     "CommandName"     TEXT    NOT NULL,
-                    "TimesRecognized" INTEGER NOT NULL DEFAULT 0,
-                    "LastRecognized"  INTEGER NOT NULL DEFAULT 0,
+                    "TimesHandled" INTEGER NOT NULL DEFAULT 0,
                     "LastHandled"     INTEGER NOT NULL DEFAULT 0,
                     "XP"              INTEGER NOT NULL DEFAULT 0,
                     "Money"           INTEGER NOT NULL DEFAULT 0,
@@ -129,20 +126,6 @@ public class DB {
         return list.contains(CommandName);
     }
 
-    public void setCommandLastRecognized(long value, long UserID) throws SQLException {
-        var upsert = """
-                INSERT INTO "CommandStatistics"("UserID", "LastRecognized")
-                VALUES (%s, %s)
-                ON CONFLICT("UserID") DO UPDATE SET "LastRecognized" = %s
-                WHERE "UserID" = %s;
-                """.formatted(UserID, value, value, UserID);
-        var connection = connect();
-        if (connection != null) {
-            connection.createStatement().execute(upsert);
-            connection.close();
-        }
-    }
-
     public void setCommandLastHandled(String name, long value, long UserID) throws SQLException {
         var upsert = """
                 INSERT INTO "CommandStatistics"("UserID", "LastHandled", "CommandName")
@@ -191,20 +174,6 @@ public class DB {
                 INSERT INTO "UserData"("UserID", "LastReaction")
                 VALUES (%s, %s)
                 ON CONFLICT("UserID") DO UPDATE SET "LastReaction" = %s
-                WHERE "UserID" = %s;
-                """.formatted(UserID, value, value, UserID);
-        var connection = connect();
-        if (connection != null) {
-            connection.createStatement().execute(upsert);
-            connection.close();
-        }
-    }
-
-    public void setLastCommand(long value, long UserID) throws SQLException {
-        var upsert = """
-                INSERT INTO "UserData"("UserID", "LastCommand")
-                VALUES (%s, %s)
-                ON CONFLICT("UserID") DO UPDATE SET "LastCommand" = %s
                 WHERE "UserID" = %s;
                 """.formatted(UserID, value, value, UserID);
         var connection = connect();
@@ -284,20 +253,6 @@ public class DB {
         }
     }
 
-    public void incrementXPCommand(long amount, long UserID) throws SQLException {
-        var upsert = """
-                INSERT INTO "UserData"("UserID", "XPCommand")
-                VALUES (%s, %s)
-                ON CONFLICT("UserID") DO UPDATE SET "XPCommand" = "XPCommand" + %s
-                WHERE "UserID" = %s;
-                """.formatted(UserID, amount, amount, UserID);
-        var connection = connect();
-        if (connection != null) {
-            connection.createStatement().execute(upsert);
-            connection.close();
-        }
-    }
-
     public void incrementXPVoice(long amount, long UserID) throws SQLException {
         var upsert = """
                 INSERT INTO "UserData"("UserID", "XPVoice")
@@ -312,20 +267,20 @@ public class DB {
         }
     }
 
-    public void incrementCommandTimesRecognized(String name, long amount, long UserID) throws SQLException {
+    public void incrementCommandTimesHandled(String name, long amount, long UserID) throws SQLException {
         String query;
         if (commandNameAlreadyExists(name, UserID)) {
             query = """
                     UPDATE "CommandStatistics"
-                    SET "TimesRecognized"
-                            = "TimesRecognized" + %S
+                    SET "TimesHandled"
+                            = "TimesHandled" + %S
                     WHERE "UserID" = %s
                       AND "CommandName" = '%s'
                     """.formatted(amount, UserID, name);
             logger.info("update");
         } else {
             query = """
-                    INSERT INTO "CommandStatistics"("UserID", "CommandName", "TimesRecognized")
+                    INSERT INTO "CommandStatistics"("UserID", "CommandName", "TimesHandled")
                     VALUES (%s, '%s', %s)
                     """.formatted(UserID, name, amount);
             logger.info("insert");

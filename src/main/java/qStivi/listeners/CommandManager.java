@@ -13,19 +13,21 @@ import qStivi.db.DB;
 
 import java.sql.SQLException;
 import java.text.Normalizer;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static org.slf4j.LoggerFactory.getLogger;
+import static qStivi.Bot.DEV_CHANNEL_ID;
 
 public class CommandManager extends ListenerAdapter {
     private static final Logger logger = getLogger(CommandManager.class);
 
     public final List<ICommand> commandList = new ArrayList<>();
-//    public final Queue<SlashCommandEvent> events = new LinkedList<>();
+    public final BlockingQueue<Command> queue = new LinkedBlockingQueue<>();
 
     public CommandManager() {
+        logger.debug("Registering commands.");
         commandList.add(new TestCommand());
         commandList.add(new RollCommand());
         commandList.add(new StopCommand());
@@ -49,91 +51,98 @@ public class CommandManager extends ListenerAdapter {
         commandList.add(new DonateCommand());
         commandList.add(new BegCommand());
         commandList.add(new SlotsCommand());
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    queue.take().handle();
+                    logger.debug("Command handled.");
+                } catch (SQLException | ClassNotFoundException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 1000, 1000);
     }
 
     public static String cleanForCommand(String str) {
+        str = str.toLowerCase().strip();
         str = Normalizer.normalize(str, Normalizer.Form.NFKD);
         str = str.replaceAll("[^a-z0-9A-Z -]", ""); // Remove all non valid chars
-        str = str.replaceAll(" {2}", " ").trim(); // convert multiple spaces into one space
+        str = str.replaceAll(" ", " ").trim(); // convert multiple spaces into one space
         return str;
     }
 
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
-        var channelID = event.getChannel().getId();
-        if (Bot.DEV_MODE && !channelID.equals(Bot.DEV_CHANNEL_ID)) return;
-        //noinspection ConstantConditions
-        if (!Bot.DEV_MODE && !event.getChannel().getParent().getId().equals("833734651070775338")) {
+
+        var channelID = event.getChannel().getIdLong();
+        var channel = event.getChannel();
+        var parent = channel.getParent();
+        var categoryID = parent == null ? 0 : parent.getIdLong();
+        var author = event.getAuthor();
+
+        if (author.isBot()) return;
+        if (event.isWebhookMessage()) return;
+        if (Bot.DEV_MODE && channelID != DEV_CHANNEL_ID) {
+            return;
+        } else if (!Bot.DEV_MODE && (channelID == DEV_CHANNEL_ID || categoryID != 833734651070775338L)) {
             return;
         }
-        if (!Bot.DEV_MODE && channelID.equals(Bot.DEV_CHANNEL_ID)) return;
-        var message = event.getMessage().getContentRaw();
-        if (!message.startsWith("/")) return;
-        String[] args;
-        if (!message.startsWith("/play")) {
-            message = cleanForCommand(message);
-            args = message.split(" ");
-        } else {
-            args = message.split(" ");
-            args[0] = cleanForCommand(args[0]);
-        }
-
-        for (ICommand command : commandList) {
-            if (command.getName().equals(args[0])) {
-                DB db = null;
-                try {
-                    db = new DB();
-                } catch (ClassNotFoundException | SQLException e) {
-                    e.printStackTrace();
-                }
-                logger.info(event.getAuthor().getName() + " issued /" + args[0]);
-
-//                events.offer(event);
-                try {
-                    command.handle(event, args);
-                    db.incrementCommandTimesRecognized(command.getName(), 1, event.getAuthor().getIdLong());
-                } catch (SQLException | ClassNotFoundException throwables) {
-                    throwables.printStackTrace();
-                }
 
 
-                var id = event.getAuthor().getIdLong();
-                Long diff = null;
-                try {
-                    diff = db.getLastCommand(id);
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-                if (diff > 10) {
-                    try {
-//                        db.increment("users", "xp", "id", id, command.getXp());
-                        db.incrementXP(command.getXp(), id);
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
-                    }
-                    try {
-//                        db.increment("users", "xp_command", "id", id, command.getXp());
-                        db.incrementCommandXP(command.getName(), command.getXp(), id);
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
-                    }
-//                    db.update("users", "last_command_xp", "id", id, new Date().getTime() / 1000);
-                    try {
-                        db.setLastCommand(new Date().getTime(), id);
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
+        try {
+            if (isCommand(event)) {
+
+                var message = cleanForCommand(event.getMessage().getContentRaw());
+                var args = message.split(" ");
+
+                for (var command : commandList) {
+                    if (command.getName().equals(args[0])) {
+
+                        queue.put(new Command(command, event, args));
+                        logger.debug("Command queued.");
+
                     }
                 }
-
-//                db.update("users", "last_command", "id", event.getAuthor().getIdLong(), new Date().getTime() / 1000);
-                try {
-                    db.setLastCommand(new Date().getTime(), id);
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-                logger.info("Event offered.");
+            } else {
+                var id = author.getIdLong();
+                var now = new Date().getTime();
+                var db = new DB();
+                
+                db.setLastChat(now, id);
+                db.incrementXPChat(1, id);
             }
+        } catch (ClassNotFoundException | SQLException | InterruptedException e) {
+            e.printStackTrace();
         }
+    }
 
+    private boolean isCommand(GuildMessageReceivedEvent event) {
+        return event.getMessage().getContentRaw().toLowerCase().strip().startsWith("/");
+    }
+}
+
+class Command {
+    ICommand command;
+    GuildMessageReceivedEvent event;
+    String[] args;
+
+    public Command(ICommand command, GuildMessageReceivedEvent event, String[] args) {
+        this.command = command;
+        this.event = event;
+        this.args = args;
+    }
+
+    void handle() throws SQLException, ClassNotFoundException {
+        this.command.handle(this.event, this.args);
+
+        var name = command.getName();
+        var id = event.getAuthor().getIdLong();
+        var db = new DB();
+
+        db.incrementCommandXP(name, command.getXp(), id);
+        db.incrementCommandTimesHandled(name, 1, id);
+        db.setCommandLastHandled(name, new Date().getTime(), id);
     }
 }

@@ -21,7 +21,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Bot {
     public static final boolean DEV_MODE = true;
     public static final String CHANNEL_ID = Config.get("CHANNEL_ID");
-    public static final String DEV_CHANNEL_ID = Config.get("DEV_CHANNEL_ID");
+    public static final long DEV_CHANNEL_ID = 834012016481271908L;
     public static final String DEV_VOICE_CHANNEL_ID = Config.get("DEV_VOICE_CHANNEL_ID");
     private static final Timer reminder = new Timer();
     private static final Timer activityUpdate = new Timer();
