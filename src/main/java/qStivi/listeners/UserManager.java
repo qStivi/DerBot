@@ -49,52 +49,9 @@ public class UserManager extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
-        if (Bot.DEV_MODE && !event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
-        if (!Bot.DEV_MODE && event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
-        if (event.getUser().isBot()) return;
-        AtomicReference<User> isBotMessage = new AtomicReference<>();
-        event.retrieveMessage().queue(message -> isBotMessage.set(message.getAuthor()));
-        while (isBotMessage.get() == null) Thread.onSpinWait();
-        if (isBotMessage.get().isBot()) return;
-
-        var id = Long.parseLong(event.getUser().getId());
-
-
-        Long diff = null;
-        try {
-            diff = db.getLastReaction(id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        if (diff > 10) {
-//            db.update("users", "last_reaction", "id", id, new Date().getTime() / 1000);
-            try {
-                db.setLastReaction(new Date().getTime(), id);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-            try {
-//                db.increment("users", "xp", "id", id, 5);
-                db.incrementXP(5, id);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-            try {
-//                db.increment("users", "xp_reaction", "id", id, 5);
-                db.incrementXPReaction(5, id);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-        }
-    }
-
-    @Override
     public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
-        if (Bot.DEV_MODE && !event.getChannelJoined().getId().equals(Bot.DEV_VOICE_CHANNEL_ID)) return;
+        if (Bot.DEV_MODE && event.getChannelJoined().getIdLong() != Bot.DEV_VOICE_CHANNEL_ID) return;
         if (event.getMember().getUser().isBot()) return;
-//        logger.info("join");
 
         var id = Long.parseLong(event.getMember().getUser().getId());
 
