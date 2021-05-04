@@ -51,6 +51,7 @@ public class CommandManager extends ListenerAdapter {
         commandList.add(new DonateCommand());
         commandList.add(new BegCommand());
         commandList.add(new SlotsCommand());
+        commandList.add(new LottoCommand());
 
         new Timer().schedule(new TimerTask() {
             @Override
