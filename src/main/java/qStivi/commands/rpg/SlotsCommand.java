@@ -38,7 +38,7 @@ public class SlotsCommand implements ICommand {
         if (event.isWebhookMessage()) return;
         var db = new DB();
         var id = event.getAuthor().getIdLong();
-        int bet = 0;
+        int bet;
         try {
             bet = Integer.parseInt(args[1]);
         } catch (NumberFormatException e) {
@@ -62,7 +62,6 @@ public class SlotsCommand implements ICommand {
         if (new Date().getTime()/1000 - db.getGameLastPlayed(getName(), id)/1000 < 3) return;
 
         db.decrementMoney(bet, id);
-        db.setGameLastPlayed(getName(), new Date().getTime(), id);
         db.incrementGamePlays(getName(), 1, id);
 
         EmbedBuilder embed = new EmbedBuilder();
@@ -105,6 +104,7 @@ public class SlotsCommand implements ICommand {
         db.incrementMoney(gain, id);
         db.incrementGameWins(getName(), 1, id);
         db.incrementCommandMoney(getName(), gain, id);
+        db.setGameLastPlayed(getName(), new Date().getTime(), id);
         channel.sendMessage("You won " + gain + ":gem:").queue();
     }
 

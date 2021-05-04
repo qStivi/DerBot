@@ -853,8 +853,10 @@ public class DB {
         String query = "select \"LastPlayed\" from \"GameStatistics\" where \"UserID\" = %s AND \"GameName\" = '%s'".formatted(UserID, CommandName);
         var connection = connect();
         var result = connection.createStatement().executeQuery(query);
-        result.next();
-        var value = result.getLong("LastPlayed");
+        long value = 0;
+        while (result.next()) {
+            value = result.getLong("LastPlayed");
+        }
         connection.close();
         return value;
     }

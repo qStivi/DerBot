@@ -84,8 +84,12 @@ public class CommandManager extends ListenerAdapter {
 
         if (author.isBot()) return;
         if (event.isWebhookMessage()) return;
-        if (Bot.DEV_MODE && channelID != DEV_CHANNEL_ID) {
-            return;
+        if (Bot.DEV_MODE) {
+            if (channelID != DEV_CHANNEL_ID) {
+                return;
+            } else if (!Bot.DEV_MODE && (channelID == DEV_CHANNEL_ID || categoryID != 833734651070775338L)) {
+                return;
+            }
         } else if (!Bot.DEV_MODE && (channelID == DEV_CHANNEL_ID || categoryID != 833734651070775338L)) {
             return;
         }
