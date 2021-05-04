@@ -36,12 +36,12 @@ public class DB {
         String setupCommandsStatisticsTable = """
                 CREATE TABLE IF NOT EXISTS "CommandStatistics"
                 (
-                    "UserID"          INTEGER NOT NULL,
-                    "CommandName"     TEXT    NOT NULL,
-                    "TimesHandled"    INTEGER NOT NULL DEFAULT 0,
-                    "LastHandled"     INTEGER NOT NULL DEFAULT 0,
-                    "XP"              INTEGER NOT NULL DEFAULT 0,
-                    "Money"           INTEGER NOT NULL DEFAULT 0,
+                    "UserID"       INTEGER NOT NULL,
+                    "CommandName"  TEXT    NOT NULL,
+                    "TimesHandled" INTEGER NOT NULL DEFAULT 0,
+                    "LastHandled"  INTEGER NOT NULL DEFAULT 0,
+                    "XP"           INTEGER NOT NULL DEFAULT 0,
+                    "Money"        INTEGER NOT NULL DEFAULT 0,
                     FOREIGN KEY ("UserID") REFERENCES "UserData" ("UserID") ON UPDATE CASCADE ON DELETE CASCADE
                 );
                 """;
@@ -58,6 +58,20 @@ public class DB {
                     FOREIGN KEY ("UserID") REFERENCES "UserData" ("UserID") ON UPDATE CASCADE ON DELETE CASCADE
                 );
                 """;
+        String setupLottoTable = """
+                CREATE TABLE IF NOT EXISTS "Lotto"
+                (
+                    "UserID" INTEGER PRIMARY KEY NOT NULL,
+                    "Vote"   INTEGER             NOT NULL DEFAULT 0,
+                    FOREIGN KEY ("UserID") REFERENCES "UserData" ("UserID") ON UPDATE CASCADE ON DELETE CASCADE
+                );
+                """;
+        String insertLottoPool = """
+                INSERT INTO "Lotto"("UserID", "Vote") VALUES (0, 0) ON CONFLICT DO NOTHING;
+                """;
+        String insertLottoPoolUser = """
+                INSERT INTO "UserData"("UserID") VALUES (0) ON CONFLICT DO NOTHING;
+                """;
 
 
         if (connection != null) {
@@ -68,9 +82,61 @@ public class DB {
             connection.createStatement().execute(setupUserDataTable);
             connection.createStatement().execute(setupCommandsStatisticsTable);
             connection.createStatement().execute(setupGameStatisticsTable);
+            connection.createStatement().execute(setupLottoTable);
+            connection.createStatement().execute(insertLottoPoolUser);
+            connection.createStatement().execute(insertLottoPool);
             connection.close();
         }
 
+    }
+
+    public void setLottoVote(long value, long UserID) throws SQLException {
+        var upsert = """
+                INSERT INTO "Lotto"("UserID", "Vote")
+                VALUES (%s, %s);
+                """.formatted(UserID, value);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
+    }
+
+    public List<Long> getLottoParticipants() throws SQLException {
+        String sql = "SELECT \"UserID\" FROM \"Lotto\" WHERE \"UserID\" != 0;";
+        List<Long> list = new ArrayList<>();
+        var connection = connect();
+        var result = connection.createStatement().executeQuery(sql);
+        while (result.next()) {
+            list.add(result.getLong("UserID"));
+        }
+        connection.close();
+        return list;
+    }
+
+    public List<Long> getLottoParticipantsByVote(int vote) throws SQLException {
+        String sql = "SELECT \"UserID\" FROM \"Lotto\" WHERE \"Vote\" = %s;".formatted(vote);
+        List<Long> list = new ArrayList<>();
+        var connection = connect();
+        var result = connection.createStatement().executeQuery(sql);
+        while (result.next()) {
+            list.add(result.getLong("UserID"));
+        }
+        connection.close();
+        return list;
+    }
+
+    public void incrementLottoPool(long amount) throws SQLException {
+        String query = """
+                UPDATE "Lotto"
+                SET "Vote" = "Vote" + %S
+                WHERE "UserID" = 0
+                """.formatted(amount);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(query);
+            connection.close();
+        }
     }
 
     public Long getLevel(Long id) throws SQLException {
@@ -965,6 +1031,25 @@ public class DB {
         return value;
     }
 
+    public Long getLottoVote(long UserID) throws SQLException {
+        String query = "SELECT \"Vote\" FROM \"Lotto\" WHERE \"UserID\" = %s".formatted(UserID);
+        var connection = connect();
+        var result = connection.createStatement().executeQuery(query);
+        result.next();
+        var value = result.getLong("Vote");
+        connection.close();
+        return value;
+    }
+
+    public void resetLotto() throws SQLException {
+        String query = "DELETE FROM \"Lotto\" WHERE \"UserID\" != 0;";
+        String update = "UPDATE \"Lotto\" SET \"Vote\" = 0 WHERE \"UserID\" = 0;";
+        var connection = connect();
+        connection.createStatement().execute(query);
+        connection.createStatement().execute(update);
+        connection.close();
+    }
+
 
     /**
      * Connect to the test.db database
@@ -1013,5 +1098,17 @@ public class DB {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public int getLottoPool() throws SQLException {
+        String query = "SELECT \"Vote\" FROM \"Lotto\" WHERE \"UserID\" = 0;";
+        var connection = connect();
+        var result = connection.createStatement().executeQuery(query);
+        int value = 0;
+        while (result.next()) {
+            value = result.getInt("Vote");
+        }
+        connection.close();
+        return value;
     }
 }

@@ -3,6 +3,7 @@ package qStivi;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 import qStivi.commands.rpg.BlackjackCommand;
@@ -28,7 +29,7 @@ public class Bot {
     private static final String ACTIVITY = "Evolving...";
     private static final Logger logger = getLogger(Bot.class);
 
-    public static void main(String[] args) throws LoginException, SQLException, ClassNotFoundException {
+    public static void main(String[] args) throws LoginException, SQLException, ClassNotFoundException, InterruptedException {
         var token = DEV_MODE ? Config.get("DEV_TOKEN") : Config.get("TOKEN");
 
         if (DEV_MODE) {
@@ -42,6 +43,7 @@ public class Bot {
                 .addEventListeners(new Listener())
                 .addEventListeners(new BlackjackCommand())
                 .enableCache(CacheFlag.VOICE_STATE)
+//                .enableIntents(GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MEMBERS)
                 .setActivity(getActivity())
                 .build();
 
@@ -49,6 +51,7 @@ public class Bot {
         jda.updateCommands().addCommands().queue();
 
         new DB();
+        new Lotto(jda);
 
         if (DEV_MODE) return; // Don't continue if in development mode.
 

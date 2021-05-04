@@ -92,6 +92,7 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
                         event.getReaction().removeReaction(user).queue();
                         if (bj.hit() > 21) {
                             endGame(event, db, bj, 0, "You Lost!");
+                            db.setLottoVote(bj.bet, 0);
                         }
                     }
                     if (event.getReactionEmote().getEmoji().equals("✋\uD83C\uDFFD")) {
@@ -103,15 +104,18 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
                             endGame(event, db, bj, bj.bet * 2, "You won!");
                         else if (dealerHandValue < playerHandValue) endGame(event, db, bj, bj.bet * 2, "You won!");
 
-                        else if (playerHandValue > 21 && dealerHandValue <= 21) endGame(event, db, bj, 0, "You Lost!");
-                        else if (dealerHandValue > playerHandValue) endGame(event, db, bj, 0, "You Lost!");
-
-                        else endGame(event, db, bj, bj.bet, "Draw.");
+                        else if (playerHandValue > 21 && dealerHandValue <= 21) {
+                            endGame(event, db, bj, 0, "You Lost!");
+                            db.setLottoVote(bj.bet, 0);
+                        } else if (dealerHandValue > playerHandValue) {
+                            endGame(event, db, bj, 0, "You Lost!");
+                            db.incrementLottoPool(bj.bet);
+                        } else endGame(event, db, bj, bj.bet, "Draw.");
                     }
                     displayGameState(bj);
                 }
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     }
