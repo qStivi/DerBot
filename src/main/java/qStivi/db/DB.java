@@ -69,6 +69,9 @@ public class DB {
         String insertLottoPool = """
                 INSERT INTO "Lotto"("UserID", "Vote") VALUES (0, 0) ON CONFLICT DO NOTHING;
                 """;
+        String insertLottoPoolUser = """
+                INSERT INTO "UserData"("UserID") VALUES (0) ON CONFLICT DO NOTHING;
+                """;
 
 
         if (connection != null) {
@@ -80,6 +83,7 @@ public class DB {
             connection.createStatement().execute(setupCommandsStatisticsTable);
             connection.createStatement().execute(setupGameStatisticsTable);
             connection.createStatement().execute(setupLottoTable);
+            connection.createStatement().execute(insertLottoPoolUser);
             connection.createStatement().execute(insertLottoPool);
             connection.close();
         }
