@@ -34,7 +34,7 @@ public class SlotsCommand implements ICommand {
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
+    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException, InterruptedException {
         if (event.isWebhookMessage()) return;
         var db = new DB();
         var id = event.getAuthor().getIdLong();
@@ -59,10 +59,12 @@ public class SlotsCommand implements ICommand {
         }
 
         // Wait for new game
-        if (new Date().getTime()/1000 - db.getGameLastPlayed(getName(), id)/1000 < 3) return;
+        if (new Date().getTime() / 1000 - db.getGameLastPlayed(getName(), id) / 1000 < 3) return;
 
         db.decrementMoney(bet, id);
         db.incrementGamePlays(getName(), 1, id);
+        Thread.sleep(500);
+        db.setGameLastPlayed(getName(), new Date().getTime(), id);
 
         EmbedBuilder embed = new EmbedBuilder();
         embed.setAuthor(event.getMember().getEffectiveName(), null, event.getAuthor().getAvatarUrl());
@@ -87,7 +89,7 @@ public class SlotsCommand implements ICommand {
                             (second.getEmote().equals(symbols[0].getEmote()) && third.getEmote().equals(symbols[0].getEmote())) ||
                             (first.getEmote().equals(symbols[0].getEmote()) && third.getEmote().equals(symbols[0].getEmote()))
             ) {
-                var gain = Math.round(bet * symbols[0].getMultiplier());
+                var gain = Math.round(bet * symbols[0].getMultiplier() * 2);
                 win(db, id, channel, embed, gain);
             } else if (first.getEmote().equals(symbols[0].getEmote()) && first.getEmote().equals(second.getEmote()) && second.getEmote().equals(third.getEmote())) {
                 var gain = bet * 100;
@@ -104,7 +106,6 @@ public class SlotsCommand implements ICommand {
         db.incrementMoney(gain, id);
         db.incrementGameWins(getName(), 1, id);
         db.incrementCommandMoney(getName(), gain, id);
-        db.setGameLastPlayed(getName(), new Date().getTime(), id);
         channel.sendMessage("You won " + gain + ":gem:").queue();
     }
 

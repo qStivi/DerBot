@@ -9,7 +9,7 @@ import java.time.Duration;
 public interface ICommand {
     Duration DURATION = Duration.ofMinutes(5);
 
-    void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException;
+    void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException, InterruptedException;
 
     @Nonnull
     String getName();

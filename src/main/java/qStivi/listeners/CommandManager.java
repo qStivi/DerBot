@@ -139,7 +139,7 @@ class Command {
         this.args = args;
     }
 
-    void handle() throws SQLException, ClassNotFoundException {
+    void handle() throws SQLException, ClassNotFoundException, InterruptedException {
         this.command.handle(this.event, this.args);
 
         var name = command.getName();
