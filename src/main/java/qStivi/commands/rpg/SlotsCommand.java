@@ -1,7 +1,7 @@
 package qStivi.commands.rpg;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
@@ -9,6 +9,7 @@ import qStivi.db.DB;
 
 import java.awt.*;
 import java.sql.SQLException;
+import java.util.Date;
 
 public class SlotsCommand implements ICommand {
     static final Symbol[] symbols = new Symbol[]{
@@ -37,7 +38,12 @@ public class SlotsCommand implements ICommand {
         if (event.isWebhookMessage()) return;
         var db = new DB();
         var id = event.getAuthor().getIdLong();
-        var bet = Integer.parseInt(args[1]);
+        int bet = 0;
+        try {
+            bet = Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            return;
+        }
         var money = db.getMoney(id);
         var channel = event.getChannel();
 
@@ -48,15 +54,18 @@ public class SlotsCommand implements ICommand {
         var third = getRandomSymbol();
 
         if (money < bet) {
-            channel.sendMessage("Sorry but you don't have enough money to do that :(").delay(DURATION).flatMap(Message::delete).queue();
+            channel.sendMessage("Sorry but you don't have enough money to do that :(").queue();
             return;
         }
 
-//        db.decrement("users", "money", "id", id, bet);
+        // Wait for new game
+        if (new Date().getTime()/1000 - db.getGameLastPlayed(getName(), id)/1000 < 3) return;
+
         db.decrementMoney(bet, id);
+        db.setGameLastPlayed(getName(), new Date().getTime(), id);
+        db.incrementGamePlays(getName(), 1, id);
 
         EmbedBuilder embed = new EmbedBuilder();
-        //noinspection ConstantConditions
         embed.setAuthor(event.getMember().getEffectiveName(), null, event.getAuthor().getAvatarUrl());
         embed.addField("", first.getEmote(), true);
         embed.addField("", second.getEmote(), true);
@@ -66,43 +75,37 @@ public class SlotsCommand implements ICommand {
 
         // Three
         if (first.getEmote().equals(second.getEmote()) && second.getEmote().equals(third.getEmote())) {
-            embed.setColor(Color.green);
             var gain = Math.round(bet * first.getMultiplier());
-//            db.increment("users", "money", "id", id, gain);
-            db.incrementMoney(gain, id);
-            channel.sendMessage("You won " + gain + ":gem:").delay(DURATION).flatMap(Message::delete).queue();
-        }
+            win(db, id, channel, embed, gain);
+        } else
 
-        // Gem
-        if (first.getEmote().equals(symbols[0].getEmote()) || second.getEmote().equals(symbols[0].getEmote()) || third.getEmote().equals(symbols[0].getEmote())) {
-            embed.setColor(Color.green);
-            var gain = Math.round(bet * symbols[0].getMultiplier());
-//            db.increment("users", "money", "id", id, gain);
-            db.incrementMoney(gain, id);
-            channel.sendMessage("You won " + gain + ":gem:").delay(DURATION).flatMap(Message::delete).queue();
-        }
+            // Gem
+            if (first.getEmote().equals(symbols[0].getEmote()) || second.getEmote().equals(symbols[0].getEmote()) || third.getEmote().equals(symbols[0].getEmote())) {
+                var gain = Math.round(bet * symbols[0].getMultiplier());
+                win(db, id, channel, embed, gain);
+            } else if (
+                    (first.getEmote().equals(symbols[0].getEmote()) && second.getEmote().equals(symbols[0].getEmote())) ||
+                            (second.getEmote().equals(symbols[0].getEmote()) && third.getEmote().equals(symbols[0].getEmote())) ||
+                            (first.getEmote().equals(symbols[0].getEmote()) && third.getEmote().equals(symbols[0].getEmote()))
+            ) {
+                var gain = Math.round(bet * symbols[0].getMultiplier());
+                win(db, id, channel, embed, gain);
+            } else if (first.getEmote().equals(symbols[0].getEmote()) && first.getEmote().equals(second.getEmote()) && second.getEmote().equals(third.getEmote())) {
+                var gain = bet * 100;
+                win(db, id, channel, embed, gain);
+            } else {
+                db.incrementGameLoses(getName(), 1, id);
+            }
 
-        if (
-                (first.getEmote().equals(symbols[0].getEmote()) && second.getEmote().equals(symbols[0].getEmote())) ||
-                        (second.getEmote().equals(symbols[0].getEmote()) && third.getEmote().equals(symbols[0].getEmote())) ||
-                        (first.getEmote().equals(symbols[0].getEmote()) && third.getEmote().equals(symbols[0].getEmote()))
-        ) {
-            embed.setColor(Color.green);
-            var gain = Math.round(bet * symbols[0].getMultiplier());
-//            db.increment("users", "money", "id", id, gain);
-            db.incrementMoney(gain, id);
-            channel.sendMessage("You won " + gain + ":gem:").delay(DURATION).flatMap(Message::delete).queue();
-        }
+        channel.sendMessage(embed.build()).queue();
+    }
 
-        if (first.getEmote().equals(symbols[0].getEmote()) && first.getEmote().equals(second.getEmote()) && second.getEmote().equals(third.getEmote())) {
-            embed.setColor(Color.green);
-            var gain = bet * 100;
-//            db.increment("users", "money", "id", id, gain);
-            db.incrementMoney(gain, id);
-            channel.sendMessage("You won " + gain + ":gem:").delay(DURATION).flatMap(Message::delete).queue();
-        }
-
-        channel.sendMessage(embed.build()).delay(DURATION).flatMap(Message::delete).queue();
+    private void win(DB db, long id, TextChannel channel, EmbedBuilder embed, long gain) throws SQLException {
+        embed.setColor(Color.green);
+        db.incrementMoney(gain, id);
+        db.incrementGameWins(getName(), 1, id);
+        db.incrementCommandMoney(getName(), gain, id);
+        channel.sendMessage("You won " + gain + ":gem:").queue();
     }
 
     @NotNull

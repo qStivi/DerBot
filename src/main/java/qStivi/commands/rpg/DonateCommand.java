@@ -6,7 +6,6 @@ import qStivi.ICommand;
 import qStivi.db.DB;
 
 import java.sql.SQLException;
-import java.util.Date;
 
 public class DonateCommand implements ICommand {
     long xp = 0;
@@ -32,14 +31,7 @@ public class DonateCommand implements ICommand {
 
         event.getChannel().sendMessage("You donated " + money + ":gem: to " + user.getName()).queue();
 
-        var id = event.getAuthor().getIdLong();
-        var diff = db.getCommandLastHandled(getName(), id);
-
-        if (diff > 1200) {
-            xp = (long) Math.floor(Math.sqrt(money)) + 5;
-//            db.update("users", "last_donated", "id", id, new Date().getTime() / 1000);
-            db.setCommandLastHandled(getName(), new Date().getTime(), id);
-        }
+        xp = (long) Math.floor(Math.sqrt(money)) + 5;
     }
 
     @NotNull

@@ -2,7 +2,6 @@ package qStivi.commands.music;
 
 import com.wrapper.spotify.exceptions.SpotifyWebApiException;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.apache.hc.core5.http.ParseException;
@@ -195,27 +194,27 @@ public class PlayCommand implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();
         if (!join(event.getGuild(), event.getAuthor())) {
-            hook.sendMessage("Please join a channel, so I can play your request.").delay(DURATION).flatMap(Message::delete).queue();
+            hook.sendMessage("Please join a channel, so I can play your request.").queue();
             return;
         }
         try {
 //            if (event.getOption("shuffle") != null) {
 //                if (event.getOption("shuffle").getAsBoolean()) {
-//                    hook.sendMessage(playSong(event.getOption("query").getAsString(), true, event.getTextChannel(), event.getGuild())).delay(DURATION).flatMap(Message::delete).queue();
+//                    hook.sendMessage(playSong(event.getOption("query").getAsString(), true, event.getTextChannel(), event.getGuild())).queue();
 //                }
 //            } else {
             var msg = playSong(args, false, event.getChannel(), event.getGuild());
             if (msg != null) {
-                hook.sendMessage(msg).delay(DURATION).flatMap(Message::delete).queue();
+                hook.sendMessage(msg).queue();
                 xp = 30;
             } else {
 
-                hook.sendMessage("Something went wrong!").delay(DURATION).flatMap(Message::delete).queue();
+                hook.sendMessage("Something went wrong!").queue();
             }
 //            }
         } catch (ParseException | SpotifyWebApiException | IOException e) {
             e.printStackTrace();
-            hook.sendMessage("Something went wrong :(").delay(DURATION).flatMap(Message::delete).queue();
+            hook.sendMessage("Something went wrong :(").queue();
         }
     }
 

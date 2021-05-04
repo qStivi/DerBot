@@ -1,6 +1,5 @@
 package qStivi.commands;
 
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
@@ -12,7 +11,7 @@ public class LeaveCommand implements ICommand {
         var hook = event.getChannel();
         event.getGuild().getAudioManager();
         event.getGuild().getAudioManager().closeAudioConnection();
-        hook.sendMessage("Bye Bye").delay(DURATION).flatMap(Message::delete).queue();
+        hook.sendMessage("Bye Bye").queue();
     }
 
     @Override

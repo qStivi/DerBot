@@ -109,9 +109,10 @@ public class CommandManager extends ListenerAdapter {
                 var id = author.getIdLong();
                 var now = new Date().getTime();
                 var db = new DB();
-                
+
                 db.setLastChat(now, id);
                 db.incrementXPChat(1, id);
+                db.incrementXP(1, id);
             }
         } catch (ClassNotFoundException | SQLException | InterruptedException e) {
             e.printStackTrace();
@@ -142,7 +143,8 @@ class Command {
         var db = new DB();
 
         db.incrementCommandXP(name, command.getXp(), id);
+        db.incrementXP(command.getXp(), id);
         db.incrementCommandTimesHandled(name, 1, id);
-        db.setCommandLastHandled(name, new Date().getTime(), id);
+        if (!name.equalsIgnoreCase("work")) db.setCommandLastHandled(name, new Date().getTime(), id);
     }
 }

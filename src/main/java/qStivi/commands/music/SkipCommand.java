@@ -1,6 +1,5 @@
 package qStivi.commands.music;
 
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import qStivi.ICommand;
 import qStivi.audioManagers.PlayerManager;
@@ -12,7 +11,6 @@ public class SkipCommand implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();
         PlayerManager.getINSTANCE().skip(event.getGuild());
-        hook.sendMessage("Skipping...").delay(DURATION).flatMap(Message::delete).queue();
     }
 
     @Override

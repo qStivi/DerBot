@@ -1,7 +1,6 @@
 package qStivi.commands.rpg;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -9,15 +8,11 @@ import qStivi.ICommand;
 import qStivi.db.DB;
 
 import java.sql.SQLException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class StatsCommand implements ICommand {
     private static final Logger logger = getLogger(StatsCommand.class);
-
-    Timer timer = new Timer();
 
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
@@ -25,13 +20,6 @@ public class StatsCommand implements ICommand {
         var hook = event.getChannel();
         var db = new DB();
         var commandUser = event.getMessage().getMentionedMembers().size() > 0 ? event.getMessage().getMentionedMembers().get(0) : null;
-
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                event.getMessage().delete().queue();
-            }
-        }, 3000);
 
         var user = commandUser == null ? event.getMember() : commandUser;
         if (user == null) {
@@ -45,14 +33,6 @@ public class StatsCommand implements ICommand {
         var userName = user.getEffectiveName();
         var ranking = db.getRanking();
         long position = 1337;
-        var blackJackWins = db.getGameWins("blackjack", userID);
-        var blackJackLoses = db.getGameWins("blackjack", userID);
-        if (blackJackLoses == null || blackJackLoses == 0) blackJackLoses = 1L;
-        if (blackJackWins == null) {
-            logger.error("userId is null!");
-            return;
-        }
-        var winLoseRatio = (double) blackJackWins / blackJackLoses;
 
         for (int i = 0; i < ranking.size(); i++) {
             if (ranking.get(i) == user.getIdLong()) {
@@ -68,9 +48,8 @@ public class StatsCommand implements ICommand {
         embed.addField("Money", money + " :gem:", true);
         var xp = db.getXP(userID);
         embed.addField("XP", String.valueOf(xp), true);
-        embed.setFooter("BlackJack win/lose ratio: " + winLoseRatio);
 
-        hook.sendMessage(embed.build()).delay(DURATION).flatMap(Message::delete).queue();
+        hook.sendMessage(embed.build()).queue();
     }
 
     @NotNull

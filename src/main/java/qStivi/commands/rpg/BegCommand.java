@@ -1,6 +1,5 @@
 package qStivi.commands.rpg;
 
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
@@ -22,10 +21,11 @@ public class BegCommand implements ICommand {
             var id = event.getAuthor().getIdLong();
             var earning = ThreadLocalRandom.current().nextInt(1, 3);
             db.incrementMoney(earning, id);
+            db.incrementCommandMoney(getName(), earning, id);
             event.getChannel().sendMessage("Someone gave you " + earning + ":gem:").queue();
             xp = 6;
         } else {
-            event.getChannel().sendMessage("You didn't get anything!").delay(DURATION).flatMap(Message::delete).queue();
+            event.getChannel().sendMessage("You didn't get anything!").queue();
         }
     }
 

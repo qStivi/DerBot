@@ -34,7 +34,6 @@ public class CleanCommand implements ICommand {
         }
         var numberOfMessages = event.getChannel().purgeMessages(messages).size();
         logger.info(String.valueOf(numberOfMessages));
-        hook.sendMessage("Cleaning...").delay(DURATION).flatMap(Message::delete).queue();
     }
 
     @Nonnull

@@ -1,6 +1,5 @@
 package qStivi.commands.music;
 
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import qStivi.ICommand;
 import qStivi.audioManagers.PlayerManager;
@@ -14,7 +13,7 @@ public class StopCommand implements ICommand {
         var hook = event.getChannel();
         PlayerManager.getINSTANCE().clearQueue(event.getGuild());
         PlayerManager.getINSTANCE().skip(event.getGuild());
-        hook.sendMessage("Playback stopped.").delay(DURATION).flatMap(Message::delete).queue();
+        hook.sendMessage("Playback stopped.").queue();
     }
 
     @Override

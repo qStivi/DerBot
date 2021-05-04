@@ -1,8 +1,9 @@
 package qStivi.listeners;
 
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -12,11 +13,8 @@ import qStivi.Bot;
 import qStivi.db.DB;
 
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.slf4j.LoggerFactory.getLogger;
 import static qStivi.Bot.DEV_CHANNEL_ID;
@@ -24,34 +22,66 @@ import static qStivi.Bot.DEV_CHANNEL_ID;
 public class Listener extends ListenerAdapter {
 
     private static final Logger logger = getLogger(Listener.class);
-    public final BlockingQueue<Command> queue = new LinkedBlockingQueue<>();
-    Thread timer;
+    Collection<Task> list = Collections.synchronizedCollection(new ArrayList<>());
+
+    public Listener() {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                list.forEach(task -> task.timerTask.run());
+            }
+        }, 60 * 1000, 60 * 1000);
+    }
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         logger.info("Ready!");
     }
 
-    public Listener() {
-        timer = new Thread()
+    @Override
+    public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
+        if (Bot.DEV_MODE && event.getChannelJoined().getIdLong() != Bot.DEV_VOICE_CHANNEL_ID) return;
+        if (event.getMember().getUser().isBot()) return;
 
 
-        new Timer().schedule(new TimerTask() {
+        try {
+            new DB().setLastVoiceJoin(new Date().getTime(), event.getMember().getIdLong());
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        var id = event.getMember().getIdLong();
+
+        list.add(new Task(new TimerTask() {
+
             @Override
             public void run() {
 
+                var voiceState = event.getMember().getVoiceState();
+                if (voiceState == null) return;
+                var voiceChannel = voiceState.getChannel();
+                if (voiceChannel == null) return;
+
+                var amountOfUsers = voiceChannel.getMembers().size();
+                var xp = (3 * amountOfUsers) + 2;
+                try {
+                    var db = new DB();
+
+                    db.incrementXPVoice(xp, id);
+                    db.incrementXP(xp, id);
+
+                } catch (ClassNotFoundException | SQLException e) {
+                    e.printStackTrace();
+                }
+
+
             }
-        }, 1000, 1000);
-
-
-
+        }, id));
     }
 
     @Override
-    public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
-        if (Bot.DEV_MODE && !event.getChannelJoined().getId().equals(Bot.DEV_VOICE_CHANNEL_ID)) return;
-        if (event.getMember().getUser().isBot()) return;
-
+    public void onGuildVoiceLeave(@NotNull GuildVoiceLeaveEvent event) {
+        list.removeIf(task -> task.id == event.getMember().getIdLong());
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -98,9 +128,18 @@ public class Listener extends ListenerAdapter {
         var channel = event.getChannel();
         var parent = channel.getParent();
         var categoryID = parent == null ? 0 : parent.getIdLong();
-        var author = event.getUser();
+        var reactingUser = event.getUser();
 
-        if (author.isBot()) return;
+        /*
+        TODO Why is this so stupid!?
+        Also there has to be a better way. At least regarding the AtomicReference...
+         */
+        AtomicReference<User> messageAuthor = new AtomicReference<>();
+        event.retrieveMessage().queue(message -> messageAuthor.set(message.getAuthor()));
+        while (messageAuthor.get()==null) Thread.onSpinWait();
+        if (messageAuthor.get().isBot()) return;
+
+        if (reactingUser.isBot()) return;
         if (Bot.DEV_MODE && channelID != DEV_CHANNEL_ID) {
             return;
         } else if (!Bot.DEV_MODE && (channelID == DEV_CHANNEL_ID || categoryID != 833734651070775338L)) {
@@ -110,7 +149,7 @@ public class Listener extends ListenerAdapter {
         try {
 
             var db = new DB();
-            var id = author.getIdLong();
+            var id = reactingUser.getIdLong();
 
             db.setLastReaction(new Date().getTime(), id);
             db.incrementXPReaction(5, id);
@@ -119,5 +158,15 @@ public class Listener extends ListenerAdapter {
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
+    }
+}
+
+class Task {
+    TimerTask timerTask;
+    Long id;
+
+    public Task(TimerTask timerTask, Long id) {
+        this.timerTask = timerTask;
+        this.id = id;
     }
 }

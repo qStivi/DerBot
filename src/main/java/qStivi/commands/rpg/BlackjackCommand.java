@@ -1,6 +1,5 @@
 package qStivi.commands.rpg;
 
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -12,45 +11,33 @@ import qStivi.db.DB;
 
 import java.awt.*;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
 
 @SuppressWarnings("ConstantConditions")
 public class BlackjackCommand extends ListenerAdapter implements ICommand {
-
-    Timer timer = new Timer();
 
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         var hook = event.getChannel();
         AtomicReference<String> messageId = new AtomicReference<>();
         hook.sendMessage("Loading...").queue(message -> messageId.set(message.getId()));
-        // TODO put this in CommandManager
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                event.getMessage().delete().queue();
-            }
-        }, 3000);
         while (messageId.get() == null) Thread.onSpinWait();
         var db = new DB();
         long id = event.getAuthor().getIdLong();
         var money = db.getMoney(id);
         if (money < Long.parseLong(args[1])) {
-            hook.editMessageById(String.valueOf(messageId), "You don't have enough money!").delay(DURATION).flatMap(Message::delete).queue();
+            hook.editMessageById(String.valueOf(messageId), "You don't have enough money!").queue();
             return;
         }
         if (Long.parseLong(args[1]) < 0) {
-            hook.editMessageById(String.valueOf(messageId), "You can't do that, sorry.").delay(DURATION).flatMap(Message::delete).queue();
+            hook.editMessageById(String.valueOf(messageId), "You can't do that, sorry.").queue();
             return;
         }
-//        db.increment("users", "command_times_blackjack", "id", id, 1);
         db.incrementGamePlays(getName(), 1, id);
 
         var removed = BlackJack.games.removeIf(game -> game.user.getIdLong() == id);
-//        if (removed) db.increment("users", "blackjack_loses", "id", id, 1);
         if (removed) db.incrementGameLoses(getName(), 1, id);
         BlackJack.games.add(new BlackJack(1, messageId.get(), event.getAuthor(), hook, Long.parseLong(args[1])));
         BlackJack bj = null;
@@ -60,9 +47,7 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
             }
         }
 
-//        db.decrement("users", "money", "id", id, bj.bet);
         db.decrementMoney(bj.bet, id);
-
 
         displayGameState(bj);
 
@@ -70,10 +55,8 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
             event.getChannel().clearReactionsById(bj.id).queue();
             BlackJack.games.remove(bj);
             bj.embed.setTitle("You won!");
-//            db.increment("users", "money", "id", id, (long) Math.floor(bj.bet * 2.5));
             db.incrementMoney((long) Math.floor(bj.bet * 2.5), id);
             bj.embed.setColor(Color.green.brighter());
-//            db.increment("users", "blackjack_wins", "id", id, 1);
             db.incrementGameWins("BlackJack", 1, id);
         } else {
             event.getChannel().addReactionById(bj.id, "\uD83E\uDD19\uD83C\uDFFD").queue();
@@ -81,7 +64,7 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
         }
 
         hook.editMessageById(String.valueOf(messageId), args[1]).queue();
-        hook.editMessageById(String.valueOf(messageId), bj.embed.build()).delay(DURATION).flatMap(Message::delete).queue();
+        hook.editMessageById(String.valueOf(messageId), bj.embed.build()).queue();
     }
 
     @Override
@@ -137,24 +120,22 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
         var id = event.getUser().getIdLong();
         var messageId = event.getMessageId();
         bj.embed.setTitle(title);
-//        db.increment("users", "money", "id", id, reward);
         db.incrementMoney(reward, id);
+        db.incrementCommandMoney(getName(), reward, id);
+        db.setGameLastPlayed(getName(), new Date().getTime(), id);
         event.getChannel().clearReactionsById(messageId).queue();
         BlackJack.games.remove(bj);
         if (title.equalsIgnoreCase("you won!")) {
             bj.embed.setColor(Color.green.brighter());
-//            db.increment("users", "blackjack_wins", "id", id, 1);
-            db.incrementGameWins("blackjack", 1, id);
+            db.incrementGameWins(getName(), 1, id);
         }
         if (title.equalsIgnoreCase("you lost!")) {
             bj.embed.setColor(Color.red.brighter());
-//            db.increment("users", "blackjack_loses", "id", id, 1);
-            db.incrementGameLoses("blackjack", 1, id);
+            db.incrementGameLoses(getName(), 1, id);
         }
         if (title.equalsIgnoreCase("draw.")) {
             bj.embed.setColor(Color.magenta.darker());
-//            db.increment("users", "blackjack_draws", "id", id, 1);
-            db.incrementGameDraws("blackjack", 1, id);
+            db.incrementGameDraws(getName(), 1, id);
         }
     }
 

@@ -1,7 +1,6 @@
 package qStivi.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import qStivi.ICommand;
@@ -23,10 +22,10 @@ public class RollCommand implements ICommand {
         } else {
             var result = normalRoll(rollInput);
             if (result == null) {
-                hook.sendMessage("This is not a valid roll!\nExample: `6d8`").delay(DURATION).flatMap(Message::delete).queue();
+                hook.sendMessage("This is not a valid roll!\nExample: `6d8`").queue();
                 return;
             }
-            hook.sendMessage(result).delay(DURATION).flatMap(Message::delete).queue();
+            hook.sendMessage(result).queue();
         }
     }
 

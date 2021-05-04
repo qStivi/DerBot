@@ -1,6 +1,5 @@
 package qStivi.commands.music;
 
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import qStivi.ICommand;
 import qStivi.audioManagers.PlayerManager;
@@ -13,7 +12,7 @@ public class ContinueCommand implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();
         PlayerManager.getINSTANCE().continueTrack(event.getGuild());
-        hook.sendMessage("Continuing...").delay(DURATION).flatMap(Message::delete).queue();
+        hook.sendMessage("Continuing...").queue();
     }
 
     @Override

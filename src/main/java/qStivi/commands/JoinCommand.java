@@ -1,7 +1,6 @@
 package qStivi.commands;
 
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -37,9 +36,9 @@ public class JoinCommand implements ICommand {
 
         var success = join(guild, author);
         if (success) {
-            hook.sendMessage("Hi").delay(DURATION).flatMap(Message::delete).queue();
+            hook.sendMessage("Hi").queue();
         } else {
-            hook.sendMessage("Something went wrong :(").delay(DURATION).flatMap(Message::delete).queue();
+            hook.sendMessage("Something went wrong :(").queue();
         }
 
     }

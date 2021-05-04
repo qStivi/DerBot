@@ -1,6 +1,5 @@
 package qStivi.commands;
 
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import qStivi.ICommand;
 
@@ -10,7 +9,7 @@ public class TestCommand implements ICommand {
 
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) {
-        event.getChannel().sendMessage("k").delay(DURATION).flatMap(Message::delete).queue();
+        event.getChannel().sendMessage("k").queue();
     }
 
     @Override

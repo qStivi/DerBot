@@ -3,13 +3,13 @@ package qStivi;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 import qStivi.commands.rpg.BlackjackCommand;
 import qStivi.db.DB;
 import qStivi.listeners.CommandManager;
 import qStivi.listeners.ControlsManager;
 import qStivi.listeners.Listener;
-import qStivi.listeners.UserManager;
 
 import javax.security.auth.login.LoginException;
 import java.sql.SQLException;
@@ -28,7 +28,7 @@ public class Bot {
     private static final String ACTIVITY = "Evolving...";
     private static final Logger logger = getLogger(Bot.class);
 
-    public static void main(String[] args) throws LoginException, ClassNotFoundException {
+    public static void main(String[] args) throws LoginException, SQLException, ClassNotFoundException {
         var token = DEV_MODE ? Config.get("DEV_TOKEN") : Config.get("TOKEN");
 
         if (DEV_MODE) {
@@ -37,17 +37,18 @@ public class Bot {
         logger.info("Booting...");
 
         logger.info("Bot token: " + token);
-        try {
-            JDA jda = JDABuilder.createDefault(token)
-                    .addEventListeners(new ControlsManager())
-                    .addEventListeners(new Listener())
-                    .addEventListeners(new UserManager())
-                    .addEventListeners(new BlackjackCommand())
-                    .setActivity(getActivity())
-                    .build();
+        JDA jda = JDABuilder.createDefault(token)
+                .addEventListeners(new ControlsManager())
+                .addEventListeners(new Listener())
+                .addEventListeners(new BlackjackCommand())
+                .enableCache(CacheFlag.VOICE_STATE)
+                .setActivity(getActivity())
+                .build();
 
         jda.addEventListener(new CommandManager());
         jda.updateCommands().addCommands().queue();
+
+        new DB();
 
         if (DEV_MODE) return; // Don't continue if in development mode.
 
@@ -72,9 +73,6 @@ public class Bot {
                 }
             }
         }, 5 * 1000, 1000);
-    } catch (SQLException throwables) {
-        throwables.printStackTrace();
-    }
     }
 
     private static Activity getActivity() {

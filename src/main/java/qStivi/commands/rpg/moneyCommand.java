@@ -1,6 +1,5 @@
 package qStivi.commands.rpg;
 
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
@@ -14,7 +13,7 @@ public class moneyCommand implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         var hook = event.getChannel();
         if (!(event.getAuthor().getIdLong() == 219108246143631364L)) {
-            hook.sendMessage("You don't have the permission to do that").delay(DURATION).flatMap(Message::delete).queue();
+            hook.sendMessage("You don't have the permission to do that").queue();
             return;
         }
 
@@ -31,7 +30,7 @@ public class moneyCommand implements ICommand {
 //            db.decrement("users", "money", "id", userID, amount);
             db.decrementMoney(amount, userID);
         }
-        hook.sendMessage("Done!").delay(DURATION).flatMap(Message::delete).queue();
+        hook.sendMessage("Done!").queue();
     }
 
     @NotNull
