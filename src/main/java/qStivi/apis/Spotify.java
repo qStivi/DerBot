@@ -36,28 +36,47 @@ public class Spotify {
 
     public Spotify() throws IOException, SpotifyWebApiException, ParseException {
         ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials().build();
-        final ClientCredentials clientCredentials = clientCredentialsRequest.execute();
+        ClientCredentials clientCredentials = clientCredentialsRequest.execute();
 
         spotifyApi.setAccessToken(clientCredentials.getAccessToken());
     }
 
+    /**
+     * Get the name of a Spotify track.
+     * @param id The track id which is included in the song link and the Spotify URI.
+     * @return String containing the name of the corresponding Song.
+     * @throws IOException In case of networking issues.
+     * @throws SpotifyWebApiException The Web API returned an error further specified in this exception's root cause.
+     * @throws ParseException String parsing error.
+     */
     public String getTrackName(String id) throws IOException, SpotifyWebApiException, ParseException {
-        GetTrackRequest getTrackRequest = spotifyApi.getTrack(id).build();
-        final Track track = getTrackRequest.execute();
+        Track track = spotifyApi.getTrack(id).build().execute();
         return track.getName();
     }
 
-    @Nullable
-    @CheckForNull
+    /**
+     * Get the first Artist of a Spotify track.
+     * @param id The track id which is included in the song link and the Spotify URI.
+     * @return String containing the name of the corresponding Song.
+     * @throws IOException In case of networking issues.
+     * @throws SpotifyWebApiException The Web API returned an error further specified in this exception's root cause.
+     * @throws ParseException String parsing error.
+     */
     public String getTrackArtists(String id) throws IOException, SpotifyWebApiException, ParseException {
         GetTrackRequest getTrackRequest = spotifyApi.getTrack(id).build();
         final Track track = getTrackRequest.execute();
-        if (Arrays.stream(track.getArtists()).findFirst().isEmpty()) return null;
+        if (Arrays.stream(track.getArtists()).findFirst().isEmpty()) return "";
         return Arrays.stream(track.getArtists()).findFirst().get().getName();
     }
 
+    /**
+     * Returns {@link List<String>} of Strings where each entry contains the name and artist of a song in the following format: song+Name+artist1+name+Artist2+name... Example: Heathens+Twenty+One+Pilots
+     * @param id The playlist id which is included in the playlist link and the Spotify URI.
+     * @return A {@link List<String>} of Strings.
+     * @throws IOException If an I/O error occurs while creating the input stream.
+     */
     // https://developer.spotify.com/console/get-playlist-tracks/?playlist_id=3cEYpjA9oz9GiPac4AsH4n&market=ES&fields=items(added_by.id%2Ctrack(name%2Chref%2Calbum(name%2Chref)))&limit=10&offset=5&additional_types=
-    public List<String> getPlaylist(String id) throws IOException {
+    public List<String> getPlaylist(String id) throws IOException{
         InputStream response;
         List<String> finalOutput = new ArrayList<>();
         URLConnection connection = new URL("https://api.spotify.com/v1/playlists/" + id + "/tracks?market=DE&fields=items(track(name%2C%20artists(name)))").openConnection();
