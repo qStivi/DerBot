@@ -55,7 +55,6 @@ public class Lotto {
                 if (/*(day.equals("WEDNESDAY") || day.equals("FRIDAY")) && */(hour == 20 && minute == 0 && seconds < 10) && !win) {
                     win = true;
                     var number = ThreadLocalRandom.current().nextInt(1, 51);
-                    number = 30;
                     DB db;
                     List<Long> winners;
                     try {
@@ -87,7 +86,7 @@ public class Lotto {
                                 e.printStackTrace();
                             }
                         }
-                        channel.sendMessage("Congratulations! " + sb + "has won the raffle. And will receive " + money + ":gem: each.").queue();
+                        channel.sendMessage("Congratulations! " + sb + "has won the raffle. And will receive " + money + ":gem: each. The lucky number was " + number).queue();
                     }
                     try {
                         db.resetLotto();

@@ -20,7 +20,7 @@ import java.util.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Bot {
-    public static final boolean DEV_MODE = true;
+    public static final boolean DEV_MODE = false;
     public static final String CHANNEL_ID = Config.get("CHANNEL_ID");
     public static final long DEV_CHANNEL_ID = 834012016481271908L;
     public static final long DEV_VOICE_CHANNEL_ID = 805955515241725983L;
@@ -61,21 +61,21 @@ public class Bot {
                 jda.getPresence().setActivity(getActivity());
             }
         }, 10 * 1000, 10 * 1000);
-
-        reminder.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                var now = LocalDateTime.now();
-                var day = now.getDayOfWeek().name();
-                var hour = now.getHour();
-                var minute = now.getMinute();
-                var seconds = now.getSecond();
-                if (day.equals("WEDNESDAY") && hour == 18 && minute == 18 && seconds == 0) {
-                    var channel = jda.getTextChannelById("755490778922352801");
-                    if (channel != null) channel.sendMessage("D&D Today!").mentionRoles("755490137118474270").queue();
-                }
-            }
-        }, 5 * 1000, 1000);
+//
+//        reminder.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                var now = LocalDateTime.now();
+//                var day = now.getDayOfWeek().name();
+//                var hour = now.getHour();
+//                var minute = now.getMinute();
+//                var seconds = now.getSecond();
+//                if (day.equals("WEDNESDAY") && hour == 18 && minute == 18 && seconds == 0) {
+//                    var channel = jda.getTextChannelById("755490778922352801");
+//                    if (channel != null) channel.sendMessage("D&D Today!").mentionRoles("755490137118474270").queue();
+//                }
+//            }
+//        }, 5 * 1000, 1000);
     }
 
     private static Activity getActivity() {
