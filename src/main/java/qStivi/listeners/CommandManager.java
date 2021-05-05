@@ -92,13 +92,13 @@ public class CommandManager extends ListenerAdapter {
                 return;
             }
         } else if (!Bot.DEV_MODE)
-            if (channelID == DEV_CHANNEL_ID || categoryID != 833734651070775338L) {
+            if (channelID == DEV_CHANNEL_ID) {
                 return;
             }
 
 
         try {
-            if (isCommand(event)) {
+            if (isCommand(event) && categoryID == 833734651070775338L) {
 
                 var message = cleanForCommand(event.getMessage().getContentRaw());
                 var args = message.split(" ");
