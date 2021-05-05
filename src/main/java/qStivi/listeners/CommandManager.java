@@ -91,14 +91,17 @@ public class CommandManager extends ListenerAdapter {
             } else if (!Bot.DEV_MODE && (channelID == DEV_CHANNEL_ID || categoryID != 833734651070775338L)) {
                 return;
             }
-        } else if (!Bot.DEV_MODE)
+        } else if (!Bot.DEV_MODE){
             if (channelID == DEV_CHANNEL_ID) {
                 return;
+            }else if (categoryID != 833734651070775338L){
+                return;
             }
+        }
 
 
         try {
-            if (isCommand(event) && categoryID == 833734651070775338L) {
+            if (isCommand(event)) {
 
                 var message = cleanForCommand(event.getMessage().getContentRaw());
                 var args = message.split(" ");

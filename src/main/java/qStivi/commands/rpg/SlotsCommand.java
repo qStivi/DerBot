@@ -74,30 +74,41 @@ public class SlotsCommand implements ICommand {
         embed.setFooter(bet + "\uD83D\uDC8E");
         embed.setColor(Color.red);
 
+
+        // Gem
         // Three
-        if (first.getEmote().equals(second.getEmote()) && second.getEmote().equals(third.getEmote())) {
-            var gain = Math.round(bet * first.getMultiplier());
+        if (first.getEmote().equals(symbols[0].getEmote()) && first.getEmote().equals(second.getEmote()) && second.getEmote().equals(third.getEmote())) {
+            var gain = bet * 100;
             win(db, id, channel, embed, gain);
         } else
 
             // Gem
-            if (first.getEmote().equals(symbols[0].getEmote()) || second.getEmote().equals(symbols[0].getEmote()) || third.getEmote().equals(symbols[0].getEmote())) {
-                var gain = Math.round(bet * symbols[0].getMultiplier());
-                win(db, id, channel, embed, gain);
-            } else if (
-                    (first.getEmote().equals(symbols[0].getEmote()) && second.getEmote().equals(symbols[0].getEmote())) ||
-                            (second.getEmote().equals(symbols[0].getEmote()) && third.getEmote().equals(symbols[0].getEmote())) ||
-                            (first.getEmote().equals(symbols[0].getEmote()) && third.getEmote().equals(symbols[0].getEmote()))
+            //Two
+            if ((first.getEmote().equals(symbols[0].getEmote()) && second.getEmote().equals(symbols[0].getEmote())) ||
+                    (second.getEmote().equals(symbols[0].getEmote()) && third.getEmote().equals(symbols[0].getEmote())) ||
+                    (first.getEmote().equals(symbols[0].getEmote()) && third.getEmote().equals(symbols[0].getEmote()))
             ) {
                 var gain = Math.round(bet * symbols[0].getMultiplier() * 2);
                 win(db, id, channel, embed, gain);
-            } else if (first.getEmote().equals(symbols[0].getEmote()) && first.getEmote().equals(second.getEmote()) && second.getEmote().equals(third.getEmote())) {
-                var gain = bet * 100;
-                win(db, id, channel, embed, gain);
-            } else {
-                db.incrementGameLoses(getName(), 1, id);
-                db.incrementLottoPool(bet);
-            }
+            } else
+
+                // Gem
+                // One
+                if (first.getEmote().equals(symbols[0].getEmote()) || second.getEmote().equals(symbols[0].getEmote()) || third.getEmote().equals(symbols[0].getEmote())) {
+                    var gain = Math.round(bet * symbols[0].getMultiplier());
+                    win(db, id, channel, embed, gain);
+                } else
+
+                    // Other
+                    // Three
+                    if (first.getEmote().equals(second.getEmote()) && second.getEmote().equals(third.getEmote())) {
+                        var gain = Math.round(bet * first.getMultiplier());
+                        win(db, id, channel, embed, gain);
+                    } else {
+                        db.incrementGameLoses(getName(), 1, id);
+                        db.incrementLottoPool(bet);
+                    }
+
 
         channel.sendMessage(embed.build()).queue();
     }
