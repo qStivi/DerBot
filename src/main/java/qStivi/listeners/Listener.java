@@ -150,7 +150,7 @@ public class Listener extends ListenerAdapter {
             } else if (!Bot.DEV_MODE && (channelID == DEV_CHANNEL_ID || categoryID != 833734651070775338L)) {
                 return;
             }
-        } else if (!Bot.DEV_MODE && (channelID == DEV_CHANNEL_ID || categoryID != 833734651070775338L)) {
+        } else if (!Bot.DEV_MODE && channelID == DEV_CHANNEL_ID) {
             return;
         }
 
