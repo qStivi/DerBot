@@ -66,6 +66,11 @@ public class Lotto {
                     }
                     if (winners.isEmpty()) {
                         channel.sendMessage("Better luck next time. No one won this raffle. The lucky number was " + number).queue();
+                        try {
+                            db.resetLottoVotes();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
                         return;
                     } else {
 
@@ -89,7 +94,7 @@ public class Lotto {
                         channel.sendMessage("Congratulations! " + sb + "has won the raffle. And will receive " + money + ":gem: each. The lucky number was " + number).queue();
                     }
                     try {
-                        db.resetLotto();
+                        db.resetLottoPool();
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }

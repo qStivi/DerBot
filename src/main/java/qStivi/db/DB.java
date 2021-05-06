@@ -1041,11 +1041,16 @@ public class DB {
         return value;
     }
 
-    public void resetLotto() throws SQLException {
+    public void resetLottoVotes() throws SQLException {
         String query = "DELETE FROM \"Lotto\" WHERE \"UserID\" != 0;";
-        String update = "UPDATE \"Lotto\" SET \"Vote\" = 0 WHERE \"UserID\" = 0;";
         var connection = connect();
         connection.createStatement().execute(query);
+        connection.close();
+    }
+
+    public void resetLottoPool() throws SQLException {
+        String update = "UPDATE \"Lotto\" SET \"Vote\" = 0 WHERE \"UserID\" = 0;";
+        var connection = connect();
         connection.createStatement().execute(update);
         connection.close();
     }
