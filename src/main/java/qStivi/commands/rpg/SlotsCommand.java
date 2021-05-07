@@ -41,7 +41,7 @@ public class SlotsCommand implements ICommand {
         int bet;
         try {
             bet = Integer.parseInt(args[1]);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
             return;
         }
         var money = db.getMoney(id);
