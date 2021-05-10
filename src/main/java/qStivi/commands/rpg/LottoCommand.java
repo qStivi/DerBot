@@ -15,10 +15,19 @@ public class LottoCommand implements ICommand {
         var id = event.getAuthor().getIdLong();
 
         long vote;
-        try {
-            vote = Long.parseLong(args[1]);
-        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e){
-            channel.sendMessage("Please enter a number from 1 to 50.").queue();
+        if (args.length > 1){
+            try {
+                vote = Long.parseLong(args[1]);
+            } catch (NumberFormatException e){
+                if (args[1].equalsIgnoreCase("pool")){
+                    sendPoolInfo(event);
+                    return;
+                }
+                channel.sendMessage("Please enter a number from 1 to 50 or 'pool'").queue();
+                return;
+            }
+        } else {
+            channel.sendMessage("Please enter a number from 1 to 50 or 'pool'").queue();
             return;
         }
         if (vote < 1 || vote > 50) {
@@ -44,6 +53,12 @@ public class LottoCommand implements ICommand {
 
         channel.sendMessage("You entered the raffle.").queue();
 
+    }
+
+    private void sendPoolInfo(GuildMessageReceivedEvent event) throws SQLException, ClassNotFoundException {
+        var db = new DB();
+        var pool = db.getLottoPool();
+        event.getChannel().sendMessage("The pool contains " + pool + " :gem:").queue();
     }
 
     @NotNull
