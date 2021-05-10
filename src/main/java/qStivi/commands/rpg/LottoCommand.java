@@ -6,6 +6,7 @@ import qStivi.ICommand;
 import qStivi.db.DB;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 public class LottoCommand implements ICommand {
@@ -15,11 +16,11 @@ public class LottoCommand implements ICommand {
         var id = event.getAuthor().getIdLong();
 
         long vote;
-        if (args.length > 1){
+        if (args.length > 1) {
             try {
                 vote = Long.parseLong(args[1]);
-            } catch (NumberFormatException e){
-                if (args[1].equalsIgnoreCase("pool")){
+            } catch (NumberFormatException e) {
+                if (args[1].equalsIgnoreCase("pool")) {
                     sendPoolInfo(event);
                     return;
                 }
@@ -45,7 +46,7 @@ public class LottoCommand implements ICommand {
             db.setCommandLastHandled(getName(), now, id);
             db.setGameLastPlayed(getName(), now, id);
             db.incrementGamePlays(getName(), 1, id);
-        } catch (SQLException e){
+        } catch (SQLException e) {
             vote = db.getLottoVote(id);
             channel.sendMessage("You already entered the raffle. Your vote is: " + vote).queue();
             return;
@@ -58,7 +59,8 @@ public class LottoCommand implements ICommand {
     private void sendPoolInfo(GuildMessageReceivedEvent event) throws SQLException, ClassNotFoundException {
         var db = new DB();
         var pool = db.getLottoPool();
-        event.getChannel().sendMessage("The pool contains " + pool + " :gem:").queue();
+        DecimalFormat formatter = new DecimalFormat();
+        event.getChannel().sendMessage("The pool contains " + formatter.format(pool) + ":gem:").queue();
     }
 
     @NotNull
