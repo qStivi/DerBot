@@ -29,7 +29,7 @@ public class Bot {
     private static final String ACTIVITY = "Evolving...";
     private static final Logger logger = getLogger(Bot.class);
 
-    public static void main(String[] args) throws LoginException, SQLException, ClassNotFoundException, InterruptedException {
+    public static void main(String[] args) throws LoginException, SQLException, ClassNotFoundException {
         var token = DEV_MODE ? Config.get("DEV_TOKEN") : Config.get("TOKEN");
 
         if (DEV_MODE) {
@@ -43,7 +43,6 @@ public class Bot {
                 .addEventListeners(new Listener())
                 .addEventListeners(new BlackjackCommand())
                 .enableCache(CacheFlag.VOICE_STATE)
-//                .enableIntents(GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MEMBERS)
                 .setActivity(getActivity())
                 .build();
 
@@ -51,7 +50,7 @@ public class Bot {
         jda.updateCommands().addCommands().queue();
 
         new DB();
-        new Lotto(jda);
+        new Events(jda);
 
         if (DEV_MODE) return; // Don't continue if in development mode.
 
@@ -61,21 +60,6 @@ public class Bot {
                 jda.getPresence().setActivity(getActivity());
             }
         }, 10 * 1000, 10 * 1000);
-//
-//        reminder.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                var now = LocalDateTime.now();
-//                var day = now.getDayOfWeek().name();
-//                var hour = now.getHour();
-//                var minute = now.getMinute();
-//                var seconds = now.getSecond();
-//                if (day.equals("WEDNESDAY") && hour == 18 && minute == 18 && seconds == 0) {
-//                    var channel = jda.getTextChannelById("755490778922352801");
-//                    if (channel != null) channel.sendMessage("D&D Today!").mentionRoles("755490137118474270").queue();
-//                }
-//            }
-//        }, 5 * 1000, 1000);
     }
 
     private static Activity getActivity() {

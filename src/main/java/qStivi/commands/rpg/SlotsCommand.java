@@ -106,7 +106,7 @@ public class SlotsCommand implements ICommand {
                         win(db, id, channel, embed, gain);
                     } else {
                         db.incrementGameLoses(getName(), 1, id);
-                        db.incrementLottoPool(bet);
+                        db.incrementLottoPool(bet/2);
                     }
 
 
