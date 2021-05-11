@@ -82,7 +82,7 @@ public class Events {
                 // Lotto end
 
                 // Happy half begin
-                if (day.equalsIgnoreCase("tuesday") && hour == 12 && minute >= 10) {
+                if (day.equalsIgnoreCase("friday") && hour == 19 && minute >= 30) {
                     Bot.happyHour = 2;
                     if (!happyHourMessageSent) {
                         channel.get().sendMessage("Happy half is starting now! :clock730:").queue();
@@ -93,7 +93,7 @@ public class Events {
                     Bot.happyHour = 1;
                     happyHourMessageSent = false;
                 }
-                if (day.equalsIgnoreCase("tuesday") && hour == 12 && minute >= 40) {
+                if (day.equalsIgnoreCase("friday") && hour == 20) {
                     if (!happyHourOverSent) {
                         channel.get().sendMessage("Happy half is over... :clock8:").queue();
                         happyHourOverSent = true;
