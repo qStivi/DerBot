@@ -48,7 +48,7 @@ public class Events {
                 var day = now.getDayOfWeek().name();
                 var hour = now.getHour();
                 var minute = now.getMinute();
-                var seconds = now.getSecond();
+//                var seconds = now.getSecond();
 
                 // Lotto begin
                 if (hour == 20 && !lottoAnnouncement) {
@@ -82,9 +82,9 @@ public class Events {
                 // Lotto end
 
                 // Happy half begin
-                if (day.equalsIgnoreCase("monday") && hour == 11 && minute >= 10){
+                if (day.equalsIgnoreCase("friday") && hour == 19 && minute >= 30) {
                     Bot.happyHour = 2;
-                    if (!happyHourMessageSent){
+                    if (!happyHourMessageSent) {
                         channel.get().sendMessage("Happy half is starting now! :clock730:").queue();
                         happyHourMessageSent = true;
                         happyHourOverSent = false;
@@ -93,8 +93,8 @@ public class Events {
                     Bot.happyHour = 1;
                     happyHourMessageSent = false;
                 }
-                if (day.equalsIgnoreCase("monday") && hour == 11 && minute >= 40) {
-                    if (!happyHourOverSent){
+                if (day.equalsIgnoreCase("friday") && hour == 20) {
+                    if (!happyHourOverSent) {
                         channel.get().sendMessage("Happy half is over... :clock8:").queue();
                         happyHourOverSent = true;
                     }

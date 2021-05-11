@@ -10,7 +10,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @SuppressWarnings("unused")
 public class DB {
-    //TODO make every number a long
     private static final Logger logger = getLogger(DB.class);
 
     public DB() throws ClassNotFoundException, SQLException {
@@ -21,6 +20,20 @@ public class DB {
         String enableForeignKeys = "PRAGMA foreign_keys = ON;";
         String setupUserDataTable = """
                 CREATE TABLE IF NOT EXISTS "UserData"
+                (
+                    "UserID"        INTEGER PRIMARY KEY NOT NULL,
+                    "XP"            INTEGER             NOT NULL DEFAULT 0,
+                    "Money"         INTEGER             NOT NULL DEFAULT 0,
+                    "LastChat"      INTEGER             NOT NULL DEFAULT 0,
+                    "LastReaction"  INTEGER             NOT NULL DEFAULT 0,
+                    "LastVoiceJoin" INTEGER             NOT NULL DEFAULT 0,
+                    "XPChat"        INTEGER             NOT NULL DEFAULT 0,
+                    "XPReaction"    INTEGER             NOT NULL DEFAULT 0,
+                    "XPVoice"       INTEGER             NOT NULL DEFAULT 0
+                );
+                """;
+        String setupSkillTree = """
+                CREATE TABLE IF NOT EXISTS "SkillTree"
                 (
                     "UserID"        INTEGER PRIMARY KEY NOT NULL,
                     "XP"            INTEGER             NOT NULL DEFAULT 0,

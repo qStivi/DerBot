@@ -233,7 +233,7 @@ public class PlayCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return xp * Bot.happyHour;
+        return xp;
     }
 
     private enum RequestType {

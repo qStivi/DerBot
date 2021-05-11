@@ -46,6 +46,6 @@ public class DonateCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return xp * Bot.happyHour;
+        return xp;
     }
 }

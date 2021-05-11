@@ -137,7 +137,7 @@ public class SlotsCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 3 * Bot.happyHour;
+        return 3;
     }
 }
 

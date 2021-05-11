@@ -51,6 +51,6 @@ public class WorkCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return xpGain * Bot.happyHour;
+        return xpGain;
     }
 }
