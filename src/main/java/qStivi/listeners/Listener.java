@@ -63,7 +63,7 @@ public class Listener extends ListenerAdapter {
                 if (voiceChannel == null) return;
 
                 var amountOfUsers = voiceChannel.getMembers().size();
-                var xp = (3 * amountOfUsers) + 2;
+                var xp = ((3L * amountOfUsers) + 2) * Bot.happyHour;
                 try {
                     var db = new DB();
 
@@ -159,9 +159,10 @@ public class Listener extends ListenerAdapter {
             var db = new DB();
             var id = reactingUser.getIdLong();
 
+            var xp = 5 * Bot.happyHour;
             db.setLastReaction(new Date().getTime(), id);
-            db.incrementXPReaction(5, id);
-            db.incrementXP(5, id);
+            db.incrementXPReaction(xp, id);
+            db.incrementXP(xp, id);
 
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();

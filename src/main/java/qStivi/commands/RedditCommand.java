@@ -104,6 +104,6 @@ public class RedditCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 30 * Bot.happyHour;
+        return 30;
     }
 }
