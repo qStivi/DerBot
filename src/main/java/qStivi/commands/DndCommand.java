@@ -1,6 +1,7 @@
 package qStivi.commands;
 
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import qStivi.Bot;
 import qStivi.ICommand;
 import qStivi.audioManagers.PlayerManager;
 import qStivi.listeners.ControlsManager;

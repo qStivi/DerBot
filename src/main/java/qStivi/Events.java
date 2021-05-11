@@ -19,6 +19,8 @@ public class Events {
     AtomicReference<TextChannel> channel = new AtomicReference<>();
     boolean lottoAnnouncement = false;
     boolean resultSent = false;
+    private boolean happyHourMessageSent = false;
+    private boolean happyHourOverSent = false;
 
     public Events(JDA jda) {
         this.jda = jda;
@@ -79,6 +81,26 @@ public class Events {
                 }
                 // Lotto end
 
+                // Happy half begin
+                if (day.equalsIgnoreCase("monday") && hour == 11 && minute >= 10){
+                    Bot.happyHour = 2;
+                    if (!happyHourMessageSent){
+                        channel.get().sendMessage("Happy half is starting now! :clock730:").queue();
+                        happyHourMessageSent = true;
+                        happyHourOverSent = false;
+                    }
+                } else {
+                    Bot.happyHour = 1;
+                    happyHourMessageSent = false;
+                }
+                if (day.equalsIgnoreCase("monday") && hour == 11 && minute >= 40) {
+                    if (!happyHourOverSent){
+                        channel.get().sendMessage("Happy half is over... :clock8:").queue();
+                        happyHourOverSent = true;
+                    }
+                }
+                // Happy half end
+
 
             }
         }, 0, 1000)).start();
@@ -91,7 +113,7 @@ public class Events {
         players = db.getLottoParticipants();
         var sb = new StringBuilder();
         for (long id : players) {
-//            appendUsers(sb, id);
+            appendUsers(sb, id);
         }
 
         channel.get().sendMessage(sb + " \nThe raffle will be held in 5 minutes!").queue();
@@ -118,7 +140,7 @@ public class Events {
 
             var sb = new StringBuilder();
             for (long id : winners) {
-//                appendUsers(sb, id);
+                appendUsers(sb, id);
                 money = Math.floorDiv(db.getLottoPool(), winners.size());
                 db.incrementCommandMoney("lotto", money, id);
                 db.incrementMoney(money, id);

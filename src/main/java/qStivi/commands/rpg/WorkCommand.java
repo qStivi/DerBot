@@ -2,6 +2,7 @@ package qStivi.commands.rpg;
 
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
+import qStivi.Bot;
 import qStivi.ICommand;
 import qStivi.db.DB;
 
@@ -24,7 +25,7 @@ public class WorkCommand implements ICommand {
 
         var diff = new Date().getTime() / 1000 - db.getCommandLastHandled(getName(), id) / 1000;
         if (diff > 1200) {
-            long salary = 1000 + (lvl * 10);
+            long salary = (1000 + (lvl * 10)) * Bot.happyHour;
             db.incrementMoney(salary, id);
             db.incrementCommandMoney(getName(), salary, id);
             hook.sendMessage("You earned " + salary + " gems").queue();
@@ -50,6 +51,6 @@ public class WorkCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return xpGain;
+        return xpGain * Bot.happyHour;
     }
 }

@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import qStivi.BlackJack;
+import qStivi.Bot;
 import qStivi.Card;
 import qStivi.ICommand;
 import qStivi.db.DB;
@@ -121,6 +122,7 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
     }
 
     private void endGame(@NotNull GuildMessageReactionAddEvent event, DB db, BlackJack bj, long reward, String title) throws SQLException {
+        reward = reward * Bot.happyHour;
         var id = event.getUser().getIdLong();
         var messageId = event.getMessageId();
         bj.embed.setTitle(title);
@@ -186,6 +188,6 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
 
     @Override
     public long getXp() {
-        return 3;
+        return 3 * Bot.happyHour;
     }
 }

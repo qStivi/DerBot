@@ -2,6 +2,7 @@ package qStivi.commands.rpg;
 
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
+import qStivi.Bot;
 import qStivi.ICommand;
 import qStivi.db.DB;
 
@@ -19,7 +20,7 @@ public class BegCommand implements ICommand {
         if (luck > chance) {
             var db = new DB();
             var id = event.getAuthor().getIdLong();
-            var earning = ThreadLocalRandom.current().nextInt(1, 3);
+            var earning = ThreadLocalRandom.current().nextInt(1, 3) * Bot.happyHour;
             db.incrementMoney(earning, id);
             db.incrementCommandMoney(getName(), earning, id);
             event.getChannel().sendMessage("Someone gave you " + earning + ":gem:").queue();
@@ -43,6 +44,6 @@ public class BegCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return xp;
+        return xp * Bot.happyHour;
     }
 }

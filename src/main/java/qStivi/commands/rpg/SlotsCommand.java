@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
+import qStivi.Bot;
 import qStivi.ICommand;
 import qStivi.db.DB;
 
@@ -114,6 +115,7 @@ public class SlotsCommand implements ICommand {
     }
 
     private void win(DB db, long id, TextChannel channel, EmbedBuilder embed, long gain) throws SQLException {
+        gain = gain  * Bot.happyHour;
         embed.setColor(Color.green);
         db.incrementMoney(gain, id);
         db.incrementGameWins(getName(), 1, id);
@@ -135,7 +137,7 @@ public class SlotsCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 3;
+        return 3 * Bot.happyHour;
     }
 }
 

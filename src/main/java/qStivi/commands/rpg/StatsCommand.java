@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import qStivi.Bot;
 import qStivi.ICommand;
 import qStivi.db.DB;
 
@@ -66,6 +67,6 @@ public class StatsCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 3;
+        return 3 * Bot.happyHour;
     }
 }

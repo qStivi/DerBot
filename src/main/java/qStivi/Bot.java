@@ -20,16 +20,18 @@ import java.util.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Bot {
-    public static final boolean DEV_MODE = false;
+    public static final boolean DEV_MODE = true;
     public static final String CHANNEL_ID = Config.get("CHANNEL_ID");
     public static final long DEV_CHANNEL_ID = 834012016481271908L;
     public static final long DEV_VOICE_CHANNEL_ID = 805955515241725983L;
-    private static final Timer reminder = new Timer();
     private static final Timer activityUpdate = new Timer();
     private static final String ACTIVITY = "Evolving...";
     private static final Logger logger = getLogger(Bot.class);
 
+    public static long happyHour = 1;
+
     public static void main(String[] args) throws LoginException, SQLException, ClassNotFoundException {
+        logger.info(String.valueOf(Bot.DEV_MODE));
         var token = DEV_MODE ? Config.get("DEV_TOKEN") : Config.get("TOKEN");
 
         if (DEV_MODE) {
@@ -45,14 +47,17 @@ public class Bot {
                 .enableCache(CacheFlag.VOICE_STATE)
                 .setActivity(getActivity())
                 .build();
+        logger.info(String.valueOf(Bot.DEV_MODE));
 
         jda.addEventListener(new CommandManager());
         jda.updateCommands().addCommands().queue();
 
         new DB();
         new Events(jda);
+        logger.info(String.valueOf(Bot.DEV_MODE));
 
         if (DEV_MODE) return; // Don't continue if in development mode.
+        logger.info(String.valueOf(Bot.DEV_MODE));
 
         activityUpdate.schedule(new TimerTask() {
             @Override

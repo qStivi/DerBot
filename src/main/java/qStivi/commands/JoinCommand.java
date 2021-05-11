@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
+import qStivi.Bot;
 import qStivi.ICommand;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -57,6 +58,6 @@ public class JoinCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 3;
+        return 3 * Bot.happyHour;
     }
 }

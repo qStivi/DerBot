@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
+import qStivi.Bot;
 import qStivi.ICommand;
 import qStivi.listeners.CommandManager;
 
@@ -50,6 +51,6 @@ public class CleanCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 9;
+        return 9 * Bot.happyHour;
     }
 }

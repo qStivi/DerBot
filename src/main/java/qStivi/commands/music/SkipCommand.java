@@ -1,6 +1,7 @@
 package qStivi.commands.music;
 
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import qStivi.Bot;
 import qStivi.ICommand;
 import qStivi.audioManagers.PlayerManager;
 
@@ -27,6 +28,6 @@ public class SkipCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 3;
+        return 3 * Bot.happyHour;
     }
 }

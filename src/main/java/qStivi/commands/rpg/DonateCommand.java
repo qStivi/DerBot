@@ -2,6 +2,7 @@ package qStivi.commands.rpg;
 
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
+import qStivi.Bot;
 import qStivi.ICommand;
 import qStivi.db.DB;
 
@@ -18,15 +19,12 @@ public class DonateCommand implements ICommand {
 
         if (money < 0) return;
 
-        //noinspection ConstantConditions
         if (db.getMoney(event.getAuthor().getIdLong()) < money) {
             event.getChannel().sendMessage("You don't have enough money to do that!").queue();
             return;
         }
 
-//        db.decrement("users", "money", "id", event.getAuthor().getIdLong(), money);
         db.decrementMoney(money, event.getAuthor().getIdLong());
-//        db.increment("users", "money", "id", user.getIdLong(), money);
         db.incrementMoney(money, user.getIdLong());
 
         event.getChannel().sendMessage("You donated " + money + ":gem: to " + user.getName()).queue();
@@ -48,6 +46,6 @@ public class DonateCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return xp;
+        return xp * Bot.happyHour;
     }
 }

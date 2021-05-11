@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.apache.hc.core5.http.ParseException;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import qStivi.Bot;
 import qStivi.ICommand;
 import qStivi.apis.Spotify;
 import qStivi.apis.YouTube;
@@ -232,7 +233,7 @@ public class PlayCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return xp;
+        return xp * Bot.happyHour;
     }
 
     private enum RequestType {

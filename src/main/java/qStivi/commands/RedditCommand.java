@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import qStivi.Bot;
 import qStivi.Config;
 import qStivi.ICommand;
 
@@ -103,6 +104,6 @@ public class RedditCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 30;
+        return 30 * Bot.happyHour;
     }
 }

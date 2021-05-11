@@ -1,6 +1,7 @@
 package qStivi.commands;
 
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import qStivi.Bot;
 import qStivi.ICommand;
 
 import javax.annotation.Nonnull;
@@ -26,6 +27,7 @@ public class TestCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 0;
+        //noinspection PointlessArithmeticExpression
+        return 1 * Bot.happyHour;
     }
 }

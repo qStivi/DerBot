@@ -3,6 +3,7 @@ package qStivi.commands;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import qStivi.Bot;
 import qStivi.ICommand;
 
 import javax.annotation.Nonnull;
@@ -116,6 +117,6 @@ public class RollCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 15;
+        return 15 * Bot.happyHour;
     }
 }

@@ -2,6 +2,7 @@ package qStivi.commands;
 
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
+import qStivi.Bot;
 import qStivi.ICommand;
 
 public class LeaveCommand implements ICommand {
@@ -27,6 +28,6 @@ public class LeaveCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 3;
+        return 3 * Bot.happyHour;
     }
 }
