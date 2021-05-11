@@ -44,6 +44,6 @@ public class BegCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return xp * Bot.happyHour;
+        return xp;
     }
 }

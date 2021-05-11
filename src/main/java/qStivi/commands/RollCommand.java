@@ -3,7 +3,6 @@ package qStivi.commands;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import qStivi.Bot;
 import qStivi.ICommand;
 
 import javax.annotation.Nonnull;
@@ -59,7 +58,7 @@ public class RollCommand implements ICommand {
             embed.setColor(Color.red);
         } else if (rolls.stream().filter(integer -> integer == 1).count() < rolls.stream().filter(integer -> integer == numOfSides).count()) {
             embed.setColor(Color.green);
-        } else if (rolls.containsAll(List.of(1, numOfSides)) && rolls.stream().filter(integer -> integer == 1).count() == rolls.stream().filter(integer -> integer == numOfSides).count()) {
+        } else if (rolls.containsAll(List.of(1L, (long) numOfSides)) && rolls.stream().filter(integer -> integer == 1).count() == rolls.stream().filter(integer -> integer == numOfSides).count()) {
             embed.setColor(Color.yellow);
         }
 
@@ -117,6 +116,6 @@ public class RollCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 15 * Bot.happyHour;
+        return 15;
     }
 }

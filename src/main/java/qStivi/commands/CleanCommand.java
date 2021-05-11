@@ -51,6 +51,6 @@ public class CleanCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 9 * Bot.happyHour;
+        return 9;
     }
 }

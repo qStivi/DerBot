@@ -27,7 +27,6 @@ public class TestCommand implements ICommand {
 
     @Override
     public long getXp() {
-        //noinspection PointlessArithmeticExpression
-        return 1 * Bot.happyHour;
+        return 1;
     }
 }
