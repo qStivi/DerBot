@@ -16,7 +16,7 @@ public class TrackScheduler extends AudioEventAdapter {
      */
     final BlockingQueue<AudioTrack> queue;
     /**
-     * TODO
+     *
      */
     private final AudioPlayer player;
     /**

@@ -135,7 +135,7 @@ public class Listener extends ListenerAdapter {
         var reactingUser = event.getUser();
 
         /*
-        TODO Why is this so stupid!?
+        Why is this so stupid!?
         Also there has to be a better way. At least regarding the AtomicReference...
          */
         AtomicReference<User> messageAuthor = new AtomicReference<>();
