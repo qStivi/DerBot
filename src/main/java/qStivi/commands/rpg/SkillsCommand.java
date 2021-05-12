@@ -40,6 +40,7 @@ public class SkillsCommand implements ICommand {
             }
         } else if (args.length == 3){
                 var amount = Integer.parseInt(args[2]);
+                if (amount > skillPoints) return;
                 switch (Integer.parseInt(args[1])){
                     case 1:
                         db.incrementSkillWorkMoney(id, amount);
