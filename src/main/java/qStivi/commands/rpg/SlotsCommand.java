@@ -50,6 +50,11 @@ public class SlotsCommand implements ICommand {
 
         if (bet < 0) return;
 
+        if (bet > 80000){
+            channel.sendMessage("Sorry but you can only bet 80k at most.").queue();
+            return;
+        }
+
         var first = getRandomSymbol();
         var second = getRandomSymbol();
         var third = getRandomSymbol();
