@@ -1118,13 +1118,13 @@ public class DB {
         return list;
     }
 
-    public int getLottoPool() throws SQLException {
+    public long getLottoPool() throws SQLException {
         String query = "SELECT \"Vote\" FROM \"Lotto\" WHERE \"UserID\" = 0;";
         var connection = connect();
         var result = connection.createStatement().executeQuery(query);
-        int value = 0;
+        long value = 0;
         while (result.next()) {
-            value = result.getInt("Vote");
+            value = result.getLong("Vote");
         }
         connection.close();
         return value;
