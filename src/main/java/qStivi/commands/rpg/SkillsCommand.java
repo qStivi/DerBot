@@ -14,12 +14,14 @@ public class SkillsCommand implements ICommand {
         var db = new DB();
         var id = event.getAuthor().getIdLong();
         db.insertSkillTreeIfNotExists(id);
-        var skillPoints = db.getSkillPoints(id);
+        var spentSkillPoints = db.getSpentSkillPoints(id);
+        long totalSkillPoints = db.getXP(id) / 800;
+        var availableSkillPoints = totalSkillPoints - spentSkillPoints;
         var channel = event.getChannel();
 
-        if (args.length == 1){
+        if (args.length == 1) {
             var embed = new EmbedBuilder();
-            embed.setFooter("Available skill points: " + skillPoints);
+            embed.setFooter("Available skill points: " + availableSkillPoints);
             embed.setAuthor(event.getMember().getEffectiveName(), null, event.getAuthor().getAvatarUrl());
             embed.addField("Efficient worker :chart_with_upwards_trend:", "You do your work more efficiently which means you get more done. Increases your wage. (1%)", false);
             embed.addField("Skill Points: " + db.getSkillPointsWorkMoney(id), "", false);
@@ -31,30 +33,38 @@ public class SkillsCommand implements ICommand {
             embed.addField("Skill Points: " + db.getSkillPointsSocialXP(id), "", false);
 
             channel.sendMessage(embed.build()).queue();
-        } else if (args.length == 2){
-            if (args[1].equalsIgnoreCase("reset")){
+        } else if (args.length == 2) {
+            if (args[1].equalsIgnoreCase("reset")) {
                 var money = db.getMoney(id);
-                if (money > 999999){
+                if (money > 999999) {
                     db.resetSkillTree(id);
                 }
             }
-        } else if (args.length == 3){
-                var amount = Integer.parseInt(args[2]);
-                if (amount > skillPoints) return;
-                switch (Integer.parseInt(args[1])){
-                    case 1:
-                        db.incrementSkillWorkMoney(id, amount);
-                        break;
-                    case 2:
-                        db.incrementSkillWorkXP(id, amount);
-                        break;
-                    case 3:
-                        db.incrementSkillGambleXP(id, amount);
-                        break;
-                    case 4:
-                        db.incrementSkillSocialXP(id, amount);
-                        break;
-                }
+        } else if (args.length == 3) {
+            var amount = Integer.parseInt(args[2]);
+            if (amount > availableSkillPoints) return;
+            boolean successful = false;
+            switch (Integer.parseInt(args[1])) {
+                case 1:
+                    db.incrementSkillWorkMoney(id, amount);
+                    successful = true;
+                    break;
+                case 2:
+                    db.incrementSkillWorkXP(id, amount);
+                    successful = true;
+                    break;
+                case 3:
+                    db.incrementSkillGambleXP(id, amount);
+                    successful = true;
+                    break;
+                case 4:
+                    db.incrementSkillSocialXP(id, amount);
+                    successful = true;
+                    break;
+            }
+            if (successful) {
+                db.decrementSkillPoints(id, amount);
+            }
         }
     }
 

@@ -1189,9 +1189,18 @@ public class DB {
     }
 
     public void resetSkillTree(long id) throws SQLException {
-        String query = "DELETE FROM \"SkillTrees\" WHERE \"UserID\" == %s".formatted(id);
+        long level = getXP(id) / 800;
+        String setSkillPoints = """
+                UPDATE "SkillTrees"
+                SET "SkillPoints" = %s,
+                "SocialXP"    = 0,
+                "GambleXP"    = 0,
+                "WorkMoney"   = 0,
+                "WorkXP"      = 0
+                WHERE "UserID" = %s;
+                """.formatted(level, id);
         var connection = connect();
-        connection.createStatement().execute(query);
+        connection.createStatement().execute(setSkillPoints);
         connection.close();
     }
 
@@ -1237,5 +1246,31 @@ public class DB {
             connection.createStatement().execute(upsert);
             connection.close();
         }
+    }
+
+    public void decrementSkillPoints(long id, int amount) throws SQLException {
+        var upsert = """
+                UPDATE "SkillTrees" SET "SkillPoints" = "SkillPoints" - %s WHERE "UserID" = %s;
+                """.formatted(amount, id);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
+    }
+
+    public long getSpentSkillPoints(long id) throws SQLException {
+        String query = "SELECT \"WorkXP\", \"WorkMoney\", \"GambleXP\", \"SocialXP\" FROM \"SkillTrees\" WHERE \"UserID\" = %s;".formatted(id);
+        var connection = connect();
+        var result = connection.createStatement().executeQuery(query);
+        long value = 0;
+        while (result.next()) {
+            value += result.getLong("WorkMoney");
+            value += result.getLong("WorkXP");
+            value += result.getLong("GambleXP");
+            value += result.getLong("SocialXP");
+        }
+        connection.close();
+        return value;
     }
 }
