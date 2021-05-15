@@ -7,6 +7,8 @@ import qStivi.ICommand;
 import qStivi.db.DB;
 
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class SkillsCommand implements ICommand {
     @Override
@@ -36,8 +38,12 @@ public class SkillsCommand implements ICommand {
         } else if (args.length == 2) {
             if (args[1].equalsIgnoreCase("reset")) {
                 var money = db.getMoney(id);
-                if (money > 999999) {
+                if (money > 99999 && new Date().getTime() / 1000 - db.getSkillLastReset(id) / 1000 > TimeUnit.DAYS.toMillis(3)) {
                     db.resetSkillTree(id);
+                    db.decrementMoney(100000, id);
+                    db.setSkillLastReset(id, new Date().getTime());
+                } else {
+                    channel.sendMessage("Nope.").queue();
                 }
             }
         } else if (args.length == 3) {
@@ -45,22 +51,22 @@ public class SkillsCommand implements ICommand {
             if (amount > availableSkillPoints) return;
             boolean successful = false;
             switch (Integer.parseInt(args[1])) {
-                case 1:
+                case 1 -> {
                     db.incrementSkillWorkMoney(id, amount);
                     successful = true;
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     db.incrementSkillWorkXP(id, amount);
                     successful = true;
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     db.incrementSkillGambleXP(id, amount);
                     successful = true;
-                    break;
-                case 4:
+                }
+                case 4 -> {
                     db.incrementSkillSocialXP(id, amount);
                     successful = true;
-                    break;
+                }
             }
             if (successful) {
                 db.decrementSkillPoints(id, amount);

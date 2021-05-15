@@ -41,6 +41,7 @@ public class DB {
                     "WorkMoney"   INTEGER             NOT NULL DEFAULT 0,
                     "GambleXP"    INTEGER             NOT NULL DEFAULT 0,
                     "SocialXP"    INTEGER             NOT NULL DEFAULT 0,
+                    "LastReset"   INTEGER             NOT NULL DEFAULT 0,
                     FOREIGN KEY ("UserID") REFERENCES "UserData" ("UserID") ON UPDATE CASCADE ON DELETE CASCADE
                 );
                 """;
@@ -1272,5 +1273,28 @@ public class DB {
         }
         connection.close();
         return value;
+    }
+
+    public long getSkillLastReset(long id) throws SQLException {
+        String query = "select \"LastReset\" from \"SkillTrees\" where \"UserID\" = %s".formatted(id);
+        var connection = connect();
+        var result = connection.createStatement().executeQuery(query);
+        long value = 0;
+        while (result.next()) {
+            value = result.getLong("LastReset");
+        }
+        connection.close();
+        return value;
+    }
+
+    public void setSkillLastReset(long id, long time) throws SQLException {
+        var upsert = """
+                UPDATE SkillTrees SET LastReset = %s WHERE UserID = %s;
+                """.formatted(time, id);
+        var connection = connect();
+        if (connection != null) {
+            connection.createStatement().execute(upsert);
+            connection.close();
+        }
     }
 }
