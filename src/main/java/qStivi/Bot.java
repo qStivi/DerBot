@@ -20,7 +20,7 @@ import java.util.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Bot {
-    public static final boolean DEV_MODE = true;
+    public static boolean DEV_MODE = false;
     public static final String CHANNEL_ID = Config.get("CHANNEL_ID");
     public static final long DEV_CHANNEL_ID = 834012016481271908L;
     public static final long DEV_VOICE_CHANNEL_ID = 805955515241725983L;
@@ -50,7 +50,6 @@ public class Bot {
         logger.info(String.valueOf(Bot.DEV_MODE));
 
         jda.addEventListener(new CommandManager());
-        jda.updateCommands().addCommands().queue();
 
         new DB();
         new Events(jda);

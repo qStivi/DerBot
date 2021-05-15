@@ -31,9 +31,9 @@ dependencies {
 
     // https://github.com/DV8FromTheWorld/JDA
     // https://github.com/DV8FromTheWorld/JDA/pull/1501
-//    compile group: 'net.dv8tion', name: 'JDA', version: '4.2.1_259'
+    compile group: 'net.dv8tion', name: 'JDA', version: '4.2.1_262'
 //    compile 'com.github.dv8fromtheworld:jda:feature~slash-commands-SNAPSHOT'
-    compile 'com.github.dv8fromtheworld:jda:7c2a506778515ea7913beac1980d41c57dfbf467'
+//    compile 'com.github.dv8fromtheworld:jda:7c2a506778515ea7913beac1980d41c57dfbf467'
 
     // https://github.com/sedmelluq/LavaPlayer#lavaplayer---audio-player-library-for-discord
     implementation 'com.sedmelluq:lavaplayer:1.3.75'
@@ -45,7 +45,7 @@ dependencies {
     compile group: 'org.json', name: 'json', version: '20210307'
 
     // https://github.com/thelinmichael/spotify-web-api-java
-    compile 'se.michaelthelin.spotify:spotify-web-api-java:6.5.3'
+    compile 'se.michaelthelin.spotify:spotify-web-api-java:6.5.4'
 
     compile 'org.junit.jupiter:junit-jupiter:5.7.0'
 
