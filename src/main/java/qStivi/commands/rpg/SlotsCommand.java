@@ -18,6 +18,7 @@ public class SlotsCommand implements ICommand {
             new Symbol(0.321829794869f, "<:seven:836662334729617517>", 5),
             new Symbol(0.584803547643f, "<:Cherry:836664853392785448>", 1.5)
     };
+    private long xp;
 
     public static Symbol getRandomSymbol() {
 
@@ -110,6 +111,8 @@ public class SlotsCommand implements ICommand {
                         db.incrementLottoPool(bet/2);
                     }
         channel.sendMessage(embed.build()).queue();
+
+        xp = 3 + (long) (3 * SkillsCommand.getGambleXPMultiplier(event.getAuthor().getIdLong()));
     }
 
     private void win(DB db, long id, TextChannel channel, EmbedBuilder embed, long gain) throws SQLException {
@@ -135,7 +138,7 @@ public class SlotsCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 3;
+        return xp;
     }
 }
 

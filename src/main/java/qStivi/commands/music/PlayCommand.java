@@ -12,9 +12,11 @@ import qStivi.ICommand;
 import qStivi.apis.Spotify;
 import qStivi.apis.YouTube;
 import qStivi.audioManagers.PlayerManager;
+import qStivi.commands.rpg.SkillsCommand;
 import qStivi.listeners.ControlsManager;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.Normalizer;
 import java.util.Collections;
 import java.util.List;
@@ -207,13 +209,14 @@ public class PlayCommand implements ICommand {
             var msg = playSong(args, false, event.getChannel(), event.getGuild());
             if (msg != null) {
                 hook.sendMessage(msg).queue();
-                xp = 30;
+
+                xp = 30 + (long) (30 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
             } else {
 
                 hook.sendMessage("Something went wrong!").queue();
             }
 //            }
-        } catch (ParseException | SpotifyWebApiException | IOException e) {
+        } catch (ParseException | SpotifyWebApiException | IOException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             hook.sendMessage("Something went wrong :(").queue();
         }

@@ -24,7 +24,8 @@ public class BegCommand implements ICommand {
             db.incrementMoney(earning, id);
             db.incrementCommandMoney(getName(), earning, id);
             event.getChannel().sendMessage("Someone gave you " + earning + ":gem:").queue();
-            xp = 6;
+
+            xp = 6 + (long) (6 * SkillsCommand.getGambleXPMultiplier(event.getAuthor().getIdLong()));
         } else {
             event.getChannel().sendMessage("You didn't get anything!").queue();
         }

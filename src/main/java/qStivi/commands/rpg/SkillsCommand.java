@@ -1,6 +1,7 @@
 package qStivi.commands.rpg;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
@@ -11,30 +12,20 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class SkillsCommand implements ICommand {
+    private long xp;
+
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException, InterruptedException {
         var db = new DB();
         var id = event.getAuthor().getIdLong();
-        db.insertSkillTreeIfNotExists(id);
-        var spentSkillPoints = db.getSpentSkillPoints(id);
         long totalSkillPoints = db.getXP(id) / 800;
+        db.insertSkillTreeIfNotExists(id, totalSkillPoints);
+        var spentSkillPoints = db.getSpentSkillPoints(id);
         var availableSkillPoints = totalSkillPoints - spentSkillPoints;
         var channel = event.getChannel();
 
         if (args.length == 1) {
-            var embed = new EmbedBuilder();
-            embed.setFooter("Available skill points: " + availableSkillPoints);
-            embed.setAuthor(event.getMember().getEffectiveName(), null, event.getAuthor().getAvatarUrl());
-            embed.addField("Efficient worker :chart_with_upwards_trend:", "You do your work more efficiently which means you get more done. Increases your wage. (1%)", false);
-            embed.addField("Skill Points: " + db.getSkillPointsWorkMoney(id), "", false);
-            embed.addField("Attentive worker :office_worker_tone2:", "You pay more attention to what you are doing. Increases XP from working. (4%)", false);
-            embed.addField("Skill Points: " + db.getSkillPointsWorkXP(id), "", false);
-            embed.addField("Attentive gambler :slot_machine:", "You pay more attention to what you are doing. Increases XP from gambling. (10%)", false);
-            embed.addField("Skill Points: " + db.getSkillPointsGambleXP(id), "", false);
-            embed.addField("Socializer :microphone2:", "You socialize more than others. Increases XP from voice chat, chat messages, relations, and other non-gambling/RPG commands. (1%)", false);
-            embed.addField("Skill Points: " + db.getSkillPointsSocialXP(id), "", false);
-
-            channel.sendMessage(embed.build()).queue();
+            sendStatBlock(event, totalSkillPoints, db, id, channel);
         } else if (args.length == 2) {
             if (args[1].equalsIgnoreCase("reset")) {
                 var money = db.getMoney(id);
@@ -42,6 +33,7 @@ public class SkillsCommand implements ICommand {
                     db.resetSkillTree(id);
                     db.decrementMoney(100000, id);
                     db.setSkillLastReset(id, new Date().getTime());
+                    sendStatBlock(event, totalSkillPoints, db, id, channel);
                 } else {
                     channel.sendMessage("Nope.").queue();
                 }
@@ -70,9 +62,52 @@ public class SkillsCommand implements ICommand {
             }
             if (successful) {
                 db.decrementSkillPoints(id, amount);
+                sendStatBlock(event, totalSkillPoints, db, id, channel);
             }
         }
+
+        xp = 3 + (long) (3 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
     }
+
+    private void sendStatBlock(GuildMessageReceivedEvent event, long totalSkillPoints, DB db, long id, TextChannel channel) throws SQLException {
+        var spentSkillPoints = db.getSpentSkillPoints(id);
+        var availableSkillPoints = totalSkillPoints - spentSkillPoints;
+        var embed = new EmbedBuilder();
+        embed.setFooter("Available skill points: " + availableSkillPoints);
+        embed.setAuthor(event.getMember().getEffectiveName(), null, event.getAuthor().getAvatarUrl());
+        embed.addField("Efficient worker :chart_with_upwards_trend:", "You do your work more efficiently which means you get more done. Increases your wage. (1%)", false);
+        embed.addField("Skill Points: " + db.getSkillPointsWorkMoney(id), "", false);
+        embed.addField("Attentive worker :office_worker_tone2:", "You pay more attention to what you are doing. Increases XP from working. (4%)", false);
+        embed.addField("Skill Points: " + db.getSkillPointsWorkXP(id), "", false);
+        embed.addField("Attentive gambler :slot_machine:", "You pay more attention to what you are doing. Increases XP from gambling. (10%)", false);
+        embed.addField("Skill Points: " + db.getSkillPointsGambleXP(id), "", false);
+        embed.addField("Socializer :microphone2:", "You socialize more than others. Increases XP from voice chat, chat messages, relations, and other non-gambling/RPG commands. (1%)", false);
+        embed.addField("Skill Points: " + db.getSkillPointsSocialXP(id), "", false);
+
+        channel.sendMessage(embed.build()).queue();
+    }
+
+    public static float getWorkMoneyMultiplier(long id) throws SQLException, ClassNotFoundException {
+        var skillPoints = new DB().getSkillPointsWorkMoney(id);
+        return (float) skillPoints / 100;
+    }
+
+    public static float getWorkXPMultiplier(long id) throws SQLException, ClassNotFoundException {
+        var skillPoints = new DB().getSkillPointsWorkXP(id);
+        return (float) skillPoints / 25;
+    }
+
+    public static float getGambleXPMultiplier(long id) throws SQLException, ClassNotFoundException {
+        var skillPoints = new DB().getSkillPointsGambleXP(id);
+        return (float) skillPoints / 10;
+    }
+
+    public static float getSocialXPPMultiplier(long id) throws SQLException, ClassNotFoundException {
+        var skillPoints = new DB().getSkillPointsSocialXP(id);
+        return (float) skillPoints / 100;
+    }
+
+
 
     @NotNull
     @Override
@@ -88,6 +123,6 @@ public class SkillsCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 0;
+        return xp;
     }
 }

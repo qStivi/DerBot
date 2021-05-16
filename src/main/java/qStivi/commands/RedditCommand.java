@@ -16,8 +16,10 @@ import org.slf4j.Logger;
 import qStivi.Bot;
 import qStivi.Config;
 import qStivi.ICommand;
+import qStivi.commands.rpg.SkillsCommand;
 
 import javax.annotation.CheckReturnValue;
+import java.sql.SQLException;
 import java.text.Normalizer;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -30,9 +32,10 @@ public class RedditCommand implements ICommand {
     Credentials credentials = Credentials.script("qStivi", Config.get("REDDIT_PASSWORD"), Config.get("REDDIT_ID"), Config.get("REDDIT_SECRET"));
     NetworkAdapter adapter = new OkHttpNetworkAdapter(userAgent);
     RedditClient reddit = OAuthHelper.automatic(adapter, credentials);
+    private long xp;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) {
+    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         var hook = event.getChannel();
 
         String url;
@@ -71,6 +74,8 @@ public class RedditCommand implements ICommand {
         } else {
             hook.sendMessage(permalink(randomSubmission)).queue();
         }
+
+        xp = 3 + (long) (3 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
     }
 
     @CheckReturnValue
@@ -104,6 +109,6 @@ public class RedditCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 30;
+        return xp;
     }
 }

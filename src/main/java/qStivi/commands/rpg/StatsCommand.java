@@ -14,6 +14,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class StatsCommand implements ICommand {
     private static final Logger logger = getLogger(StatsCommand.class);
+    private long totalXP;
 
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
@@ -51,6 +52,8 @@ public class StatsCommand implements ICommand {
         embed.addField("XP", String.valueOf(xp), true);
 
         hook.sendMessage(embed.build()).queue();
+
+        totalXP = 3 + (long) (3 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
     }
 
     @NotNull
@@ -67,6 +70,6 @@ public class StatsCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 3;
+        return totalXP;
     }
 }

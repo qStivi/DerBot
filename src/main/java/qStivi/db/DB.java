@@ -1182,8 +1182,8 @@ public class DB {
         return value;
     }
 
-    public void insertSkillTreeIfNotExists(long id) throws SQLException {
-        String query = "INSERT INTO \"SkillTrees\"(UserID) VALUES(%s) ON CONFLICT DO NOTHING;".formatted(id);
+    public void insertSkillTreeIfNotExists(long id, long skillPoints) throws SQLException {
+        String query = "INSERT INTO \"SkillTrees\"(UserID, SkillPoints) VALUES(%s, %s) ON CONFLICT DO NOTHING;".formatted(id, skillPoints);
         var connection = connect();
         connection.createStatement().execute(query);
         connection.close();
