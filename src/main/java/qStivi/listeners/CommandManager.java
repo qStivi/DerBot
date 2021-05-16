@@ -52,6 +52,7 @@ public class CommandManager extends ListenerAdapter {
         commandList.add(new BegCommand());
         commandList.add(new SlotsCommand());
         commandList.add(new LottoCommand());
+        commandList.add(new SkillsCommand());
 
         new Timer().schedule(new TimerTask() {
             @Override
@@ -70,7 +71,7 @@ public class CommandManager extends ListenerAdapter {
         str = str.toLowerCase().strip();
         str = Normalizer.normalize(str, Normalizer.Form.NFKD);
         str = str.replaceAll("[^a-z0-9A-Z -]", ""); // Remove all non valid chars
-        str = str.replaceAll("[ \\t]+", " ").trim(); // convert multiple spaces into one space
+        str = str.replaceAll(" ", " ").trim(); // convert multiple spaces into one space
         return str;
     }
 
@@ -85,7 +86,6 @@ public class CommandManager extends ListenerAdapter {
 
         if (author.isBot()) return;
         if (event.isWebhookMessage()) return;
-//        logger.info(String.valueOf(Bot.DEV_MODE));
         if (Bot.DEV_MODE) {
             if (channelID != DEV_CHANNEL_ID) {
                 return;
@@ -99,17 +99,12 @@ public class CommandManager extends ListenerAdapter {
                 return;
             }
         }
-//        logger.info(String.valueOf(Bot.DEV_MODE));
+
 
         try {
             if (isCommand(event)) {
 
-                String message;
-                if (!event.getMessage().getContentRaw().startsWith("/play")) {
-                    message = cleanForCommand(event.getMessage().getContentRaw());
-                } else {
-                    message = event.getMessage().getContentRaw().replaceFirst("/", "");
-                }
+                var message = cleanForCommand(event.getMessage().getContentRaw());
                 var args = message.split(" ");
 
                 for (var command : commandList) {
@@ -141,6 +136,7 @@ public class CommandManager extends ListenerAdapter {
 }
 
 class Command {
+    private static final Logger logger = getLogger(Command.class);
     ICommand command;
     GuildMessageReceivedEvent event;
     String[] args;
@@ -163,5 +159,9 @@ class Command {
         db.incrementXP(xp, id);
         db.incrementCommandTimesHandled(name, 1, id);
         if (!name.equalsIgnoreCase("work")) db.setCommandLastHandled(name, new Date().getTime(), id);
+
+//        event.getChannel().sendMessage("Command XP: " + command.getXp()).queue();
+//        event.getChannel().sendMessage("HappyHalf: " + Bot.happyHour).queue();
+//        event.getChannel().sendMessage("Total XP: " + xp).queue();
     }
 }

@@ -2,20 +2,20 @@ package qStivi.commands.rpg;
 
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
-import qStivi.Bot;
 import qStivi.ICommand;
 import qStivi.db.DB;
 
 import java.sql.SQLException;
 
 public class DonateCommand implements ICommand {
-    long xp = 0;
+    long totalXP = 0;
 
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         var user = event.getMessage().getMentionedUsers().get(0);
         var money = Long.parseLong(args[2]);
         var db = new DB();
+        totalXP = 0;
 
         if (money < 0) return;
 
@@ -29,7 +29,9 @@ public class DonateCommand implements ICommand {
 
         event.getChannel().sendMessage("You donated " + money + ":gem: to " + user.getName()).queue();
 
-        xp = (long) Math.floor(Math.sqrt(money)) + 5;
+        var xp = (long) Math.floor(Math.sqrt(money)) + 5;
+
+        totalXP = xp + (long) (xp * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
     }
 
     @NotNull
@@ -46,6 +48,6 @@ public class DonateCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return xp;
+        return totalXP;
     }
 }

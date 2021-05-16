@@ -18,6 +18,7 @@ public class SlotsCommand implements ICommand {
             new Symbol(0.321829794869f, "<:seven:836662334729617517>", 5),
             new Symbol(0.584803547643f, "<:Cherry:836664853392785448>", 1.5)
     };
+    private long xp;
 
     public static Symbol getRandomSymbol() {
 
@@ -36,6 +37,7 @@ public class SlotsCommand implements ICommand {
 
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException, InterruptedException {
+        xp = 0;
         if (event.isWebhookMessage()) return;
         var db = new DB();
         var id = event.getAuthor().getIdLong();
@@ -49,11 +51,6 @@ public class SlotsCommand implements ICommand {
         var channel = event.getChannel();
 
         if (bet < 0) return;
-
-        if (bet > 80000){
-            channel.sendMessage("Sorry but you can only bet 80k at most.").queue();
-            return;
-        }
 
         var first = getRandomSymbol();
         var second = getRandomSymbol();
@@ -114,9 +111,9 @@ public class SlotsCommand implements ICommand {
                         db.incrementGameLoses(getName(), 1, id);
                         db.incrementLottoPool(bet/2);
                     }
-
-
         channel.sendMessage(embed.build()).queue();
+
+        xp = 3 + (long) (3 * SkillsCommand.getGambleXPMultiplier(event.getAuthor().getIdLong()));
     }
 
     private void win(DB db, long id, TextChannel channel, EmbedBuilder embed, long gain) throws SQLException {
@@ -142,7 +139,7 @@ public class SlotsCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 3;
+        return xp;
     }
 }
 

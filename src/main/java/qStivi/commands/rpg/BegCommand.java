@@ -16,6 +16,7 @@ public class BegCommand implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         var luck = ThreadLocalRandom.current().nextFloat();
         var chance = .8;
+        xp = 0;
 
         if (luck > chance) {
             var db = new DB();
@@ -24,7 +25,8 @@ public class BegCommand implements ICommand {
             db.incrementMoney(earning, id);
             db.incrementCommandMoney(getName(), earning, id);
             event.getChannel().sendMessage("Someone gave you " + earning + ":gem:").queue();
-            xp = 6;
+
+            xp = 6 + (long) (6 * SkillsCommand.getGambleXPMultiplier(event.getAuthor().getIdLong()));
         } else {
             event.getChannel().sendMessage("You didn't get anything!").queue();
         }

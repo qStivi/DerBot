@@ -10,10 +10,13 @@ import java.text.DecimalFormat;
 import java.util.Date;
 
 public class LottoCommand implements ICommand {
+    private long xp;
+
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException, InterruptedException {
         var channel = event.getChannel();
         var id = event.getAuthor().getIdLong();
+        xp = 0;
 
         long vote;
         if (args.length > 1) {
@@ -54,6 +57,8 @@ public class LottoCommand implements ICommand {
 
         channel.sendMessage("You entered the raffle.").queue();
 
+
+        xp = 3 + (long) (3 * SkillsCommand.getGambleXPMultiplier(event.getAuthor().getIdLong()));
     }
 
     private void sendPoolInfo(GuildMessageReceivedEvent event) throws SQLException, ClassNotFoundException {
@@ -77,6 +82,6 @@ public class LottoCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 3;
+        return xp;
     }
 }

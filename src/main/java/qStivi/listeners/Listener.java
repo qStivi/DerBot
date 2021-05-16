@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import qStivi.Bot;
+import qStivi.commands.rpg.SkillsCommand;
 import qStivi.db.DB;
 
 import java.sql.SQLException;
@@ -40,9 +41,7 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
-        if (Bot.DEV_MODE && event.getChannelJoined().getIdLong() != Bot.DEV_VOICE_CHANNEL_ID) {
-            return;
-        }
+        if (Bot.DEV_MODE && event.getChannelJoined().getIdLong() != Bot.DEV_VOICE_CHANNEL_ID) return;
         if (event.getMember().getUser().isBot()) return;
 
 
@@ -53,6 +52,7 @@ public class Listener extends ListenerAdapter {
         }
 
         var id = event.getMember().getIdLong();
+        event.getGuild().getTextChannelById(834012016481271908L).sendMessage("yee").queue();
 
         list.add(new Task(new TimerTask() {
 
@@ -67,10 +67,16 @@ public class Listener extends ListenerAdapter {
                 var amountOfUsers = voiceChannel.getMembers().size();
                 var xp = ((3L * amountOfUsers) + 2) * Bot.happyHour;
                 try {
+                    xp += xp * SkillsCommand.getSocialXPPMultiplier(id);
+                } catch (SQLException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                try {
                     var db = new DB();
 
                     db.incrementXPVoice(xp, id);
                     db.incrementXP(xp, id);
+                    event.getGuild().getTextChannelById(834012016481271908L).sendMessage("Voice XP: " + xp).queue();
 
                 } catch (ClassNotFoundException | SQLException e) {
                     e.printStackTrace();
