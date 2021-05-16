@@ -71,7 +71,7 @@ public class CommandManager extends ListenerAdapter {
         str = str.toLowerCase().strip();
         str = Normalizer.normalize(str, Normalizer.Form.NFKD);
         str = str.replaceAll("[^a-z0-9A-Z -]", ""); // Remove all non valid chars
-        str = str.replaceAll(" ", " ").trim(); // convert multiple spaces into one space
+        str = str.replaceAll("[ \\t]+", " ").trim(); // convert multiple spaces into one space
         return str;
     }
 
@@ -86,6 +86,7 @@ public class CommandManager extends ListenerAdapter {
 
         if (author.isBot()) return;
         if (event.isWebhookMessage()) return;
+//        logger.info(String.valueOf(Bot.DEV_MODE));
         if (Bot.DEV_MODE) {
             if (channelID != DEV_CHANNEL_ID) {
                 return;
@@ -99,12 +100,17 @@ public class CommandManager extends ListenerAdapter {
                 return;
             }
         }
-
+//        logger.info(String.valueOf(Bot.DEV_MODE));
 
         try {
             if (isCommand(event)) {
 
-                var message = cleanForCommand(event.getMessage().getContentRaw());
+                String message;
+                if (!event.getMessage().getContentRaw().startsWith("/play")) {
+                    message = cleanForCommand(event.getMessage().getContentRaw());
+                } else {
+                    message = event.getMessage().getContentRaw().replaceFirst("/", "");
+                }
                 var args = message.split(" ");
 
                 for (var command : commandList) {

@@ -50,7 +50,6 @@ public class Bot {
         logger.info(String.valueOf(Bot.DEV_MODE));
 
         jda.addEventListener(new CommandManager());
-        jda.updateCommands().addCommands().queue();
 
         new DB();
         new Events(jda);
