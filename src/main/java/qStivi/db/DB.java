@@ -33,16 +33,17 @@ public class DB {
                 );
                 """;
         String setupSkillTree = """
-                CREATE TABLE IF NOT EXISTS "SkillTrees"
+                CREATE TABLE IF NOT EXISTS "SkillTree"
                 (
-                    "UserID"      INTEGER PRIMARY KEY NOT NULL,
-                    "SkillPoints" INTEGER             NOT NULL DEFAULT 0,
-                    "WorkXP"      INTEGER             NOT NULL DEFAULT 0,
-                    "WorkMoney"   INTEGER             NOT NULL DEFAULT 0,
-                    "GambleXP"    INTEGER             NOT NULL DEFAULT 0,
-                    "SocialXP"    INTEGER             NOT NULL DEFAULT 0,
-                    "LastReset"   INTEGER             NOT NULL DEFAULT 0,
-                    FOREIGN KEY ("UserID") REFERENCES "UserData" ("UserID") ON UPDATE CASCADE ON DELETE CASCADE
+                    "UserID"        INTEGER PRIMARY KEY NOT NULL,
+                    "XP"            INTEGER             NOT NULL DEFAULT 0,
+                    "Money"         INTEGER             NOT NULL DEFAULT 0,
+                    "LastChat"      INTEGER             NOT NULL DEFAULT 0,
+                    "LastReaction"  INTEGER             NOT NULL DEFAULT 0,
+                    "LastVoiceJoin" INTEGER             NOT NULL DEFAULT 0,
+                    "XPChat"        INTEGER             NOT NULL DEFAULT 0,
+                    "XPReaction"    INTEGER             NOT NULL DEFAULT 0,
+                    "XPVoice"       INTEGER             NOT NULL DEFAULT 0
                 );
                 """;
         String setupCommandsStatisticsTable = """
@@ -97,7 +98,6 @@ public class DB {
             connection.createStatement().execute(setupLottoTable);
             connection.createStatement().execute(insertLottoPoolUser);
             connection.createStatement().execute(insertLottoPool);
-            connection.createStatement().execute(setupSkillTree);
             connection.close();
         }
 
@@ -1054,66 +1054,6 @@ public class DB {
         return value;
     }
 
-    public Long getSkillPoints(long UserID) throws SQLException {
-        String query = "SELECT \"SkillPoints\" FROM \"SkillTrees\" WHERE \"UserID\" = %s".formatted(UserID);
-        var connection = connect();
-        var result = connection.createStatement().executeQuery(query);
-        long value = 0;
-        while (result.next()) {
-            value = result.getLong("SkillPoints");
-        }
-        connection.close();
-        return value;
-    }
-
-    public Long getSkillPointsWorkXP(long UserID) throws SQLException {
-        String query = "SELECT \"WorkXP\" FROM \"SkillTrees\" WHERE \"UserID\" = %s".formatted(UserID);
-        var connection = connect();
-        var result = connection.createStatement().executeQuery(query);
-        long value = 0;
-        while(result.next()) {
-            value = result.getLong("WorkXP");
-        }
-        connection.close();
-        return value;
-    }
-
-    public Long getSkillPointsWorkMoney(long UserID) throws SQLException {
-        String query = "SELECT \"WorkMoney\" FROM \"SkillTrees\" WHERE \"UserID\" = %s".formatted(UserID);
-        var connection = connect();
-        var result = connection.createStatement().executeQuery(query);
-        long value = 0;
-        while(result.next()) {
-            value = result.getLong("WorkMoney");
-        }
-        connection.close();
-        return value;
-    }
-
-    public Long getSkillPointsGambleXP(long UserID) throws SQLException {
-        String query = "SELECT \"GambleXP\" FROM \"SkillTrees\" WHERE \"UserID\" = %s".formatted(UserID);
-        var connection = connect();
-        var result = connection.createStatement().executeQuery(query);
-        long value = 0;
-        while(result.next()) {
-            value = result.getLong("GambleXP");
-        }
-        connection.close();
-        return value;
-    }
-
-    public Long getSkillPointsSocialXP(long UserID) throws SQLException {
-        String query = "SELECT \"SocialXP\" FROM \"SkillTrees\" WHERE \"UserID\" = %s".formatted(UserID);
-        var connection = connect();
-        var result = connection.createStatement().executeQuery(query);
-        long value = 0;
-        while(result.next()) {
-            value = result.getLong("SocialXP");
-        }
-        connection.close();
-        return value;
-    }
-
     public void resetLottoVotes() throws SQLException {
         String query = "DELETE FROM \"Lotto\" WHERE \"UserID\" != 0;";
         var connection = connect();
@@ -1188,121 +1128,5 @@ public class DB {
         }
         connection.close();
         return value;
-    }
-
-    public void insertSkillTreeIfNotExists(long id, long skillPoints) throws SQLException {
-        String query = "INSERT INTO \"SkillTrees\"(UserID, SkillPoints) VALUES(%s, %s) ON CONFLICT DO NOTHING;".formatted(id, skillPoints);
-        var connection = connect();
-        connection.createStatement().execute(query);
-        connection.close();
-    }
-
-    public void resetSkillTree(long id) throws SQLException {
-        long level = getXP(id) / 800;
-        String setSkillPoints = """
-                UPDATE "SkillTrees"
-                SET "SkillPoints" = %s,
-                "SocialXP"    = 0,
-                "GambleXP"    = 0,
-                "WorkMoney"   = 0,
-                "WorkXP"      = 0
-                WHERE "UserID" = %s;
-                """.formatted(level, id);
-        var connection = connect();
-        connection.createStatement().execute(setSkillPoints);
-        connection.close();
-    }
-
-    public void incrementSkillWorkXP(long id, int amount) throws SQLException {
-        var upsert = """
-                UPDATE "SkillTrees" SET "WorkXP" = "WorkXP" + %s WHERE "UserID" = %s;
-                """.formatted(amount, id);
-        var connection = connect();
-        if (connection != null) {
-            connection.createStatement().execute(upsert);
-            connection.close();
-        }
-    }
-
-    public void incrementSkillWorkMoney(long id, int amount) throws SQLException {
-        var upsert = """
-                UPDATE "SkillTrees" SET "WorkMoney" = "WorkMoney" + %s WHERE "UserID" = %s;
-                """.formatted(amount, id);
-        var connection = connect();
-        if (connection != null) {
-            connection.createStatement().execute(upsert);
-            connection.close();
-        }
-    }
-
-    public void incrementSkillGambleXP(long id, int amount) throws SQLException {
-        var upsert = """
-                UPDATE "SkillTrees" SET "GambleXP" = "GambleXP" + %s WHERE "UserID" = %s;
-                """.formatted(amount, id);
-        var connection = connect();
-        if (connection != null) {
-            connection.createStatement().execute(upsert);
-            connection.close();
-        }
-    }
-
-    public void incrementSkillSocialXP(long id, int amount) throws SQLException {
-        var upsert = """
-                UPDATE "SkillTrees" SET "SocialXP" = "SocialXP" + %s WHERE "UserID" = %s;
-                """.formatted(amount, id);
-        var connection = connect();
-        if (connection != null) {
-            connection.createStatement().execute(upsert);
-            connection.close();
-        }
-    }
-
-    public void decrementSkillPoints(long id, int amount) throws SQLException {
-        var upsert = """
-                UPDATE "SkillTrees" SET "SkillPoints" = "SkillPoints" - %s WHERE "UserID" = %s;
-                """.formatted(amount, id);
-        var connection = connect();
-        if (connection != null) {
-            connection.createStatement().execute(upsert);
-            connection.close();
-        }
-    }
-
-    public long getSpentSkillPoints(long id) throws SQLException {
-        String query = "SELECT \"WorkXP\", \"WorkMoney\", \"GambleXP\", \"SocialXP\" FROM \"SkillTrees\" WHERE \"UserID\" = %s;".formatted(id);
-        var connection = connect();
-        var result = connection.createStatement().executeQuery(query);
-        long value = 0;
-        while (result.next()) {
-            value += result.getLong("WorkMoney");
-            value += result.getLong("WorkXP");
-            value += result.getLong("GambleXP");
-            value += result.getLong("SocialXP");
-        }
-        connection.close();
-        return value;
-    }
-
-    public long getSkillLastReset(long id) throws SQLException {
-        String query = "select \"LastReset\" from \"SkillTrees\" where \"UserID\" = %s".formatted(id);
-        var connection = connect();
-        var result = connection.createStatement().executeQuery(query);
-        long value = 0;
-        while (result.next()) {
-            value = result.getLong("LastReset");
-        }
-        connection.close();
-        return value;
-    }
-
-    public void setSkillLastReset(long id, long time) throws SQLException {
-        var upsert = """
-                UPDATE SkillTrees SET LastReset = %s WHERE UserID = %s;
-                """.formatted(time, id);
-        var connection = connect();
-        if (connection != null) {
-            connection.createStatement().execute(upsert);
-            connection.close();
-        }
     }
 }

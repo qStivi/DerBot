@@ -12,11 +12,9 @@ import qStivi.ICommand;
 import qStivi.apis.Spotify;
 import qStivi.apis.YouTube;
 import qStivi.audioManagers.PlayerManager;
-import qStivi.commands.rpg.SkillsCommand;
 import qStivi.listeners.ControlsManager;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.text.Normalizer;
 import java.util.Collections;
 import java.util.List;
@@ -196,8 +194,6 @@ public class PlayCommand implements ICommand {
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();
-        xp = 0;
-
         if (!join(event.getGuild(), event.getAuthor())) {
             hook.sendMessage("Please join a channel, so I can play your request.").queue();
             return;
@@ -211,14 +207,13 @@ public class PlayCommand implements ICommand {
             var msg = playSong(args, false, event.getChannel(), event.getGuild());
             if (msg != null) {
                 hook.sendMessage(msg).queue();
-
-                xp = 30 + (long) (30 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
+                xp = 30;
             } else {
 
                 hook.sendMessage("Something went wrong!").queue();
             }
 //            }
-        } catch (ParseException | SpotifyWebApiException | IOException | SQLException | ClassNotFoundException e) {
+        } catch (ParseException | SpotifyWebApiException | IOException e) {
             e.printStackTrace();
             hook.sendMessage("Something went wrong :(").queue();
         }
