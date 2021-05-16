@@ -21,6 +21,8 @@ public class RollCommand implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         var hook = event.getChannel();
         var rollInput = args[1];
+        xp = 0;
+
         if (rollInput.equals("stats")) {
             hook.sendMessage(statsRoll()).queue();
         } else {

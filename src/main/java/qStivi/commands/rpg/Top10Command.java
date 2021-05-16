@@ -20,6 +20,7 @@ public class Top10Command implements ICommand {
         var hook = event.getChannel();
         var db = new DB();
         var embed = new EmbedBuilder();
+        xp = 0;
 
         var list = db.getRanking();
         var size = Math.min(list.size(), 10);

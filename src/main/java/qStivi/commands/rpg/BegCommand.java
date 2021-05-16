@@ -16,6 +16,7 @@ public class BegCommand implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         var luck = ThreadLocalRandom.current().nextFloat();
         var chance = .8;
+        xp = 0;
 
         if (luck > chance) {
             var db = new DB();

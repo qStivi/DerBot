@@ -14,8 +14,8 @@ public class SkipCommand implements ICommand {
 
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
-        var hook = event.getChannel();
         PlayerManager.getINSTANCE().skip(event.getGuild());
+        xp = 0;
 
         xp = 3 + (long) (3 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
     }

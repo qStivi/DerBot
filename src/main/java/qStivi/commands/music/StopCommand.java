@@ -19,6 +19,7 @@ public class StopCommand implements ICommand {
         PlayerManager.getINSTANCE().clearQueue(event.getGuild());
         PlayerManager.getINSTANCE().skip(event.getGuild());
         hook.sendMessage("Playback stopped.").queue();
+        xp = 0;
 
         xp = 3 + (long) (3 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
     }

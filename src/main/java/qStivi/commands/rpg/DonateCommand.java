@@ -15,6 +15,7 @@ public class DonateCommand implements ICommand {
         var user = event.getMessage().getMentionedUsers().get(0);
         var money = Long.parseLong(args[2]);
         var db = new DB();
+        totalXP = 0;
 
         if (money < 0) return;
 

@@ -15,6 +15,8 @@ public class LeaveCommand implements ICommand {
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         var hook = event.getChannel();
+        xp = 0;
+
         event.getGuild().getAudioManager();
         event.getGuild().getAudioManager().closeAudioConnection();
         hook.sendMessage("Bye Bye").queue();

@@ -39,6 +39,8 @@ public class JoinCommand implements ICommand {
         Guild guild = event.getGuild();
         User author = event.getMember().getUser();
 
+        xp = 0;
+
         var success = join(guild, author);
         if (success) {
             hook.sendMessage("Hi").queue();

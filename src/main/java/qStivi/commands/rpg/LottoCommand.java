@@ -16,6 +16,7 @@ public class LottoCommand implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException, InterruptedException {
         var channel = event.getChannel();
         var id = event.getAuthor().getIdLong();
+        xp = 0;
 
         long vote;
         if (args.length > 1) {

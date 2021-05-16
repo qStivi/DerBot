@@ -18,6 +18,7 @@ public class StatsCommand implements ICommand {
 
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
+        totalXP = 0;
         if (event.isWebhookMessage()) return;
         var hook = event.getChannel();
         var db = new DB();

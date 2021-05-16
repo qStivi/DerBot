@@ -16,6 +16,8 @@ public class RepeatCommand implements ICommand {
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         var hook = event.getChannel();
+        xp = 0;
+
         PlayerManager playerManager = PlayerManager.getINSTANCE();
         playerManager.setRepeat(event.getGuild(), !playerManager.isRepeating(event.getGuild()));
         if (playerManager.isRepeating(event.getGuild())) {

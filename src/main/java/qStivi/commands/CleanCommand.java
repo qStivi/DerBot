@@ -27,6 +27,8 @@ public class CleanCommand implements ICommand {
         var hook = event.getChannel();
         List<Message> messages = new ArrayList<>();
         var option = args.length > 1 && Boolean.parseBoolean(args[1]);
+        xp = 0;
+
         if (option) {
             if (event.getMember().hasPermission(Permission.ADMINISTRATOR)) {
                 messages = event.getChannel().getIterableHistory().stream().limit(1000).collect(Collectors.toList());

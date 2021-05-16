@@ -17,6 +17,7 @@ public class WorkCommand implements ICommand {
         var hook = event.getChannel();
         var id = event.getAuthor().getIdLong();
         var db = new DB();
+        xpGain = 0;
 
 
         var xp = db.getXP(id);

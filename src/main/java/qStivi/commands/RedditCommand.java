@@ -38,6 +38,8 @@ public class RedditCommand implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         var hook = event.getChannel();
 
+        xp = 0;
+
         String url;
 
         var subreddit = args[1];

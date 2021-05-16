@@ -23,6 +23,7 @@ public class SkillsCommand implements ICommand {
         var spentSkillPoints = db.getSpentSkillPoints(id);
         var availableSkillPoints = totalSkillPoints - spentSkillPoints;
         var channel = event.getChannel();
+        xp = 0;
 
         if (args.length == 1) {
             sendStatBlock(event, totalSkillPoints, db, id, channel);
@@ -77,7 +78,7 @@ public class SkillsCommand implements ICommand {
         embed.setAuthor(event.getMember().getEffectiveName(), null, event.getAuthor().getAvatarUrl());
         embed.addField("Efficient worker :chart_with_upwards_trend:", "You do your work more efficiently which means you get more done. Increases your wage. (1%)", false);
         embed.addField("Skill Points: " + db.getSkillPointsWorkMoney(id), "", false);
-        embed.addField("Attentive worker :office_worker_tone2:", "You pay more attention to what you are doing. Increases XP from working. (4%)", false);
+        embed.addField("Attentive worker :office_worker_tone2:", "You pay more attention to what you are doing. Increases XP from working. (5%)", false);
         embed.addField("Skill Points: " + db.getSkillPointsWorkXP(id), "", false);
         embed.addField("Attentive gambler :slot_machine:", "You pay more attention to what you are doing. Increases XP from gambling. (10%)", false);
         embed.addField("Skill Points: " + db.getSkillPointsGambleXP(id), "", false);
@@ -94,7 +95,7 @@ public class SkillsCommand implements ICommand {
 
     public static float getWorkXPMultiplier(long id) throws SQLException, ClassNotFoundException {
         var skillPoints = new DB().getSkillPointsWorkXP(id);
-        return (float) skillPoints / 25;
+        return (float) skillPoints / 20;
     }
 
     public static float getGambleXPMultiplier(long id) throws SQLException, ClassNotFoundException {

@@ -18,6 +18,7 @@ public class PauseCommand implements ICommand {
         var hook = event.getChannel();
         PlayerManager.getINSTANCE().pause(event.getGuild());
         hook.sendMessage("Playback paused.").queue();
+        xp= 0;
 
         xp = 3 + (long) (3 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
     }

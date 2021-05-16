@@ -15,6 +15,7 @@ public class TestCommand implements ICommand {
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         event.getChannel().sendMessage("k").queue();
+        xp = 0;
 
         xp = 1 + (long) (1 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
     }

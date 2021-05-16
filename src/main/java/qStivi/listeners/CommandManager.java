@@ -136,6 +136,7 @@ public class CommandManager extends ListenerAdapter {
 }
 
 class Command {
+    private static final Logger logger = getLogger(Command.class);
     ICommand command;
     GuildMessageReceivedEvent event;
     String[] args;
@@ -158,5 +159,9 @@ class Command {
         db.incrementXP(xp, id);
         db.incrementCommandTimesHandled(name, 1, id);
         if (!name.equalsIgnoreCase("work")) db.setCommandLastHandled(name, new Date().getTime(), id);
+
+//        event.getChannel().sendMessage("Command XP: " + command.getXp()).queue();
+//        event.getChannel().sendMessage("HappyHalf: " + Bot.happyHour).queue();
+//        event.getChannel().sendMessage("Total XP: " + xp).queue();
     }
 }

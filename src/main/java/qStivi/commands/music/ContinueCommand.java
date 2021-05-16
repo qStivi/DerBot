@@ -18,6 +18,7 @@ public class ContinueCommand implements ICommand {
         var hook = event.getChannel();
         PlayerManager.getINSTANCE().continueTrack(event.getGuild());
         hook.sendMessage("Continuing...").queue();
+        xp = 0;
 
         xp = 3 + (long) (3 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
     }

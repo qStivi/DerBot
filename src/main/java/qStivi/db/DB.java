@@ -1070,8 +1070,10 @@ public class DB {
         String query = "SELECT \"WorkXP\" FROM \"SkillTrees\" WHERE \"UserID\" = %s".formatted(UserID);
         var connection = connect();
         var result = connection.createStatement().executeQuery(query);
-        result.next();
-        var value = result.getLong("WorkXP");
+        long value = 0;
+        while(result.next()) {
+            value = result.getLong("WorkXP");
+        }
         connection.close();
         return value;
     }
@@ -1080,8 +1082,10 @@ public class DB {
         String query = "SELECT \"WorkMoney\" FROM \"SkillTrees\" WHERE \"UserID\" = %s".formatted(UserID);
         var connection = connect();
         var result = connection.createStatement().executeQuery(query);
-        result.next();
-        var value = result.getLong("WorkMoney");
+        long value = 0;
+        while(result.next()) {
+            value = result.getLong("WorkMoney");
+        }
         connection.close();
         return value;
     }
@@ -1090,8 +1094,10 @@ public class DB {
         String query = "SELECT \"GambleXP\" FROM \"SkillTrees\" WHERE \"UserID\" = %s".formatted(UserID);
         var connection = connect();
         var result = connection.createStatement().executeQuery(query);
-        result.next();
-        var value = result.getLong("GambleXP");
+        long value = 0;
+        while(result.next()) {
+            value = result.getLong("GambleXP");
+        }
         connection.close();
         return value;
     }
@@ -1100,8 +1106,10 @@ public class DB {
         String query = "SELECT \"SocialXP\" FROM \"SkillTrees\" WHERE \"UserID\" = %s".formatted(UserID);
         var connection = connect();
         var result = connection.createStatement().executeQuery(query);
-        result.next();
-        var value = result.getLong("SocialXP");
+        long value = 0;
+        while(result.next()) {
+            value = result.getLong("SocialXP");
+        }
         connection.close();
         return value;
     }

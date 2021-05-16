@@ -196,6 +196,8 @@ public class PlayCommand implements ICommand {
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();
+        xp = 0;
+
         if (!join(event.getGuild(), event.getAuthor())) {
             hook.sendMessage("Please join a channel, so I can play your request.").queue();
             return;
