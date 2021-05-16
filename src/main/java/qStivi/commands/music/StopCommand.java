@@ -4,24 +4,17 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import qStivi.Bot;
 import qStivi.ICommand;
 import qStivi.audioManagers.PlayerManager;
-import qStivi.commands.rpg.SkillsCommand;
 
 import javax.annotation.Nonnull;
-import java.sql.SQLException;
 
 public class StopCommand implements ICommand {
 
-    private long xp;
-
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
+    public void handle(GuildMessageReceivedEvent event, String[] args) {
         var hook = event.getChannel();
         PlayerManager.getINSTANCE().clearQueue(event.getGuild());
         PlayerManager.getINSTANCE().skip(event.getGuild());
         hook.sendMessage("Playback stopped.").queue();
-        xp = 0;
-
-        xp = 3 + (long) (3 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
     }
 
     @Override
@@ -38,6 +31,6 @@ public class StopCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return xp;
+        return 3;
     }
 }

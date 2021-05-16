@@ -14,11 +14,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class StatsCommand implements ICommand {
     private static final Logger logger = getLogger(StatsCommand.class);
-    private long totalXP;
 
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
-        totalXP = 0;
         if (event.isWebhookMessage()) return;
         var hook = event.getChannel();
         var db = new DB();
@@ -53,8 +51,6 @@ public class StatsCommand implements ICommand {
         embed.addField("XP", String.valueOf(xp), true);
 
         hook.sendMessage(embed.build()).queue();
-
-        totalXP = 3 + (long) (3 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
     }
 
     @NotNull
@@ -71,6 +67,6 @@ public class StatsCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return totalXP;
+        return 3;
     }
 }
