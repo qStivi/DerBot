@@ -3,14 +3,21 @@ package qStivi.commands;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import qStivi.Bot;
 import qStivi.ICommand;
+import qStivi.commands.rpg.SkillsCommand;
 
 import javax.annotation.Nonnull;
+import java.sql.SQLException;
 
 public class TestCommand implements ICommand {
 
+    private long xp;
+
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) {
+    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         event.getChannel().sendMessage("k").queue();
+        xp = 0;
+
+        xp = 1 + (long) (1 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
     }
 
     @Override
@@ -27,6 +34,6 @@ public class TestCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 1;
+        return xp;
     }
 }

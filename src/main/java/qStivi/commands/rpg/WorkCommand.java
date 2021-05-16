@@ -17,6 +17,7 @@ public class WorkCommand implements ICommand {
         var hook = event.getChannel();
         var id = event.getAuthor().getIdLong();
         var db = new DB();
+        xpGain = 0;
 
 
         var xp = db.getXP(id);
@@ -26,11 +27,13 @@ public class WorkCommand implements ICommand {
         var diff = new Date().getTime() / 1000 - db.getCommandLastHandled(getName(), id) / 1000;
         if (diff > 1200) {
             long salary = (1000 + (lvl * 10)) * Bot.happyHour;
+            salary += salary * SkillsCommand.getWorkMoneyMultiplier(id);
             db.incrementMoney(salary, id);
             db.incrementCommandMoney(getName(), salary, id);
             hook.sendMessage("You earned " + salary + " gems").queue();
             db.setCommandLastHandled(getName(), new Date().getTime(), id);
-            xpGain = 50;
+
+            xpGain = 50 + (long) (50 * SkillsCommand.getWorkXPMultiplier(event.getAuthor().getIdLong()));
         } else {
             hook.sendMessage("You need to wait " + Math.subtractExact(1200L, diff) + " seconds before you can work again").queue();
         }

@@ -19,8 +19,11 @@ import java.util.concurrent.atomic.AtomicReference;
 @SuppressWarnings("ConstantConditions")
 public class BlackjackCommand extends ListenerAdapter implements ICommand {
 
+    private long xp;
+
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
+        xp = 0;
         if (args.length < 2) return;
         var hook = event.getChannel();
         AtomicReference<String> messageId = new AtomicReference<>();
@@ -67,6 +70,8 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
 
         hook.editMessageById(String.valueOf(messageId), args[1]).queue();
         hook.editMessageById(String.valueOf(messageId), bj.embed.build()).queue();
+
+        xp = 3 + (long) (3 * SkillsCommand.getGambleXPMultiplier(event.getAuthor().getIdLong()));
     }
 
     @Override
@@ -189,6 +194,6 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
 
     @Override
     public long getXp() {
-        return 3;
+        return xp;
     }
 }

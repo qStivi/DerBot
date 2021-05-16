@@ -4,19 +4,25 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import qStivi.ICommand;
+import qStivi.commands.rpg.SkillsCommand;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RollCommand implements ICommand {
 
+    private long xp;
+
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) {
+    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         var hook = event.getChannel();
         var rollInput = args[1];
+        xp = 0;
+
         if (rollInput.equals("stats")) {
             hook.sendMessage(statsRoll()).queue();
         } else {
@@ -27,6 +33,8 @@ public class RollCommand implements ICommand {
             }
             hook.sendMessage(result).queue();
         }
+
+        xp = 15 + (long) (15 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
     }
 
 
@@ -116,6 +124,6 @@ public class RollCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 15;
+        return xp;
     }
 }
