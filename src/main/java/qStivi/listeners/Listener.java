@@ -52,7 +52,6 @@ public class Listener extends ListenerAdapter {
         }
 
         var id = event.getMember().getIdLong();
-        event.getGuild().getTextChannelById(834012016481271908L).sendMessage("yee").queue();
 
         list.add(new Task(new TimerTask() {
 
@@ -76,7 +75,6 @@ public class Listener extends ListenerAdapter {
 
                     db.incrementXPVoice(xp, id);
                     db.incrementXP(xp, id);
-                    event.getGuild().getTextChannelById(834012016481271908L).sendMessage("Voice XP: " + xp).queue();
 
                 } catch (ClassNotFoundException | SQLException e) {
                     e.printStackTrace();
