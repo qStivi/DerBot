@@ -20,7 +20,7 @@ import java.util.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Bot {
-    public static final boolean DEV_MODE = true;
+    public static final boolean DEV_MODE = false;
     public static final long CHANNEL_ID = 742024523502846052L;
     public static final long DEV_CHANNEL_ID = 834012016481271908L;
     public static final long DEV_VOICE_CHANNEL_ID = 805955515241725983L;

@@ -14,6 +14,26 @@ import java.util.concurrent.TimeUnit;
 public class SkillsCommand implements ICommand {
     private long xp;
 
+    public static float getWorkMoneyMultiplier(long id) throws SQLException, ClassNotFoundException {
+        var skillPoints = new DB().getSkillPointsWorkMoney(id);
+        return (float) skillPoints / 100;
+    }
+
+    public static float getWorkXPMultiplier(long id) throws SQLException, ClassNotFoundException {
+        var skillPoints = new DB().getSkillPointsWorkXP(id);
+        return (float) skillPoints / 20;
+    }
+
+    public static float getGambleXPMultiplier(long id) throws SQLException, ClassNotFoundException {
+        var skillPoints = new DB().getSkillPointsGambleXP(id);
+        return (float) skillPoints / 10;
+    }
+
+    public static float getSocialXPPMultiplier(long id) throws SQLException, ClassNotFoundException {
+        var skillPoints = new DB().getSkillPointsSocialXP(id);
+        return (float) skillPoints / 100;
+    }
+
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException, InterruptedException {
         var db = new DB();
@@ -87,28 +107,6 @@ public class SkillsCommand implements ICommand {
 
         channel.sendMessage(embed.build()).queue();
     }
-
-    public static float getWorkMoneyMultiplier(long id) throws SQLException, ClassNotFoundException {
-        var skillPoints = new DB().getSkillPointsWorkMoney(id);
-        return (float) skillPoints / 100;
-    }
-
-    public static float getWorkXPMultiplier(long id) throws SQLException, ClassNotFoundException {
-        var skillPoints = new DB().getSkillPointsWorkXP(id);
-        return (float) skillPoints / 20;
-    }
-
-    public static float getGambleXPMultiplier(long id) throws SQLException, ClassNotFoundException {
-        var skillPoints = new DB().getSkillPointsGambleXP(id);
-        return (float) skillPoints / 10;
-    }
-
-    public static float getSocialXPPMultiplier(long id) throws SQLException, ClassNotFoundException {
-        var skillPoints = new DB().getSkillPointsSocialXP(id);
-        return (float) skillPoints / 100;
-    }
-
-
 
     @NotNull
     @Override
