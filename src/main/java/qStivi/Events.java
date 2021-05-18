@@ -52,7 +52,7 @@ public class Events {
 //                var seconds = now.getSecond();
 
                 // Lotto begin
-                if (hour == 21 && !lottoAnnouncement) {
+                if (hour == 20 && !lottoAnnouncement) {
 
                     try {
                         announceLotto();
@@ -76,7 +76,7 @@ public class Events {
                     resultSent = true;
                 }
 
-                if (hour > 21) {
+                if (hour > 20) {
                     lottoAnnouncement = false;
                     resultSent = false;
                 }

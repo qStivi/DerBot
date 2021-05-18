@@ -61,6 +61,7 @@ public class SkillsCommand implements ICommand {
             }
         } else if (args.length == 3) {
             var amount = Integer.parseInt(args[2]);
+            if (amount < 0) return;
             if (amount > availableSkillPoints) return;
             boolean successful = false;
             switch (Integer.parseInt(args[1])) {
