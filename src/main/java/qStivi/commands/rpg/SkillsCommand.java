@@ -38,7 +38,7 @@ public class SkillsCommand implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException, InterruptedException {
         var db = new DB();
         var id = event.getAuthor().getIdLong();
-        long totalSkillPoints = db.getXP(id) / 800;
+        long totalSkillPoints = db.getLevel(id);
         db.insertSkillTreeIfNotExists(id, totalSkillPoints);
         var spentSkillPoints = db.getSpentSkillPoints(id);
         var availableSkillPoints = totalSkillPoints - spentSkillPoints;

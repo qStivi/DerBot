@@ -155,7 +155,7 @@ public class DB {
     public Long getLevel(Long id) throws SQLException {
         var xp = getXP(id);
         xp = xp == null ? 0 : xp;
-        return (long) Math.floor((double) xp / 800);
+        return (long) Math.floor(-5000 * Math.pow(2.7, ((float) -xp / 3700000)) + 5000);
     }
 
     private void executeUpdate(Object value, String sql) {
@@ -1071,7 +1071,7 @@ public class DB {
         var connection = connect();
         var result = connection.createStatement().executeQuery(query);
         long value = 0;
-        while(result.next()) {
+        while (result.next()) {
             value = result.getLong("WorkXP");
         }
         connection.close();
@@ -1083,7 +1083,7 @@ public class DB {
         var connection = connect();
         var result = connection.createStatement().executeQuery(query);
         long value = 0;
-        while(result.next()) {
+        while (result.next()) {
             value = result.getLong("WorkMoney");
         }
         connection.close();
@@ -1095,7 +1095,7 @@ public class DB {
         var connection = connect();
         var result = connection.createStatement().executeQuery(query);
         long value = 0;
-        while(result.next()) {
+        while (result.next()) {
             value = result.getLong("GambleXP");
         }
         connection.close();
@@ -1107,7 +1107,7 @@ public class DB {
         var connection = connect();
         var result = connection.createStatement().executeQuery(query);
         long value = 0;
-        while(result.next()) {
+        while (result.next()) {
             value = result.getLong("SocialXP");
         }
         connection.close();
