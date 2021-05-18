@@ -27,7 +27,7 @@ public class Events {
         long id = Bot.DEV_MODE ?Bot.DEV_CHANNEL_ID:Bot.CHANNEL_ID;
 
         AtomicReference<Guild> guild = new AtomicReference<>();
-        guild.set(jda.getGuildById(id));
+        guild.set(jda.getGuildById(703363806356701295L));
         while (guild.get() == null) {
             Thread.onSpinWait();
         }
@@ -52,7 +52,7 @@ public class Events {
 //                var seconds = now.getSecond();
 
                 // Lotto begin
-                if (hour == 20 && !lottoAnnouncement) {
+                if (hour == 21 && !lottoAnnouncement) {
 
                     try {
                         announceLotto();
@@ -76,7 +76,7 @@ public class Events {
                     resultSent = true;
                 }
 
-                if (hour > 20) {
+                if (hour > 21) {
                     lottoAnnouncement = false;
                     resultSent = false;
                 }

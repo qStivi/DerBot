@@ -114,6 +114,7 @@ public class SlotsCommand implements ICommand {
         channel.sendMessage(embed.build()).queue();
 
         xp = 3 + (long) (3 * SkillsCommand.getGambleXPMultiplier(event.getAuthor().getIdLong()));
+        db.incrementCommandTimesHandled("slots", 1, id);
     }
 
     private void win(DB db, long id, TextChannel channel, EmbedBuilder embed, long gain) throws SQLException {

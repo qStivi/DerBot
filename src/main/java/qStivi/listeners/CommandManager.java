@@ -71,7 +71,7 @@ public class CommandManager extends ListenerAdapter {
         str = str.toLowerCase().strip();
         str = Normalizer.normalize(str, Normalizer.Form.NFKD);
         str = str.replaceAll("[^a-z0-9A-Z -]", ""); // Remove all non valid chars
-        str = str.replaceAll(" ", " ").trim(); // convert multiple spaces into one space
+        str = str.replaceAll("[ \\t]+", " ").trim(); // convert multiple spaces into one space
         return str;
     }
 
@@ -157,7 +157,7 @@ class Command {
         var xp = command.getXp() * Bot.happyHour;
         db.incrementCommandXP(name, xp, id);
         db.incrementXP(xp, id);
-        db.incrementCommandTimesHandled(name, 1, id);
+        if (!name.equalsIgnoreCase("slots")) db.incrementCommandTimesHandled(name, 1, id);
         if (!name.equalsIgnoreCase("work")) db.setCommandLastHandled(name, new Date().getTime(), id);
 
 //        event.getChannel().sendMessage("Command XP: " + command.getXp()).queue();

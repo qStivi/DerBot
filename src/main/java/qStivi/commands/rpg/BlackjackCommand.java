@@ -25,6 +25,7 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         xp = 0;
 
+        if (args.length < 2) return;
         var hook = event.getChannel();
         AtomicReference<String> messageId = new AtomicReference<>();
         hook.sendMessage("Loading...").queue(message -> messageId.set(message.getId()));
