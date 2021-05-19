@@ -22,7 +22,7 @@ public class WorkCommand implements ICommand {
 
         var xp = db.getXP(id);
         xp = xp == null ? 0 : xp;
-        var lvl = (long) Math.floor(xp / (double) 800);
+        var lvl = db.getLevel(id);
 
         var diff = new Date().getTime() / 1000 - db.getCommandLastHandled(getName(), id) / 1000;
         if (diff > 1200) {
