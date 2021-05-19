@@ -50,7 +50,7 @@ public class SlotsCommand implements ICommand {
         var money = db.getMoney(id);
         var channel = event.getChannel();
 
-        if (bet < 0) return;
+        if (bet < 0 || bet > 80000) return;
 
         var first = getRandomSymbol();
         var second = getRandomSymbol();
