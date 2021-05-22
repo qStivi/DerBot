@@ -41,9 +41,9 @@ public class SlotsCommand implements ICommand {
         if (event.isWebhookMessage()) return;
         var db = new DB();
         var id = event.getAuthor().getIdLong();
-        int bet;
+        long bet;
         try {
-            bet = Integer.parseInt(args[1]);
+            bet = Long.parseLong(args[1]);
         } catch (NumberFormatException | IndexOutOfBoundsException e) {
             return;
         }
