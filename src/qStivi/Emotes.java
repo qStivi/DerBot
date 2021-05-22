@@ -56,4 +56,10 @@ public class Emotes {
     public final static String JESTER_OF_SPADES = "jester_of_spades:833098413709066270";
     public final static String KING_OF_SPADES = "king_of_spades:833098490178699315";
     public final static String QUEEN_OF_SPADES = "queen_of_spades:833098490687127562";
+
+
+    public final static String DND = "DnD:845645007128887326";
+    public final static String LOL = "LoL:845646470686441493";
+    public final static String MINECRAFT = "Minecraft:845646698767843329";
+    public final static String AMONGUS = "AmongUs:845646901512241153";
 }

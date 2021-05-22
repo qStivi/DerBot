@@ -1133,8 +1133,6 @@ public class DB {
         while (result.next()) {
             value = result.getLong("Vote");
         }
-        logger.info(String.valueOf(value));
-        System.out.println(value);
         connection.close();
         return value;
     }
