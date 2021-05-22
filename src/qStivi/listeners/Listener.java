@@ -18,6 +18,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.slf4j.LoggerFactory.getLogger;
+import static qStivi.Bot.CHANNEL_ID;
 import static qStivi.Bot.DEV_CHANNEL_ID;
 
 public class Listener extends ListenerAdapter {
@@ -37,6 +38,11 @@ public class Listener extends ListenerAdapter {
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         logger.info("Ready!");
+        if (Bot.DEV_MODE){
+            event.getJDA().getTextChannelById(DEV_CHANNEL_ID).sendMessage("Ready!").queue();
+        } else {
+            event.getJDA().getTextChannelById(CHANNEL_ID).sendMessage("Ready!").mentionUsers(219035632435986433L, 219050169763758081L).queue();
+        }
     }
 
     @Override
