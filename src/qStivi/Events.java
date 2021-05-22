@@ -137,7 +137,7 @@ public class Events {
             channel.get().sendMessage("Better luck next time. No one won this raffle. The lucky number was " + number).queue();
         } else {
 
-            int money = 0;
+            long money = 0;
 
             var sb = new StringBuilder();
             for (long id : winners) {

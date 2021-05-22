@@ -24,7 +24,6 @@ public class LottoCommand implements ICommand {
                 vote = Long.parseLong(args[1]);
             } catch (NumberFormatException e) {
                 if (args[1].equalsIgnoreCase("pool")) {
-                    sendPoolInfo(event);
                     return;
                 }
                 channel.sendMessage("Please enter a number from 1 to 50 or 'pool'").queue();

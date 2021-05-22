@@ -58,12 +58,7 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
         displayGameState(bj);
 
         if (bj.count(bj.player) == 21) {
-            event.getChannel().clearReactionsById(bj.id).queue();
-            BlackJack.games.remove(bj);
-            bj.embed.setTitle("You won!");
-            db.incrementMoney((long) Math.floor(bj.bet * 2.5), id);
-            bj.embed.setColor(Color.green.brighter());
-            db.incrementGameWins("BlackJack", 1, id);
+            endGame(event, db, bj, (long) (bj.bet * 2.5), "You won!");
         } else {
             event.getChannel().addReactionById(bj.id, "\uD83E\uDD19\uD83C\uDFFD").queue();
             event.getChannel().addReactionById(bj.id, "✋\uD83C\uDFFD").queue();
@@ -131,6 +126,30 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
     private void endGame(@NotNull GuildMessageReactionAddEvent event, DB db, BlackJack bj, long reward, String title) throws SQLException {
         reward = reward * Bot.happyHour;
         var id = event.getUser().getIdLong();
+        var messageId = event.getMessageId();
+        bj.embed.setTitle(title);
+        db.incrementMoney(reward, id);
+        db.incrementCommandMoney(getName(), reward, id);
+        db.setGameLastPlayed(getName(), new Date().getTime(), id);
+        event.getChannel().clearReactionsById(messageId).queue();
+        BlackJack.games.remove(bj);
+        if (title.equalsIgnoreCase("you won!")) {
+            bj.embed.setColor(Color.green.brighter());
+            db.incrementGameWins(getName(), 1, id);
+        }
+        if (title.equalsIgnoreCase("you lost!")) {
+            bj.embed.setColor(Color.red.brighter());
+            db.incrementGameLoses(getName(), 1, id);
+        }
+        if (title.equalsIgnoreCase("draw.")) {
+            bj.embed.setColor(Color.magenta.darker());
+            db.incrementGameDraws(getName(), 1, id);
+        }
+    }
+
+    private void endGame(@NotNull GuildMessageReceivedEvent event, DB db, BlackJack bj, long reward, String title) throws SQLException {
+        reward = reward * Bot.happyHour;
+        var id = event.getMessage().getAuthor().getIdLong();
         var messageId = event.getMessageId();
         bj.embed.setTitle(title);
         db.incrementMoney(reward, id);

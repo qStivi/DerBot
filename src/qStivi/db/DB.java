@@ -561,7 +561,7 @@ public class DB {
 
         } else {
             query = """
-                    INSERT INTO "CommandStatistics"("UserID", "GameName", "Draws")
+                    INSERT INTO "GameStatistics"("UserID", "GameName", "Draws")
                     VALUES (%s, '%s', %s)
                     """.formatted(UserID, name, amount);
 
@@ -629,20 +629,6 @@ public class DB {
         }
     }
 
-    public void decrementXPCommand(long amount, long UserID) throws SQLException {
-        var upsert = """
-                INSERT INTO "UserData"("UserID", "XPCommand")
-                VALUES (%s, %s)
-                ON CONFLICT("UserID") DO UPDATE SET "XPCommand" = "XPCommand" - %s
-                WHERE "UserID" = %s;
-                """.formatted(UserID, amount, amount, UserID);
-        var connection = connect();
-        if (connection != null) {
-            connection.createStatement().execute(upsert);
-            connection.close();
-        }
-    }
-
     public void decrementXPVoice(long amount, long UserID) throws SQLException {
         var upsert = """
                 INSERT INTO "UserData"("UserID", "XPVoice")
@@ -662,15 +648,15 @@ public class DB {
         if (commandNameAlreadyExists(name, UserID)) {
             query = """
                     UPDATE "CommandStatistics"
-                    SET "TimesRecognized"
-                            = "TimesRecognized" - %S
+                    SET "TimesHandled"
+                            = "TimesHandled" - %S
                     WHERE "UserID" = %s
                       AND "CommandName" = '%s'
                     """.formatted(amount, UserID, name);
 
         } else {
             query = """
-                    INSERT INTO "CommandStatistics"("UserID", "CommandName", "TimesRecognized")
+                    INSERT INTO "CommandStatistics"("UserID", "CommandName", "TimesHandled")
                     VALUES (%s, '%s', %s)
                     """.formatted(UserID, name, amount);
 
@@ -745,7 +731,7 @@ public class DB {
 
         } else {
             query = """
-                    INSERT INTO "CommandStatistics"("UserID", "GameName", "Plays")
+                    INSERT INTO "GameStatistics"("UserID", "GameName", "Plays")
                     VALUES (%s, '%s', %s)
                     """.formatted(UserID, name, amount);
 
@@ -770,7 +756,7 @@ public class DB {
 
         } else {
             query = """
-                    INSERT INTO "CommandStatistics"("UserID", "GameName", "Wins")
+                    INSERT INTO "GameStatistics"("UserID", "GameName", "Wins")
                     VALUES (%s, '%s', %s)
                     """.formatted(UserID, name, amount);
 
@@ -795,7 +781,7 @@ public class DB {
 
         } else {
             query = """
-                    INSERT INTO "CommandStatistics"("UserID", "GameName", "Loses")
+                    INSERT INTO "GameStatistics"("UserID", "GameName", "Loses")
                     VALUES (%s, '%s', %s)
                     """.formatted(UserID, name, amount);
 
@@ -820,7 +806,7 @@ public class DB {
 
         } else {
             query = """
-                    INSERT INTO "CommandStatistics"("UserID", "GameName", "Draws")
+                    INSERT INTO "GameStatistics"("UserID", "GameName", "Draws")
                     VALUES (%s, '%s', %s)
                     """.formatted(UserID, name, amount);
 
@@ -833,7 +819,7 @@ public class DB {
     }
 
     public Long getCommandTimesRecognized(String CommandName, long UserID) throws SQLException {
-        String query = "select \"TimesRecognized\" from \"CommandStatistics\" where \"UserID\" = %s AND \"CommandName\" = '%s'".formatted(UserID, CommandName);
+        String query = "select \"TimesHandled\" from \"CommandStatistics\" where \"UserID\" = %s AND \"CommandName\" = '%s'".formatted(UserID, CommandName);
         var connection = connect();
         var result = connection.createStatement().executeQuery(query);
         result.next();
@@ -843,7 +829,7 @@ public class DB {
     }
 
     public Long getCommandLastRecognized(String CommandName, long UserID) throws SQLException {
-        String query = "select \"LastRecognized\" from \"CommandStatistics\" where \"UserID\" = %s AND \"CommandName\" = '%s'".formatted(UserID, CommandName);
+        String query = "select \"TimesHandled\" from \"CommandStatistics\" where \"UserID\" = %s AND \"CommandName\" = '%s'".formatted(UserID, CommandName);
         var connection = connect();
         var result = connection.createStatement().executeQuery(query);
         result.next();
@@ -984,16 +970,6 @@ public class DB {
         return value;
     }
 
-    public Long getLastCommand(long UserID) throws SQLException {
-        String query = "select \"LastCommand\" from \"UserData\" where \"UserID\" = %s".formatted(UserID);
-        var connection = connect();
-        var result = connection.createStatement().executeQuery(query);
-        result.next();
-        var value = result.getLong("LastCommand");
-        connection.close();
-        return value;
-    }
-
     public Long getLastVoiceJoin(long UserID) throws SQLException {
         String query = "select \"LastVoiceJoin\" from \"UserData\" where \"UserID\" = %s".formatted(UserID);
         var connection = connect();
@@ -1020,16 +996,6 @@ public class DB {
         var result = connection.createStatement().executeQuery(query);
         result.next();
         var value = result.getLong("XPReaction");
-        connection.close();
-        return value;
-    }
-
-    public Long getXPCommand(long UserID) throws SQLException {
-        String query = "select \"XPCommand\" from \"UserData\" where \"UserID\" = %s".formatted(UserID);
-        var connection = connect();
-        var result = connection.createStatement().executeQuery(query);
-        result.next();
-        var value = result.getLong("XPCommand");
         connection.close();
         return value;
     }
@@ -1139,25 +1105,6 @@ public class DB {
         return DriverManager.getConnection(url);
     }
 
-    public boolean userDoesNotExists(long id) {
-        String sql = "select id from users where id = ? LIMIT 1";
-
-        try (Connection conn = this.connect()) {
-            PreparedStatement pstmt;
-            if (conn != null) {
-                pstmt = conn.prepareStatement(sql);
-                pstmt.setLong(1, id);
-                ResultSet rs = pstmt.executeQuery();
-                if (rs.next()) {
-                    return false;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-
     @Deprecated
     public List<Long> getRanking() {
         String sql = "select \"UserID\" from \"UserData\" order by \"Money\" DESC, \"XP\" desc";
@@ -1178,14 +1125,16 @@ public class DB {
         return list;
     }
 
-    public int getLottoPool() throws SQLException {
+    public long getLottoPool() throws SQLException {
         String query = "SELECT \"Vote\" FROM \"Lotto\" WHERE \"UserID\" = 0;";
         var connection = connect();
         var result = connection.createStatement().executeQuery(query);
-        int value = 0;
+        long value = 0;
         while (result.next()) {
-            value = result.getInt("Vote");
+            value = result.getLong("Vote");
         }
+        logger.info(String.valueOf(value));
+        System.out.println(value);
         connection.close();
         return value;
     }
