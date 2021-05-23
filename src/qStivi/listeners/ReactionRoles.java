@@ -27,6 +27,12 @@ public class ReactionRoles extends ListenerAdapter {
                 case "AmongUs":
                     event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(750014132220330016L)).queue();
                     break;
+                case "Warzone":
+                    event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846009044610580500L)).queue();
+                    break;
+                case "Apex":
+                    event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846010998728425472L)).queue();
+                    break;
                 case "\uD83D\uDFE4":
                     event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(843120253566320672L)).queue();
                     break;
@@ -71,6 +77,12 @@ public class ReactionRoles extends ListenerAdapter {
                     break;
                 case "AmongUs":
                     event.getGuild().removeRoleFromMember(event.getUserIdLong(), event.getGuild().getRoleById(750014132220330016L)).queue();
+                    break;
+                case "Warzone":
+                    event.getGuild().removeRoleFromMember(event.getUserIdLong(), event.getGuild().getRoleById(846009044610580500L)).queue();
+                    break;
+                case "Apex":
+                    event.getGuild().removeRoleFromMember(event.getUserIdLong(), event.getGuild().getRoleById(846010998728425472L)).queue();
                     break;
                 case "\uD83D\uDFE4":
                     event.getGuild().removeRoleFromMember(event.getUserIdLong(), event.getGuild().getRoleById(843120253566320672L)).queue();

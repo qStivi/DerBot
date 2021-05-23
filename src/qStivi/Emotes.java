@@ -62,4 +62,6 @@ public class Emotes {
     public final static String LOL = "LoL:845646470686441493";
     public final static String MINECRAFT = "Minecraft:845646698767843329";
     public final static String AMONGUS = "AmongUs:845646901512241153";
+    public final static String WARZONE = "Warzone:846008564673544267";
+    public final static String APEX = "Apex:846010709380300821";
 }
