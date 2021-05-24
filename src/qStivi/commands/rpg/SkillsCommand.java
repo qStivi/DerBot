@@ -50,7 +50,7 @@ public class SkillsCommand implements ICommand {
         } else if (args.length == 2) {
             if (args[1].equalsIgnoreCase("reset")) {
                 var money = db.getMoney(id);
-                if (money > 999999 && new Date().getTime() / 1000 - db.getSkillLastReset(id) / 1000 > TimeUnit.DAYS.toMillis(3)) {
+                if (money > 999999 && new Date().getTime() - db.getSkillLastReset(id) > TimeUnit.DAYS.toMillis(3)) {
                     db.resetSkillTree(id);
                     db.decrementMoney(1000000, id);
                     db.setSkillLastReset(id, new Date().getTime());
