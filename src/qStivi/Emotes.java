@@ -64,4 +64,29 @@ public class Emotes {
     public final static String AMONGUS = "AmongUs:845646901512241153";
     public final static String WARZONE = "Warzone:846008564673544267";
     public final static String APEX = "Apex:846010709380300821";
+    public final static String PLAYSTATION = "Playstation:846773573061967892";
+    public final static String BOT = "Bot:846773804859392061";
+    public final static String GMOD = "GMod:846773924310024253";
+    public final static String NINTENDO = "Switch:846842977249787944";
+    public final static String CIV = "Civ:846774135124525106";
+    public final static String XBOX = "Xbox:846774297338445924";
+    public final static String ARK = "ARK:846780314314997820";
+    public final static String GTA = "GTA5:846781428649558056";
+    public final static String HEARTHSTONE = "Hearthstone:846781941080522792";
+    public final static String VR = "VR:846782012941008977";
+    public final static String ROCKETLEAGUE = "RocketLeague:846782061464518666";
+    public final static String SHISHA = "Shisha:846807867046232077";
+    public final static String VALORANT = "Valorant:846815440256499772";
+    public final static String CSGO = "CSGO:846819173078401114";
+    public final static String RAINBOW = "RainbowSixSiege:846827482459406413";
+    public final static String ROUNDS = "Rounds:846829130795581470";
+    public final static String PUMMELPARTY = "Pummel:846832039697449007";
+    public final static String SATISFACTORY = "Satisfactory:846833471947407410";
+    public final static String FORTNITE = "Fortnite:846836183748706354";
+    public final static String ANIME = "ayaya:846839910862028811";
+    public final static String DIABLO = "Diablo3:846841047954096188";
+
+    public static long getEmoteIDLong(String emote) {
+        return Long.parseLong(emote.split(":")[1]);
+    }
 }
