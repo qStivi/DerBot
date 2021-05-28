@@ -3,6 +3,9 @@ package qStivi;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 import qStivi.commands.rpg.BlackjackCommand;
@@ -25,7 +28,7 @@ public class Bot {
     private static final Timer activityUpdate = new Timer();
     private static final String ACTIVITY = "Evolving...";
     private static final Logger logger = getLogger(Bot.class);
-    public static boolean DEV_MODE = false;
+    public static boolean DEV_MODE = true;
     public static long happyHour = 1;
 
     public static void main(String[] args) throws LoginException, SQLException, ClassNotFoundException {
@@ -38,9 +41,13 @@ public class Bot {
         logger.info("Booting...");
 
         logger.info("Bot token: " + token);
-        JDA jda = JDABuilder.createDefault(token)
+        JDA jda = JDABuilder.createLight(token)
                 .addEventListeners(new ControlsManager(), new Listener(), new BlackjackCommand(), new ReactionRoles())
                 .enableCache(CacheFlag.VOICE_STATE)
+                .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES)
+                .setChunkingFilter(ChunkingFilter.NONE)
+                .setMemberCachePolicy(MemberCachePolicy.NONE)
+                .setLargeThreshold(50)
                 .setActivity(getActivity())
                 .build();
         logger.info(String.valueOf(Bot.DEV_MODE));

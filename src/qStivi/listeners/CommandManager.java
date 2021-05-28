@@ -16,6 +16,7 @@ import java.text.Normalizer;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 import static qStivi.Bot.DEV_CHANNEL_ID;
@@ -54,15 +55,20 @@ public class CommandManager extends ListenerAdapter {
         commandList.add(new LottoCommand());
         commandList.add(new SkillsCommand());
 
-        new Timer().schedule(new TimerTask() {
+        var timer = new Timer();
+
+        timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                try {
-                    queue.take().handle();
-                    logger.debug("Command handled.");
-                } catch (SQLException | ClassNotFoundException | InterruptedException e) {
-                    e.printStackTrace();
-                }
+                var thread = new Thread(() -> {
+                    try {
+                        var command = queue.poll(1, TimeUnit.SECONDS);
+                        if (command != null) command.handle();
+                    } catch (SQLException | ClassNotFoundException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                });
+                thread.start();
             }
         }, 1000, 1000);
     }
@@ -159,6 +165,8 @@ class Command {
         db.incrementXP(xp, id);
         if (!name.equalsIgnoreCase("slots")) db.incrementCommandTimesHandled(name, 1, id);
         if (!name.equalsIgnoreCase("work")) db.setCommandLastHandled(name, new Date().getTime(), id);
+
+        System.gc();
 
 //        event.getChannel().sendMessage("Command XP: " + command.getXp()).queue();
 //        event.getChannel().sendMessage("HappyHalf: " + Bot.happyHour).queue();

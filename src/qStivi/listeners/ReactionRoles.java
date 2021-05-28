@@ -6,12 +6,16 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import qStivi.Bot;
 import qStivi.Emotes;
 
 public class ReactionRoles extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
+
+        if (Bot.DEV_MODE) return;
+
         if (event.getChannel().getIdLong() == 843093823366365184L) {
             var emote = event.getReactionEmote().getName();
             switch (emote) {
@@ -57,6 +61,9 @@ public class ReactionRoles extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReactionRemove(@NotNull GuildMessageReactionRemoveEvent event) {
+
+        if (Bot.DEV_MODE) return;
+
         if (event.getChannel().getIdLong() == 843093823366365184L) {
             var emote = event.getReactionEmote().getName();
             switch (emote) {
@@ -102,6 +109,9 @@ public class ReactionRoles extends ListenerAdapter {
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
+
+        if (Bot.DEV_MODE) return;
+
         var jda = event.getJDA();
 
         EmbedBuilder games = new EmbedBuilder();
