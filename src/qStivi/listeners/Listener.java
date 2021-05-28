@@ -47,138 +47,147 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
-        if (Bot.DEV_MODE && event.getChannelJoined().getIdLong() != Bot.DEV_VOICE_CHANNEL_ID) return;
-        if (event.getMember().getUser().isBot()) return;
+        new Thread(() -> {
+            if (Bot.DEV_MODE && event.getChannelJoined().getIdLong() != Bot.DEV_VOICE_CHANNEL_ID) return;
+            if (event.getMember().getUser().isBot()) return;
 
-
-        try {
-            new DB().setLastVoiceJoin(new Date().getTime(), event.getMember().getIdLong());
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        var id = event.getMember().getIdLong();
-
-        list.add(new Task(new TimerTask() {
-
-            @Override
-            public void run() {
-
-                var voiceState = event.getMember().getVoiceState();
-                if (voiceState == null) return;
-                var voiceChannel = voiceState.getChannel();
-                if (voiceChannel == null) return;
-
-                var amountOfUsers = voiceChannel.getMembers().size();
-                var xp = ((3L * amountOfUsers) + 2) * Bot.happyHour;
-                try {
-                    xp += xp * SkillsCommand.getSocialXPPMultiplier(id);
-                } catch (SQLException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    var db = new DB();
-
-                    db.incrementXPVoice(xp, id);
-                    db.incrementXP(xp, id);
-
-                } catch (ClassNotFoundException | SQLException e) {
-                    e.printStackTrace();
-                }
-
-
+            try {
+                new DB().setLastVoiceJoin(new Date().getTime(), event.getMember().getIdLong());
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
             }
-        }, id));
+
+            var id = event.getMember().getIdLong();
+
+            list.add(new Task(new TimerTask() {
+
+                @Override
+                public void run() {
+
+                    var voiceState = event.getMember().getVoiceState();
+                    if (voiceState == null) return;
+                    var voiceChannel = voiceState.getChannel();
+                    if (voiceChannel == null) return;
+
+                    var amountOfUsers = voiceChannel.getMembers().size();
+                    var xp = ((3L * amountOfUsers) + 2) * Bot.happyHour;
+                    try {
+                        xp += xp * SkillsCommand.getSocialXPPMultiplier(id);
+                    } catch (SQLException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        var db = new DB();
+
+                        db.incrementXPVoice(xp, id);
+                        db.incrementXP(xp, id);
+                        logger.info(event.getMember().getEffectiveName());
+
+                    } catch (ClassNotFoundException | SQLException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }, id));
+        }).start();
     }
 
     @Override
     public void onGuildVoiceLeave(@NotNull GuildVoiceLeaveEvent event) {
-        list.removeIf(task -> task.id == event.getMember().getIdLong());
+        new Thread(() -> {
+            list.removeIf(task -> task.id == event.getMember().getIdLong());
+        }).start();
     }
 
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+        new Thread(() -> {
 
-        var channelID = event.getChannel().getIdLong();
-        var channel = event.getChannel();
-        var parent = channel.getParent();
-        var categoryID = parent == null ? 0 : parent.getIdLong();
-        var author = event.getAuthor();
+            var channelID = event.getChannel().getIdLong();
+            var channel = event.getChannel();
+            var parent = channel.getParent();
+            var categoryID = parent == null ? 0 : parent.getIdLong();
+            var author = event.getAuthor();
 
-        if (author.isBot()) return;
-        if (event.isWebhookMessage()) return;
-        if (Bot.DEV_MODE) {
-            if (channelID != DEV_CHANNEL_ID) {
-                return;
-            } else if (!Bot.DEV_MODE && (channelID == DEV_CHANNEL_ID || categoryID != 833734651070775338L)) {
+            if (author.isBot()) return;
+            if (event.isWebhookMessage()) return;
+            if (Bot.DEV_MODE) {
+                if (channelID != DEV_CHANNEL_ID) {
+                    return;
+                } else if (!Bot.DEV_MODE && (channelID == DEV_CHANNEL_ID || categoryID != 833734651070775338L)) {
+                    return;
+                }
+            } else if (!Bot.DEV_MODE && channelID == DEV_CHANNEL_ID) {
                 return;
             }
-        } else if (!Bot.DEV_MODE && channelID == DEV_CHANNEL_ID) {
-            return;
-        }
 
-        event.getGuild().getTextChannelById(Bot.CHANNEL_ID).getManager().setName(String.valueOf(event.getGuild().getMemberCount())).queue();
+            event.getGuild().getTextChannelById(Bot.CHANNEL_ID).getManager().setName(String.valueOf(event.getGuild().getMemberCount())).queue();
 
-        String messageRaw = event.getMessage().getContentRaw();
+            String messageRaw = event.getMessage().getContentRaw();
 
         /*
         Reactions
          */
-        if (messageRaw.toLowerCase().startsWith("ree")) {
-            String[] words = messageRaw.split("\\s+");
-            String ree = words[0];
-            String ees = ree.substring(1);
-            channel.sendMessage(ree + ees + ees).queue();
-        }
+            if (messageRaw.toLowerCase().startsWith("ree")) {
+                String[] words = messageRaw.split("\\s+");
+                String ree = words[0];
+                String ees = ree.substring(1);
+                channel.sendMessage(ree + ees + ees).queue();
+            }
 
-        if (messageRaw.toLowerCase().startsWith("hmm")) {
-            event.getMessage().addReaction("U+1F914").queue();
-        }
+            if (messageRaw.toLowerCase().startsWith("hmm")) {
+                event.getMessage().addReaction("U+1F914").queue();
+            }
+
+        }).start();
     }
 
     @Override
     public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
+        new Thread(() -> {
 
-        var channelID = event.getChannel().getIdLong();
-        var channel = event.getChannel();
-        var parent = channel.getParent();
-        var categoryID = parent == null ? 0 : parent.getIdLong();
-        var reactingUser = event.getUser();
+            var channelID = event.getChannel().getIdLong();
+            var channel = event.getChannel();
+            var parent = channel.getParent();
+            var categoryID = parent == null ? 0 : parent.getIdLong();
+            var reactingUser = event.getUser();
 
         /*
         Why is this so stupid!?
         Also there has to be a better way. At least regarding the AtomicReference...
          */
-        AtomicReference<User> messageAuthor = new AtomicReference<>();
-        event.retrieveMessage().queue(message -> messageAuthor.set(message.getAuthor()));
-        while (messageAuthor.get() == null) Thread.onSpinWait();
-        if (messageAuthor.get().isBot()) return;
+            AtomicReference<User> messageAuthor = new AtomicReference<>();
+            event.retrieveMessage().queue(message -> messageAuthor.set(message.getAuthor()));
+            while (messageAuthor.get() == null) Thread.onSpinWait();
+            if (messageAuthor.get().isBot()) return;
 
-        if (reactingUser.isBot()) return;
-        if (Bot.DEV_MODE) {
-            if (channelID != DEV_CHANNEL_ID) {
-                return;
-            } else if (!Bot.DEV_MODE && (channelID == DEV_CHANNEL_ID || categoryID != 833734651070775338L)) {
+            if (reactingUser.isBot()) return;
+            if (Bot.DEV_MODE) {
+                if (channelID != DEV_CHANNEL_ID) {
+                    return;
+                } else if (!Bot.DEV_MODE && (channelID == DEV_CHANNEL_ID || categoryID != 833734651070775338L)) {
+                    return;
+                }
+            } else if (!Bot.DEV_MODE && channelID == DEV_CHANNEL_ID) {
                 return;
             }
-        } else if (!Bot.DEV_MODE && channelID == DEV_CHANNEL_ID) {
-            return;
-        }
 
-        try {
+            try {
 
-            var db = new DB();
-            var id = reactingUser.getIdLong();
+                var db = new DB();
+                var id = reactingUser.getIdLong();
 
-            var xp = 5 * Bot.happyHour;
-            db.setLastReaction(new Date().getTime(), id);
-            db.incrementXPReaction(xp, id);
-            db.incrementXP(xp, id);
+                var xp = 5 * Bot.happyHour;
+                db.setLastReaction(new Date().getTime(), id);
+                db.incrementXPReaction(xp, id);
+                db.incrementXP(xp, id);
 
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
+            } catch (ClassNotFoundException | SQLException e) {
+                e.printStackTrace();
+            }
+
+        }).start();
     }
 }
 

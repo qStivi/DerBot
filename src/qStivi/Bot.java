@@ -46,7 +46,7 @@ public class Bot {
                 .enableCache(CacheFlag.VOICE_STATE)
                 .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES)
                 .setChunkingFilter(ChunkingFilter.NONE)
-                .setMemberCachePolicy(MemberCachePolicy.NONE)
+                .setMemberCachePolicy(MemberCachePolicy.VOICE)
                 .setLargeThreshold(50)
                 .setActivity(getActivity())
                 .build();

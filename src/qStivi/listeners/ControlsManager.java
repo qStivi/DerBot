@@ -40,26 +40,28 @@ public class ControlsManager extends ListenerAdapter {
     }
 
     public void sendMessage(TextChannel channel, Guild guild) {
-        deleteMessage(channel, guild);
-        //noinspection StatementWithEmptyBody
-        while (PlayerManager.getINSTANCE().getMusicManager(guild).audioPlayer.getPlayingTrack() == null) {
-        } // wait for track to start playing
-        this.id = PlayerManager.getINSTANCE().getMusicManager(guild).audioPlayer.getPlayingTrack().getIdentifier();
-        channel.sendMessage("Loading...").queue(message -> this.messageId = message.getId());
-        while (this.messageId == null) {
-            Thread.onSpinWait();
-        }
+        new Thread(() -> {
+            deleteMessage(channel, guild);
+            //noinspection StatementWithEmptyBody
+            while (PlayerManager.getINSTANCE().getMusicManager(guild).audioPlayer.getPlayingTrack() == null) {
+            } // wait for track to start playing
+            this.id = PlayerManager.getINSTANCE().getMusicManager(guild).audioPlayer.getPlayingTrack().getIdentifier();
+            channel.sendMessage("Loading...").queue(message -> this.messageId = message.getId());
+            while (this.messageId == null) {
+                Thread.onSpinWait();
+            }
 
-        channel.addReactionById(this.messageId, "▶").queue();
-        channel.addReactionById(this.messageId, "⏸").queue();
-        channel.addReactionById(this.messageId, "⏹").queue();
-        channel.addReactionById(this.messageId, "\uD83D\uDD02").queue();
-        channel.addReactionById(this.messageId, "⏭").queue();
+            channel.addReactionById(this.messageId, "▶").queue();
+            channel.addReactionById(this.messageId, "⏸").queue();
+            channel.addReactionById(this.messageId, "⏹").queue();
+            channel.addReactionById(this.messageId, "\uD83D\uDD02").queue();
+            channel.addReactionById(this.messageId, "⏭").queue();
 
-        channel.editMessageById(messageId, "Currently playing...").queue();
+            channel.editMessageById(messageId, "Currently playing...").queue();
 
-        task = task(channel, guild);
-        this.timer.schedule(task, 2000, 2000);
+            task = task(channel, guild);
+            this.timer.schedule(task, 2000, 2000);
+        }).start();
     }
 
     public void deleteMessage(TextChannel channel, Guild guild) {
@@ -131,33 +133,42 @@ public class ControlsManager extends ListenerAdapter {
 
     @Override
     public void onGenericMessageReaction(@NotNull GenericMessageReactionEvent event) {
-        if (Bot.DEV_MODE && !event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
-        if (!Bot.DEV_MODE && event.getChannel().getId().equals(Bot.DEV_CHANNEL_ID)) return;
-        if (event.getUser() == null) return;
-        if (event.retrieveMessage().complete().getContentRaw().contains("Currently playing..."))
-            if (!event.getUser().isBot()) {
+        new Thread(() -> {
+            if (Bot.DEV_MODE)
+                if (event.getChannel().getIdLong() != Bot.DEV_CHANNEL_ID) {
+                    return;
+                }
+            if (!Bot.DEV_MODE)
+                if (event.getChannel().getIdLong() == Bot.DEV_CHANNEL_ID) {
+                    return;
+                }
+            if (event.getUser() == null) return;
+            if (event.retrieveMessage().complete().getContentRaw().contains("Currently playing..."))
+                if (!event.getUser().isBot()) {
 
-                if (event.getReactionEmote().getEmoji().equals("⏸")) {
-                    PlayerManager.getINSTANCE().pause(event.getGuild());
+                    if (event.getReactionEmote().getEmoji().equals("⏸")) {
+                        PlayerManager.getINSTANCE().pause(event.getGuild());
+                    }
+
+                    if (event.getReactionEmote().getEmoji().equals("▶")) {
+                        PlayerManager.getINSTANCE().continueTrack(event.getGuild());
+                    }
+
+                    if (event.getReactionEmote().getEmoji().equals("⏹")) {
+                        PlayerManager.getINSTANCE().clearQueue(event.getGuild());
+                        PlayerManager.getINSTANCE().skip(event.getGuild());
+                    }
+
+                    if (event.getReactionEmote().getEmoji().equals("\uD83D\uDD02")) {
+                        PlayerManager.getINSTANCE().setRepeat(event.getGuild(), !PlayerManager.getINSTANCE().isRepeating(event.getGuild()));
+                    }
+
+                    if (event.getReactionEmote().getEmoji().equals("⏭")) {
+                        PlayerManager.getINSTANCE().skip(event.getGuild());
+                    }
                 }
 
-                if (event.getReactionEmote().getEmoji().equals("▶")) {
-                    PlayerManager.getINSTANCE().continueTrack(event.getGuild());
-                }
-
-                if (event.getReactionEmote().getEmoji().equals("⏹")) {
-                    PlayerManager.getINSTANCE().clearQueue(event.getGuild());
-                    PlayerManager.getINSTANCE().skip(event.getGuild());
-                }
-
-                if (event.getReactionEmote().getEmoji().equals("\uD83D\uDD02")) {
-                    PlayerManager.getINSTANCE().setRepeat(event.getGuild(), !PlayerManager.getINSTANCE().isRepeating(event.getGuild()));
-                }
-
-                if (event.getReactionEmote().getEmoji().equals("⏭")) {
-                    PlayerManager.getINSTANCE().skip(event.getGuild());
-                }
-            }
+        }).start();
 
     }
 }
