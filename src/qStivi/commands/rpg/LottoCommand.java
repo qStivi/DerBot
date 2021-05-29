@@ -13,7 +13,7 @@ public class LottoCommand implements ICommand {
     private long xp;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException, InterruptedException {
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException, InterruptedException {
         var channel = event.getChannel();
         var id = event.getAuthor().getIdLong();
         xp = 0;
@@ -38,8 +38,6 @@ public class LottoCommand implements ICommand {
             channel.sendMessage("Please enter a number from 1 to 50.").queue();
             return;
         }
-
-        var db = new DB();
 
         try {
             var now = new Date().getTime();

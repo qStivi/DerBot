@@ -13,13 +13,12 @@ public class BegCommand implements ICommand {
     long xp = 0;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
         var luck = ThreadLocalRandom.current().nextFloat();
         var chance = .8;
         xp = 0;
 
         if (luck > chance) {
-            var db = new DB();
             var id = event.getAuthor().getIdLong();
             var earning = ThreadLocalRandom.current().nextInt(1, 3) * Bot.happyHour;
             db.incrementMoney(earning, id);

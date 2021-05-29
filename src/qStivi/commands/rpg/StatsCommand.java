@@ -16,11 +16,10 @@ public class StatsCommand implements ICommand {
     private long totalXP;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
         totalXP = 0;
         if (event.isWebhookMessage()) return;
         var hook = event.getChannel();
-        var db = new DB();
         var commandUser = event.getMessage().getMentionedMembers().size() > 0 ? event.getMessage().getMentionedMembers().get(0) : null;
 
         var user = commandUser == null ? event.getMember() : commandUser;

@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
 import qStivi.commands.rpg.SkillsCommand;
+import qStivi.db.DB;
 
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -32,7 +33,7 @@ public class JoinCommand implements ICommand {
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
         var hook = event.getChannel();
 
         Guild guild = event.getGuild();

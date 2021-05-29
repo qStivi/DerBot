@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import qStivi.ICommand;
 import qStivi.audioManagers.PlayerManager;
 import qStivi.commands.rpg.SkillsCommand;
+import qStivi.db.DB;
 
 import javax.annotation.Nonnull;
 import java.sql.SQLException;
@@ -13,7 +14,7 @@ public class ContinueCommand implements ICommand {
     private long xp = 0;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
         var hook = event.getChannel();
         PlayerManager.getINSTANCE().continueTrack(event.getGuild());
         hook.sendMessage("Continuing...").queue();

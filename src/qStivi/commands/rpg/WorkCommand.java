@@ -13,10 +13,9 @@ public class WorkCommand implements ICommand {
     long xpGain = 0;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
         var hook = event.getChannel();
         var id = event.getAuthor().getIdLong();
-        var db = new DB();
         xpGain = 0;
 
 

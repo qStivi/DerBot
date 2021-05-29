@@ -15,9 +15,8 @@ public class Top10Command implements ICommand {
     private long xp;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
         var hook = event.getChannel();
-        var db = new DB();
         var embed = new EmbedBuilder();
         xp = 0;
 

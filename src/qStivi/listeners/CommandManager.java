@@ -146,15 +146,16 @@ class Command {
     ICommand command;
     GuildMessageReceivedEvent event;
     String[] args;
+    DB db = new DB();
 
-    public Command(ICommand command, GuildMessageReceivedEvent event, String[] args) {
+    public Command(ICommand command, GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         this.command = command;
         this.event = event;
         this.args = args;
     }
 
     void handle() throws SQLException, ClassNotFoundException, InterruptedException {
-        this.command.handle(this.event, this.args);
+        this.command.handle(this.event, this.args, this.db);
 
         var name = command.getName();
         var id = event.getAuthor().getIdLong();
@@ -166,10 +167,6 @@ class Command {
         if (!name.equalsIgnoreCase("slots")) db.incrementCommandTimesHandled(name, 1, id);
         if (!name.equalsIgnoreCase("work")) db.setCommandLastHandled(name, new Date().getTime(), id);
 
-        System.gc();
-
-//        event.getChannel().sendMessage("Command XP: " + command.getXp()).queue();
-//        event.getChannel().sendMessage("HappyHalf: " + Bot.happyHour).queue();
-//        event.getChannel().sendMessage("Total XP: " + xp).queue();
+        System.gc(); // Because Memory usage gets crazy after a while
     }
 }

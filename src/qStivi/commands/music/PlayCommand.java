@@ -12,6 +12,7 @@ import qStivi.apis.Spotify;
 import qStivi.apis.YouTube;
 import qStivi.audioManagers.PlayerManager;
 import qStivi.commands.rpg.SkillsCommand;
+import qStivi.db.DB;
 import qStivi.listeners.ControlsManager;
 
 import java.io.IOException;
@@ -193,7 +194,7 @@ public class PlayCommand implements ICommand {
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) {
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) {
         var hook = event.getChannel();
         xp = 0;
 

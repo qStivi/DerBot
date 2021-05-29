@@ -10,7 +10,7 @@ import java.sql.SQLException;
 public class moneyCommand implements ICommand {
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
         var hook = event.getChannel();
         if (!(event.getAuthor().getIdLong() == 219108246143631364L)) {
             hook.sendMessage("You don't have the permission to do that").queue();
@@ -21,7 +21,6 @@ public class moneyCommand implements ICommand {
         var userID = event.getMessage().getMentionedUsers().get(0).getIdLong();
         var amount = Long.parseLong(args[3]);
 
-        var db = new DB();
         if (subcommand.equals("give")) {
 //            db.increment("users", "money", "id", userID, amount);
             db.incrementMoney(amount, userID);

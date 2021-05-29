@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import qStivi.Config;
 import qStivi.ICommand;
 import qStivi.commands.rpg.SkillsCommand;
+import qStivi.db.DB;
 
 import javax.annotation.CheckReturnValue;
 import java.sql.SQLException;
@@ -34,7 +35,7 @@ public class RedditCommand implements ICommand {
     private long xp;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
         var hook = event.getChannel();
 
         xp = 0;

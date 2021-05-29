@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
 import qStivi.ICommand;
 import qStivi.commands.rpg.SkillsCommand;
+import qStivi.db.DB;
 import qStivi.listeners.CommandManager;
 
 import javax.annotation.Nonnull;
@@ -22,7 +23,7 @@ public class CleanCommand implements ICommand {
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
         var hook = event.getChannel();
         List<Message> messages = new ArrayList<>();
         var option = args.length > 1 && Boolean.parseBoolean(args[1]);

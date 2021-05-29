@@ -22,7 +22,7 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
     private long xp;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
         xp = 0;
 
         if (args.length < 2) return;
@@ -30,7 +30,6 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
         AtomicReference<String> messageId = new AtomicReference<>();
         hook.sendMessage("Loading...").queue(message -> messageId.set(message.getId()));
         while (messageId.get() == null) Thread.onSpinWait();
-        var db = new DB();
         long id = event.getAuthor().getIdLong();
         var money = db.getMoney(id);
         if (money < Long.parseLong(args[1])) {

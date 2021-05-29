@@ -3,6 +3,7 @@ package qStivi.commands;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import qStivi.ICommand;
 import qStivi.audioManagers.PlayerManager;
+import qStivi.db.DB;
 import qStivi.listeners.ControlsManager;
 
 import javax.annotation.Nonnull;
@@ -69,7 +70,7 @@ public class DndCommand implements ICommand {
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args) {
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) {
         var hook = event.getChannel();
 
         if (!join(event.getGuild(), event.getAuthor())) {
