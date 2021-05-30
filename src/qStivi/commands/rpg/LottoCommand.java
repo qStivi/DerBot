@@ -1,9 +1,10 @@
 package qStivi.commands.rpg;
 
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
-import qStivi.db.DB;
+import qStivi.DB;
 
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -13,8 +14,7 @@ public class LottoCommand implements ICommand {
     private long xp;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException, InterruptedException {
-        var channel = event.getChannel();
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException, InterruptedException {
         var id = event.getAuthor().getIdLong();
         xp = 0;
 
@@ -27,15 +27,15 @@ public class LottoCommand implements ICommand {
                     sendPoolInfo(event);
                     return;
                 }
-                channel.sendMessage("Please enter a number from 1 to 50 or 'pool'").queue();
+                reply.editMessage("Please enter a number from 1 to 50 or 'pool'").queue();
                 return;
             }
         } else {
-            channel.sendMessage("Please enter a number from 1 to 50 or 'pool'").queue();
+            reply.editMessage("Please enter a number from 1 to 50 or 'pool'").queue();
             return;
         }
         if (vote < 1 || vote > 50) {
-            channel.sendMessage("Please enter a number from 1 to 50.").queue();
+            reply.editMessage("Please enter a number from 1 to 50.").queue();
             return;
         }
 
@@ -49,18 +49,18 @@ public class LottoCommand implements ICommand {
             db.incrementGamePlays(getName(), 1, id);
         } catch (SQLException e) {
             vote = db.getLottoVote(id);
-            channel.sendMessage("You already entered the raffle. Your vote is: " + vote).queue();
+            reply.editMessage("You already entered the raffle. Your vote is: " + vote).queue();
             return;
         }
 
-        channel.sendMessage("You entered the raffle.").queue();
+        reply.editMessage("You entered the raffle.").queue();
 
 
         xp = 3 + (long) (3 * SkillsCommand.getGambleXPMultiplier(event.getAuthor().getIdLong()));
     }
 
     private void sendPoolInfo(GuildMessageReceivedEvent event) throws SQLException, ClassNotFoundException {
-        var db = new DB();
+        var db = DB.getInstance();
         var pool = db.getLottoPool();
         DecimalFormat formatter = new DecimalFormat();
         event.getChannel().sendMessage("The pool contains " + formatter.format(pool) + ":gem:").queue();

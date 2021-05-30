@@ -1,12 +1,14 @@
-package qStivi.commands.rpg;
+package qStivi.commands.rpg.slots;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import qStivi.Bot;
+import qStivi.DB;
 import qStivi.ICommand;
-import qStivi.db.DB;
+import qStivi.commands.rpg.SkillsCommand;
 
 import java.awt.*;
 import java.sql.SQLException;
@@ -36,7 +38,7 @@ public class SlotsCommand implements ICommand {
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException, InterruptedException {
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException, InterruptedException {
         xp = 0;
         if (event.isWebhookMessage()) return;
         var id = event.getAuthor().getIdLong();
@@ -49,14 +51,14 @@ public class SlotsCommand implements ICommand {
         var money = db.getMoney(id);
         var channel = event.getChannel();
 
-        if (bet < 0 || bet > 80000) return;
+        if (bet < 0 || bet > 100000) return;
 
         var first = getRandomSymbol();
         var second = getRandomSymbol();
         var third = getRandomSymbol();
 
         if (money < bet) {
-            channel.sendMessage("Sorry but you don't have enough money to do that :(").queue();
+            reply.editMessage("Sorry but you don't have enough money to do that :(").queue();
             return;
         }
 
@@ -69,7 +71,9 @@ public class SlotsCommand implements ICommand {
         db.setGameLastPlayed(getName(), new Date().getTime(), id);
 
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setAuthor(event.getMember().getEffectiveName(), null, event.getAuthor().getAvatarUrl());
+        var member = event.getMember();
+        if (member == null) return;
+        embed.setAuthor(member.getEffectiveName(), null, event.getAuthor().getAvatarUrl());
         embed.addField("", first.getEmote(), true);
         embed.addField("", second.getEmote(), true);
         embed.addField("", third.getEmote(), true);
@@ -108,9 +112,10 @@ public class SlotsCommand implements ICommand {
                         win(db, id, channel, embed, gain);
                     } else {
                         db.incrementGameLoses(getName(), 1, id);
-                        db.incrementLottoPool(bet / 2);
+                        db.incrementLottoPool(bet);
                     }
-        channel.sendMessage(embed.build()).queue();
+        reply.editMessage(embed.build()).queue();
+        reply.editMessage("Slots").queue();
 
         xp = 3 + (long) (3 * SkillsCommand.getGambleXPMultiplier(event.getAuthor().getIdLong()));
         db.incrementCommandTimesHandled("slots", 1, id);

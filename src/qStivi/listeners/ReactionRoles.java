@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import qStivi.Bot;
 import qStivi.Emotes;
 
+@SuppressWarnings("ALL")
 public class ReactionRoles extends ListenerAdapter {
 
     @Override
@@ -18,43 +19,44 @@ public class ReactionRoles extends ListenerAdapter {
 
         if (event.getChannel().getIdLong() == 843093823366365184L) {
             var emote = event.getReactionEmote().getName();
+            var id = event.getUserIdLong();
             switch (emote) {
-                case "LoL" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(843108657079779359L)).queue();
-                case "Minecraft" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(755490059976966254L)).queue();
-                case "AmongUs" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(750014132220330016L)).queue();
-                case "Warzone" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846009044610580500L)).queue();
-                case "Apex" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846010998728425472L)).queue();
-                case "Playstation" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846784335804760079L)).queue();
-                case "Bot" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846784745073672252L)).queue();
-                case "GMod" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846785053819666502L)).queue();
-                case "Switch" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846785268694777896L)).queue();
-                case "Civ" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846785388076335137L)).queue();
-                case "Xbox" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846785641474818059L)).queue();
-                case "ARK" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846785894525567007L)).queue();
-                case "GTA5" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846786036750614560L)).queue();
-                case "Hearthstone" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846786187653677077L)).queue();
-                case "VR" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846786480381624410L)).queue();
-                case "RocketLeague" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846786687484821545L)).queue();
-                case "Shisha" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846808961894318110L)).queue();
-                case "Valorant" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846815650260451429L)).queue();
-                case "CSGO" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846819632161226803L)).queue();
-                case "RainbowSixSiege" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846827756767281182L)).queue();
-                case "Rounds" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846829319091126293L)).queue();
-                case "Pummel" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846832373374517278L)).queue();
-                case "Satisfactory" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846833665191051314L)).queue();
-                case "Fortnite" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846836340729315379L)).queue();
-                case "ayaya" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846838972093300786L)).queue();
-                case "Diablo3" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846830616129175642L)).queue();
-                case "♟" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846817735798685696L)).queue();
-                case "\uD83C\uDF7E" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(846810390196256798L)).queue();
-                case "\uD83D\uDFE4" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(843120253566320672L)).queue();
-                case "\uD83D\uDFE2" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(843120087245389824L)).queue();
-                case "\uD83D\uDD35" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(843120035853107210L)).queue();
-                case "\uD83D\uDFE3" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(843119963270545439L)).queue();
-                case "\uD83D\uDFE1" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(843120339508658186L)).queue();
-                case "\uD83D\uDFE0" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(843120410190020628L)).queue();
-                case "\uD83D\uDD34" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(843120454067945483L)).queue();
-                case "⚫" -> event.getGuild().addRoleToMember(event.getUserIdLong(), event.getGuild().getRoleById(843120566655647746L)).queue();
+                case "LoL" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(843108657079779359L)).queue();
+                case "Minecraft" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(755490059976966254L)).queue();
+                case "AmongUs" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(750014132220330016L)).queue();
+                case "Warzone" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846009044610580500L)).queue();
+                case "Apex" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846010998728425472L)).queue();
+                case "Playstation" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846784335804760079L)).queue();
+                case "Bot" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846784745073672252L)).queue();
+                case "GMod" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846785053819666502L)).queue();
+                case "Switch" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846785268694777896L)).queue();
+                case "Civ" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846785388076335137L)).queue();
+                case "Xbox" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846785641474818059L)).queue();
+                case "ARK" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846785894525567007L)).queue();
+                case "GTA5" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846786036750614560L)).queue();
+                case "Hearthstone" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846786187653677077L)).queue();
+                case "VR" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846786480381624410L)).queue();
+                case "RocketLeague" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846786687484821545L)).queue();
+                case "Shisha" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846808961894318110L)).queue();
+                case "Valorant" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846815650260451429L)).queue();
+                case "CSGO" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846819632161226803L)).queue();
+                case "RainbowSixSiege" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846827756767281182L)).queue();
+                case "Rounds" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846829319091126293L)).queue();
+                case "Pummel" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846832373374517278L)).queue();
+                case "Satisfactory" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846833665191051314L)).queue();
+                case "Fortnite" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846836340729315379L)).queue();
+                case "ayaya" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846838972093300786L)).queue();
+                case "Diablo3" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846830616129175642L)).queue();
+                case "♟" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846817735798685696L)).queue();
+                case "\uD83C\uDF7E" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(846810390196256798L)).queue();
+                case "\uD83D\uDFE4" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(843120253566320672L)).queue();
+                case "\uD83D\uDFE2" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(843120087245389824L)).queue();
+                case "\uD83D\uDD35" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(843120035853107210L)).queue();
+                case "\uD83D\uDFE3" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(843119963270545439L)).queue();
+                case "\uD83D\uDFE1" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(843120339508658186L)).queue();
+                case "\uD83D\uDFE0" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(843120410190020628L)).queue();
+                case "\uD83D\uDD34" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(843120454067945483L)).queue();
+                case "⚫" -> event.getGuild().addRoleToMember(id, event.getGuild().getRoleById(843120566655647746L)).queue();
             }
         }
     }

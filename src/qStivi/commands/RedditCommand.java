@@ -9,6 +9,7 @@ import net.dean.jraw.oauth.Credentials;
 import net.dean.jraw.oauth.OAuthHelper;
 import net.dean.jraw.tree.RootCommentNode;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +17,7 @@ import org.slf4j.Logger;
 import qStivi.Config;
 import qStivi.ICommand;
 import qStivi.commands.rpg.SkillsCommand;
-import qStivi.db.DB;
+import qStivi.DB;
 
 import javax.annotation.CheckReturnValue;
 import java.sql.SQLException;
@@ -35,9 +36,7 @@ public class RedditCommand implements ICommand {
     private long xp;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
-        var hook = event.getChannel();
-
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException {
         xp = 0;
 
         String url;
@@ -58,23 +57,23 @@ public class RedditCommand implements ICommand {
         if (link.contains("i.redd.it") || link.contains("v.redd.it") || link.contains("youtu.be") || link.contains("youtube.com") || link.contains("imgur.com") || link.contains("giphy.com") || link.contains("gfycat.com")) {
 
             if (link.contains("i.redd.it")) {
-                hook.sendMessage(sendFancyTitle(submissionSubject)).queue();
+                reply.editMessage(sendFancyTitle(submissionSubject)).queue();
                 event.getChannel().sendMessage(url).queue();
             } else if (link.contains("v.redd.it")) {
                 if (submissionSubject.getEmbeddedMedia() != null) {
                     if (submissionSubject.getEmbeddedMedia().getRedditVideo() != null) {
-                        hook.sendMessage(sendFancyTitle(submissionSubject)).queue();
+                        reply.editMessage(sendFancyTitle(submissionSubject)).queue();
                         event.getChannel().sendMessage(submissionSubject.getEmbeddedMedia().getRedditVideo().getFallbackUrl()).queue();
                     }
-                } else hook.sendMessage(permalink(randomSubmission)).queue(); // This is usually a cross post
+                } else reply.editMessage(permalink(randomSubmission)).queue(); // This is usually a cross post
 
             } else {
-                hook.sendMessage(sendFancyTitle(submissionSubject)).queue();
+                reply.editMessage(sendFancyTitle(submissionSubject)).queue();
                 event.getChannel().sendMessage(url).queue();
             }
 
         } else {
-            hook.sendMessage(permalink(randomSubmission)).queue();
+            reply.editMessage(permalink(randomSubmission)).queue();
         }
 
         xp = 3 + (long) (3 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));

@@ -1,9 +1,10 @@
 package qStivi.commands;
 
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
 import qStivi.ICommand;
-import qStivi.db.DB;
+import qStivi.DB;
 
 import javax.annotation.Nonnull;
 
@@ -13,7 +14,9 @@ public class ShutdownCommand implements ICommand {
     private static final Logger logger = getLogger(ShutdownCommand.class);
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) {
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) {
+        reply.editMessage("Shutting down...").queue();
+
         logger.info("Shutting down...");
 
         event.getJDA().shutdownNow();

@@ -4,7 +4,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import qStivi.db.DB;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -110,7 +109,7 @@ public class Events {
     private void announceLotto() throws SQLException, ClassNotFoundException {
         DB db;
         List<Long> players;
-        db = new DB();
+        db = DB.getInstance();
         players = db.getLottoParticipants();
         var sb = new StringBuilder();
         for (long id : players) {
@@ -131,7 +130,7 @@ public class Events {
         var number = ThreadLocalRandom.current().nextInt(1, 51);
         DB db;
         List<Long> winners;
-        db = new DB();
+        db = DB.getInstance();
         winners = db.getLottoParticipantsByVote(number);
         if (winners.isEmpty()) {
             channel.get().sendMessage("Better luck next time. No one won this raffle. The lucky number was " + number).queue();

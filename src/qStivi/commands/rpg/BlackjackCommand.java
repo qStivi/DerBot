@@ -1,5 +1,6 @@
 package qStivi.commands.rpg;
 
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -8,43 +9,39 @@ import qStivi.BlackJack;
 import qStivi.Bot;
 import qStivi.Card;
 import qStivi.ICommand;
-import qStivi.db.DB;
+import qStivi.DB;
 
 import java.awt.*;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
-@SuppressWarnings("ConstantConditions")
+@SuppressWarnings({"ConstantConditions", "DuplicatedCode"})
 public class BlackjackCommand extends ListenerAdapter implements ICommand {
 
     private long xp;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException {
         xp = 0;
 
-        if (args.length < 2) return;
+        if (args.length < 2 || Long.parseLong(args[1]) > 1000000) return;
         var hook = event.getChannel();
-        AtomicReference<String> messageId = new AtomicReference<>();
-        hook.sendMessage("Loading...").queue(message -> messageId.set(message.getId()));
-        while (messageId.get() == null) Thread.onSpinWait();
         long id = event.getAuthor().getIdLong();
         var money = db.getMoney(id);
         if (money < Long.parseLong(args[1])) {
-            hook.editMessageById(String.valueOf(messageId), "You don't have enough money!").queue();
+            reply.editMessage("You don't have enough money!").queue();
             return;
         }
         if (Long.parseLong(args[1]) < 0) {
-            hook.editMessageById(String.valueOf(messageId), "You can't do that, sorry.").queue();
+            reply.editMessage("You can't do that, sorry.").queue();
             return;
         }
         db.incrementGamePlays(getName(), 1, id);
 
         var removed = BlackJack.games.removeIf(game -> game.user.getIdLong() == id);
         if (removed) db.incrementGameLoses(getName(), 1, id);
-        BlackJack.games.add(new BlackJack(1, messageId.get(), event.getAuthor(), hook, Long.parseLong(args[1])));
+        BlackJack.games.add(new BlackJack(1, reply, event.getAuthor(), hook, Long.parseLong(args[1])));
         BlackJack bj = null;
         for (BlackJack game : BlackJack.games) {
             if (game.user.getIdLong() == id) {
@@ -59,12 +56,12 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
         if (bj.count(bj.player) == 21) {
             endGame(event, db, bj, (long) (bj.bet * 2.5), "You won!");
         } else {
-            event.getChannel().addReactionById(bj.id, "\uD83E\uDD19\uD83C\uDFFD").queue();
-            event.getChannel().addReactionById(bj.id, "✋\uD83C\uDFFD").queue();
+            reply.addReaction("\uD83E\uDD19\uD83C\uDFFD").queue();
+            reply.addReaction("✋\uD83C\uDFFD").queue();
         }
 
-        hook.editMessageById(String.valueOf(messageId), args[1]).queue();
-        hook.editMessageById(String.valueOf(messageId), bj.embed.build()).queue();
+        reply.editMessage(args[1]).queue();
+        reply.editMessage(bj.embed.build()).queue();
 
         xp = 3 + (long) (3 * SkillsCommand.getGambleXPMultiplier(event.getAuthor().getIdLong()));
     }
@@ -74,7 +71,7 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
         var user = event.getUser();
         DB db = null;
         try {
-            db = new DB();
+            db = DB.getInstance();
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
@@ -89,12 +86,12 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
         if (bj != null) {
             try {
                 String messageId = event.getMessageId();
-                if (messageId.equals(bj.id) && !Objects.requireNonNull(event.getUser()).isBot()) {
+                if (messageId.equals(bj.reply.getId()) && !Objects.requireNonNull(event.getUser()).isBot()) {
                     if (event.getReactionEmote().getEmoji().equals("\uD83E\uDD19\uD83C\uDFFD")) {
                         event.getReaction().removeReaction(user).queue();
                         if (bj.hit() > 21) {
                             endGame(event, db, bj, 0, "You Lost!");
-                            db.incrementLottoPool(bj.bet / 2);
+                            db.incrementLottoPool(bj.bet);
                         }
                     }
                     if (event.getReactionEmote().getEmoji().equals("✋\uD83C\uDFFD")) {
@@ -108,10 +105,10 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
 
                         else if (playerHandValue > 21 && dealerHandValue <= 21) {
                             endGame(event, db, bj, 0, "You Lost!");
-                            db.incrementLottoPool(bj.bet / 2);
+                            db.incrementLottoPool(bj.bet);
                         } else if (dealerHandValue > playerHandValue) {
                             endGame(event, db, bj, 0, "You Lost!");
-                            db.incrementLottoPool(bj.bet / 2);
+                            db.incrementLottoPool(bj.bet);
                         } else endGame(event, db, bj, bj.bet, "Draw.");
                     }
                     displayGameState(bj);
@@ -146,6 +143,7 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void endGame(@NotNull GuildMessageReceivedEvent event, DB db, BlackJack bj, long reward, String title) throws SQLException {
         reward = reward * Bot.happyHour;
         var id = event.getMessage().getAuthor().getIdLong();
@@ -196,7 +194,7 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
         }
 
         bj.embed.addField("", playerCards.toString(), true);
-        bj.hook.editMessageById(bj.id, bj.embed.build()).queue();
+        bj.reply.editMessage(bj.embed.build()).queue();
     }
 
     @NotNull

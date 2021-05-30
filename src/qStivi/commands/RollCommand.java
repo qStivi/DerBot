@@ -1,11 +1,12 @@
 package qStivi.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import qStivi.ICommand;
 import qStivi.commands.rpg.SkillsCommand;
-import qStivi.db.DB;
+import qStivi.DB;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -19,27 +20,31 @@ public class RollCommand implements ICommand {
     private long xp;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
-        var hook = event.getChannel();
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException {
         var rollInput = args[1];
         xp = 0;
 
         if (rollInput.equals("stats")) {
-            hook.sendMessage(statsRoll()).queue();
+            reply.editMessage(statsRoll()).queue();
         } else {
-            var result = normalRoll(rollInput);
-            if (result == null) {
-                hook.sendMessage("This is not a valid roll!\nExample: `6d8`").queue();
-                return;
+            try {
+                var result = normalRoll(rollInput);
+                if (result == null) {
+                    reply.editMessage("This is not a valid roll!\nExample: `6d8`").queue();
+                    return;
+                }
+                reply.editMessage(result).queue();
+                reply.editMessage("Roll").queue();
+            }catch (OutOfMemoryError e){
+                reply.editMessage("Your roll is too heavy!").queue();
             }
-            hook.sendMessage(result).queue();
         }
 
         xp = 15 + (long) (15 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
     }
 
 
-    MessageEmbed normalRoll(String query) {
+    MessageEmbed normalRoll(String query) throws OutOfMemoryError{
         String[] input = query.split("d");
         long numOfDice;
         int numOfSides;

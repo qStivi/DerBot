@@ -1,12 +1,13 @@
 package qStivi.commands;
 
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
 import qStivi.commands.rpg.SkillsCommand;
-import qStivi.db.DB;
+import qStivi.DB;
 
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -33,9 +34,7 @@ public class JoinCommand implements ICommand {
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
-        var hook = event.getChannel();
-
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException {
         Guild guild = event.getGuild();
         User author = event.getMember().getUser();
 
@@ -43,9 +42,9 @@ public class JoinCommand implements ICommand {
 
         var success = join(guild, author);
         if (success) {
-            hook.sendMessage("Hi").queue();
+            reply.editMessage("Hi").queue();
         } else {
-            hook.sendMessage("Something went wrong :(").queue();
+            reply.editMessage("Something went wrong :(").queue();
         }
 
 

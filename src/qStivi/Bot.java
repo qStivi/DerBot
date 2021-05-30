@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 import qStivi.commands.rpg.BlackjackCommand;
-import qStivi.db.DB;
 import qStivi.listeners.CommandManager;
 import qStivi.listeners.ControlsManager;
 import qStivi.listeners.Listener;
@@ -42,7 +41,7 @@ public class Bot {
 
         logger.info("Bot token: " + token);
         JDA jda = JDABuilder.createLight(token)
-                .addEventListeners(new ControlsManager(), new Listener(), new BlackjackCommand(), new ReactionRoles())
+                .addEventListeners(ControlsManager.getINSTANCE(), new Listener(), new BlackjackCommand(), new ReactionRoles())
                 .enableCache(CacheFlag.VOICE_STATE)
                 .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES)
                 .setChunkingFilter(ChunkingFilter.NONE)
@@ -54,13 +53,12 @@ public class Bot {
 
         jda.addEventListener(new CommandManager());
 
-        new DB();
+        DB.getInstance();
         new Events(jda);
 
 
         logger.info(String.valueOf(Bot.DEV_MODE));
         if (DEV_MODE) return; // Don't continue if in development mode.
-        logger.info(String.valueOf(Bot.DEV_MODE));
 
         activityUpdate.schedule(new TimerTask() {
             @Override

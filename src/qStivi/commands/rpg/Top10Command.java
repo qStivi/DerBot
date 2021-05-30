@@ -1,11 +1,12 @@
 package qStivi.commands.rpg;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
-import qStivi.db.DB;
+import qStivi.DB;
 
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicReference;
@@ -15,8 +16,7 @@ public class Top10Command implements ICommand {
     private long xp;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
-        var hook = event.getChannel();
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException {
         var embed = new EmbedBuilder();
         xp = 0;
 
@@ -37,9 +37,10 @@ public class Top10Command implements ICommand {
                 Thread.onSpinWait();
             }
             var xp = db.getXP(id);
-            embed.addField("", "#" + i + " [" + name.get() + "](https://youtu.be/dQw4w9WgXcQ) " + money + " :gem: :white_small_square: " + xp + "xp LVL: " + lvl, false);
+            var rank = i + 1;
+            embed.addField("", "#" + rank + " [" + name.get() + "](https://youtu.be/dQw4w9WgXcQ) " + money + " :gem: :white_small_square: " + xp + "xp LVL: " + lvl, false);
         }
-        hook.sendMessage(embed.build()).queue();
+        reply.editMessage(embed.build()).queue();
 
         xp = 3 + (long) (3 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
     }

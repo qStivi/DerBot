@@ -9,7 +9,8 @@ import qStivi.ICommand;
 import qStivi.commands.*;
 import qStivi.commands.music.*;
 import qStivi.commands.rpg.*;
-import qStivi.db.DB;
+import qStivi.DB;
+import qStivi.commands.rpg.slots.SlotsCommand;
 
 import java.sql.SQLException;
 import java.text.Normalizer;
@@ -81,6 +82,7 @@ public class CommandManager extends ListenerAdapter {
         return str;
     }
 
+    @SuppressWarnings({"ConstantConditions", "DuplicatedCode"})
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
 
@@ -95,9 +97,10 @@ public class CommandManager extends ListenerAdapter {
         if (Bot.DEV_MODE) {
             if (channelID != DEV_CHANNEL_ID) {
                 return;
-            } else if (!Bot.DEV_MODE && (channelID == DEV_CHANNEL_ID || categoryID != 833734651070775338L)) {
-                return;
-            }
+            } else if (!Bot.DEV_MODE)
+                if (channelID == DEV_CHANNEL_ID || categoryID != 833734651070775338L) {
+                    return;
+                }
         } else if (!Bot.DEV_MODE) {
             if (channelID == DEV_CHANNEL_ID) {
                 return;
@@ -124,7 +127,7 @@ public class CommandManager extends ListenerAdapter {
             } else {
                 var id = author.getIdLong();
                 var now = new Date().getTime();
-                var db = new DB();
+                var db = DB.getInstance();
 
                 @SuppressWarnings("PointlessArithmeticExpression") var xp = 1 * Bot.happyHour;
                 db.setLastChat(now, id);
@@ -142,11 +145,10 @@ public class CommandManager extends ListenerAdapter {
 }
 
 class Command {
-    private static final Logger logger = getLogger(Command.class);
     ICommand command;
     GuildMessageReceivedEvent event;
     String[] args;
-    DB db = new DB();
+    DB db = DB.getInstance();
 
     public Command(ICommand command, GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
         this.command = command;
@@ -155,11 +157,13 @@ class Command {
     }
 
     void handle() throws SQLException, ClassNotFoundException, InterruptedException {
-        this.command.handle(this.event, this.args, this.db);
+        var reply = event.getMessage().reply("Loading...").complete();
+
+        this.command.handle(this.event, this.args, this.db, reply);
 
         var name = command.getName();
         var id = event.getAuthor().getIdLong();
-        var db = new DB();
+        var db = DB.getInstance();
 
         var xp = command.getXp() * Bot.happyHour;
         db.incrementCommandXP(name, xp, id);

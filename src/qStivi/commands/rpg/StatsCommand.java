@@ -1,11 +1,12 @@
 package qStivi.commands.rpg;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import qStivi.ICommand;
-import qStivi.db.DB;
+import qStivi.DB;
 
 import java.sql.SQLException;
 
@@ -16,10 +17,9 @@ public class StatsCommand implements ICommand {
     private long totalXP;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException {
         totalXP = 0;
         if (event.isWebhookMessage()) return;
-        var hook = event.getChannel();
         var commandUser = event.getMessage().getMentionedMembers().size() > 0 ? event.getMessage().getMentionedMembers().get(0) : null;
 
         var user = commandUser == null ? event.getMember() : commandUser;
@@ -37,20 +37,32 @@ public class StatsCommand implements ICommand {
 
         for (int i = 0; i < ranking.size(); i++) {
             if (ranking.get(i) == user.getIdLong()) {
-                position = i;
+                position = i + 1;
             }
         }
 
         var embed = new EmbedBuilder();
         embed.setColor(user.getColor());
         embed.setAuthor(userName, "https://youtu.be/dQw4w9WgXcQ", user.getUser().getEffectiveAvatarUrl());
-        if (position != 1337) embed.addField("Rank", "#" + position, false);
+        embed.addField("Rank", "#" + position, false);
         embed.addField("Level", String.valueOf(lvl), true);
         embed.addField("Money", money + " :gem:", true);
         var xp = db.getXP(userID);
         embed.addField("XP", String.valueOf(xp), true);
 
-        hook.sendMessage(embed.build()).queue();
+        var gameStatistics = new EmbedBuilder();
+        gameStatistics.setTitle("Game statistics");
+        gameStatistics.addField("", "Blackjack", false);
+        gameStatistics.addField("Plays", String.valueOf(db.getGamePlays("bj", userID)), true);
+        gameStatistics.addField("Wins", String.valueOf(db.getGameWins("bj", userID)), true);
+        gameStatistics.addField("Loses", String.valueOf(db.getGameLoses("bj", userID)), true);
+        gameStatistics.addField("", "Slots", false);
+        gameStatistics.addField("Plays", String.valueOf(db.getGamePlays("slots", userID)), true);
+        gameStatistics.addField("Wins", String.valueOf(db.getGameWins("slots", userID)), true);
+        gameStatistics.addField("Loses", String.valueOf(db.getGameLoses("slots", userID)), true);
+
+        reply.editMessage(embed.build()).queue();
+        event.getChannel().sendMessage(gameStatistics.build()).queue();
 
         totalXP = 3 + (long) (3 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
     }

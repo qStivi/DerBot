@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import qStivi.Bot;
 import qStivi.commands.rpg.SkillsCommand;
-import qStivi.db.DB;
+import qStivi.DB;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -39,9 +39,13 @@ public class Listener extends ListenerAdapter {
     public void onReady(@NotNull ReadyEvent event) {
         logger.info("Ready!");
         if (Bot.DEV_MODE){
-            event.getJDA().getTextChannelById(DEV_CHANNEL_ID).sendMessage("Ready!").queue();
+            var channel = event.getJDA().getTextChannelById(DEV_CHANNEL_ID);
+            if (channel == null) return;
+                    channel.sendMessage("Ready!").queue();
         } else {
-            event.getJDA().getTextChannelById(CHANNEL_ID).sendMessage("Ready!").mentionUsers(219035632435986433L, 219050169763758081L).queue();
+            var channel = event.getJDA().getTextChannelById(CHANNEL_ID);
+            if (channel == null) return;
+            channel.sendMessage("Ready!").mentionRoles(846784745073672252L).queue();
         }
     }
 
@@ -52,7 +56,7 @@ public class Listener extends ListenerAdapter {
             if (event.getMember().getUser().isBot()) return;
 
             try {
-                new DB().setLastVoiceJoin(new Date().getTime(), event.getMember().getIdLong());
+                DB.getInstance().setLastVoiceJoin(new Date().getTime(), event.getMember().getIdLong());
             } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -77,7 +81,7 @@ public class Listener extends ListenerAdapter {
                         e.printStackTrace();
                     }
                     try {
-                        var db = new DB();
+                        var db = DB.getInstance();
 
                         db.incrementXPVoice(xp, id);
                         db.incrementXP(xp, id);
@@ -94,12 +98,10 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceLeave(@NotNull GuildVoiceLeaveEvent event) {
-        new Thread(() -> {
-            list.removeIf(task -> task.id == event.getMember().getIdLong());
-        }).start();
+        new Thread(() -> list.removeIf(task -> task.id == event.getMember().getIdLong())).start();
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings({"ConstantConditions", "DuplicatedCode"})
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         new Thread(() -> {
@@ -143,6 +145,7 @@ public class Listener extends ListenerAdapter {
         }).start();
     }
 
+    @SuppressWarnings({"DuplicatedCode", "ConstantConditions"})
     @Override
     public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
         new Thread(() -> {
@@ -175,7 +178,7 @@ public class Listener extends ListenerAdapter {
 
             try {
 
-                var db = new DB();
+                var db = DB.getInstance();
                 var id = reactingUser.getIdLong();
 
                 var xp = 5 * Bot.happyHour;

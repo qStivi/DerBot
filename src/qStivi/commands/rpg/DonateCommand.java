@@ -1,9 +1,10 @@
 package qStivi.commands.rpg;
 
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import qStivi.ICommand;
-import qStivi.db.DB;
+import qStivi.DB;
 
 import java.sql.SQLException;
 
@@ -11,7 +12,7 @@ public class DonateCommand implements ICommand {
     long totalXP = 0;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException {
         var user = event.getMessage().getMentionedUsers().get(0);
         var money = Long.parseLong(args[2]);
         totalXP = 0;
@@ -19,14 +20,14 @@ public class DonateCommand implements ICommand {
         if (money < 0) return;
 
         if (db.getMoney(event.getAuthor().getIdLong()) < money) {
-            event.getChannel().sendMessage("You don't have enough money to do that!").queue();
+            reply.editMessage("You don't have enough money to do that!").queue();
             return;
         }
 
         db.decrementMoney(money, event.getAuthor().getIdLong());
         db.incrementMoney(money, user.getIdLong());
 
-        event.getChannel().sendMessage("You donated " + money + ":gem: to " + user.getName()).queue();
+        reply.editMessage("You donated " + money + ":gem: to " + user.getName()).queue();
 
         var xp = (long) Math.floor(Math.sqrt(money)) + 5;
 

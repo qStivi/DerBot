@@ -1,10 +1,11 @@
 package qStivi.commands.rpg;
 
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import qStivi.Bot;
 import qStivi.ICommand;
-import qStivi.db.DB;
+import qStivi.DB;
 
 import java.sql.SQLException;
 import java.util.Date;
@@ -13,14 +14,11 @@ public class WorkCommand implements ICommand {
     long xpGain = 0;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
-        var hook = event.getChannel();
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException {
         var id = event.getAuthor().getIdLong();
         xpGain = 0;
 
 
-        var xp = db.getXP(id);
-        xp = xp == null ? 0 : xp;
         var lvl = db.getLevel(id);
 
         var diff = new Date().getTime() / 1000 - db.getCommandLastHandled(getName(), id) / 1000;
@@ -29,12 +27,12 @@ public class WorkCommand implements ICommand {
             salary += salary * SkillsCommand.getWorkMoneyMultiplier(id);
             db.incrementMoney(salary, id);
             db.incrementCommandMoney(getName(), salary, id);
-            hook.sendMessage("You earned " + salary + " gems").queue();
+            reply.editMessage("You earned " + salary + " gems").queue();
             db.setCommandLastHandled(getName(), new Date().getTime(), id);
 
             xpGain = 50 + (long) (50 * SkillsCommand.getWorkXPMultiplier(event.getAuthor().getIdLong()));
         } else {
-            hook.sendMessage("You need to wait " + Math.subtractExact(1200L, diff) + " seconds before you can work again").queue();
+            reply.editMessage("You need to wait " + Math.subtractExact(1200L, diff) + " seconds before you can work again").queue();
         }
 
     }

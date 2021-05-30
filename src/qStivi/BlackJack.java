@@ -1,6 +1,7 @@
 package qStivi;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 
@@ -15,13 +16,13 @@ public class BlackJack {
     public final List<Card> dealer = new ArrayList<>();
     public final List<Card> player = new ArrayList<>();
     private final List<Card> cards = new ArrayList<>();
-    public String id;
+    public Message reply;
     public EmbedBuilder embed = new EmbedBuilder();
     public TextChannel hook;
     public long bet;
     public User user;
 
-    public BlackJack(int numberOfDecks, String id, User user, TextChannel hook, long bet) {
+    public BlackJack(int numberOfDecks, Message reply, User user, TextChannel hook, long bet) {
         for (int i = 0; i < numberOfDecks; i++) {
             cards.add(new Card(Suit.Clubs, 0, Emotes.ACE_OF_CLUBS));
             cards.add(new Card(Suit.Clubs, 2, Emotes.TWO_OF_CLUBS));
@@ -83,7 +84,7 @@ public class BlackJack {
         this.bet = bet;
         this.hook = hook;
         this.user = user;
-        this.id = id;
+        this.reply = reply;
 
         player.add(draw());
         player.add(draw());

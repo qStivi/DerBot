@@ -2,6 +2,7 @@ package qStivi.commands.music;
 
 import com.wrapper.spotify.exceptions.SpotifyWebApiException;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.apache.hc.core5.http.ParseException;
@@ -12,7 +13,7 @@ import qStivi.apis.Spotify;
 import qStivi.apis.YouTube;
 import qStivi.audioManagers.PlayerManager;
 import qStivi.commands.rpg.SkillsCommand;
-import qStivi.db.DB;
+import qStivi.DB;
 import qStivi.listeners.ControlsManager;
 
 import java.io.IOException;
@@ -37,7 +38,7 @@ public class PlayCommand implements ICommand {
         return str;
     }
 
-    public String playSong(String[] args, boolean shuffle, TextChannel channel, Guild guild) throws ParseException, SpotifyWebApiException, IOException {
+    public String playSong(String[] args, boolean shuffle, TextChannel channel, Guild guild, Message reply) throws ParseException, SpotifyWebApiException, IOException {
 
 
         StringBuilder query = new StringBuilder();
@@ -70,7 +71,7 @@ public class PlayCommand implements ICommand {
         } else if (requestType == RequestType.SEARCH) {
             song = searchPlay(song, channel);
         }
-        if (song != null) ControlsManager.getINSTANCE().sendMessage(channel, guild);
+        if (song != null) ControlsManager.getINSTANCE().sendMessage(reply, guild);
 
         return song;
     }
@@ -194,12 +195,11 @@ public class PlayCommand implements ICommand {
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) {
-        var hook = event.getChannel();
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) {
         xp = 0;
 
         if (!join(event.getGuild(), event.getAuthor())) {
-            hook.sendMessage("Please join a channel, so I can play your request.").queue();
+            reply.editMessage("Please join a channel, so I can play your request.").queue();
             return;
         }
         try {
@@ -208,19 +208,19 @@ public class PlayCommand implements ICommand {
 //                    hook.sendMessage(playSong(event.getOption("query").getAsString(), true, event.getTextChannel(), event.getGuild())).queue();
 //                }
 //            } else {
-            var msg = playSong(args, false, event.getChannel(), event.getGuild());
+            var msg = playSong(args, false, event.getChannel(), event.getGuild(), reply);
             if (msg != null) {
-                hook.sendMessage(msg).queue();
+                reply.editMessage(msg).queue();
 
                 xp = 30 + (long) (30 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
             } else {
 
-                hook.sendMessage("Something went wrong!").queue();
+                reply.editMessage("Something went wrong!").queue();
             }
 //            }
         } catch (ParseException | SpotifyWebApiException | IOException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
-            hook.sendMessage("Something went wrong :(").queue();
+            reply.editMessage("Something went wrong :(").queue();
         }
     }
 

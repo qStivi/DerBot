@@ -80,3 +80,5 @@ bot.db
 NapoleonBot.jar
 
 *.jar
+
+.idea

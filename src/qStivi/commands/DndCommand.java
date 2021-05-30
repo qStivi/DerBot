@@ -1,9 +1,10 @@
 package qStivi.commands;
 
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import qStivi.ICommand;
 import qStivi.audioManagers.PlayerManager;
-import qStivi.db.DB;
+import qStivi.DB;
 import qStivi.listeners.ControlsManager;
 
 import javax.annotation.Nonnull;
@@ -70,26 +71,32 @@ public class DndCommand implements ICommand {
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) {
-        var hook = event.getChannel();
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) {
 
         if (!join(event.getGuild(), event.getAuthor())) {
-            hook.sendMessage("Please join a channel, so I can play your request.").queue();
+            reply.editMessage("Please join a channel, so I can play your request.").queue();
+            return;
+        }
+
+        if (args.length < 3) {
+            reply.editMessage("Please tell me how many songs ou want to play.").queue();
             return;
         }
 
         PlayerManager.getINSTANCE().clearQueue(event.getGuild());
 
-        for (long i = 0; i < Integer.parseInt(args[2]); i++) {
+        long numberOfSongs = Math.min(Long.parseLong(args[2]), 50);
+
+        for (long i = 0; i < numberOfSongs; i++) {
             JoinCommand.join(event.getGuild(), event.getAuthor());
             PlayerManager.getINSTANCE().loadAndPlay(event.getGuild(), getSongByType(args[1]));
         }
 
+        reply.editMessageFormat("Added %s songs to the queue.", numberOfSongs).queue();
+
+        ControlsManager.getINSTANCE().sendMessage(reply, event.getGuild());
+
         PlayerManager.getINSTANCE().skip(event.getGuild());
-
-        hook.sendMessage("Playing D&D music.").queue();
-
-        ControlsManager.getINSTANCE().sendMessage(event.getChannel(), event.getGuild());
     }
 
     private String getSongByType(String type) {

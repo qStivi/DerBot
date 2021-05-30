@@ -1,10 +1,11 @@
 package qStivi.commands.music;
 
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import qStivi.ICommand;
 import qStivi.audioManagers.PlayerManager;
 import qStivi.commands.rpg.SkillsCommand;
-import qStivi.db.DB;
+import qStivi.DB;
 
 import javax.annotation.Nonnull;
 import java.sql.SQLException;
@@ -14,16 +15,15 @@ public class RepeatCommand implements ICommand {
     private long xp;
 
     @Override
-    public void handle(GuildMessageReceivedEvent event, String[] args, DB db) throws SQLException, ClassNotFoundException {
-        var hook = event.getChannel();
+    public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException {
         xp = 0;
 
         PlayerManager playerManager = PlayerManager.getINSTANCE();
         playerManager.setRepeat(event.getGuild(), !playerManager.isRepeating(event.getGuild()));
         if (playerManager.isRepeating(event.getGuild())) {
-            hook.sendMessage("Repeat: ON").queue();
+            reply.editMessage("Repeat: ON").queue();
         } else {
-            hook.sendMessage("Repeat: OFF").queue();
+            reply.editMessage("Repeat: OFF").queue();
         }
 
         xp = 3 + (long) (3 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));
