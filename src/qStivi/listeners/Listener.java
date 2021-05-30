@@ -45,7 +45,7 @@ public class Listener extends ListenerAdapter {
         } else {
             var channel = event.getJDA().getTextChannelById(CHANNEL_ID);
             if (channel == null) return;
-            channel.sendMessage("Ready!").mentionRoles(846784745073672252L).queue();
+            channel.sendMessage("<@&846784745073672252> Ready!").queue();
         }
     }
 

@@ -24,12 +24,20 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException {
         xp = 0;
+        long bet;
 
-        if (args.length < 2 || Long.parseLong(args[1]) > 1000000) return;
+        try {
+            bet = Long.parseLong(args[1]);
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException ignored){
+            reply.editMessage("Please enter a valid number.").queue();
+            return;
+        }
+
+        if (args.length < 2 || bet > 1000000) return;
         var hook = event.getChannel();
         long id = event.getAuthor().getIdLong();
         var money = db.getMoney(id);
-        if (money < Long.parseLong(args[1])) {
+        if (money < bet) {
             reply.editMessage("You don't have enough money!").queue();
             return;
         }

@@ -1,20 +1,40 @@
 package qStivi.commands.rpg;
 
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import qStivi.Bot;
 import qStivi.ICommand;
 import qStivi.DB;
 
+import javax.imageio.IIOException;
 import java.sql.SQLException;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class DonateCommand implements ICommand {
     long totalXP = 0;
 
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException {
-        var user = event.getMessage().getMentionedUsers().get(0);
-        var money = Long.parseLong(args[2]);
+        User user;
+        try {
+            user = event.getMessage().getMentionedUsers().get(0);
+        } catch (IndexOutOfBoundsException ignored) {
+            reply.editMessage("I can't find that user.").queue();
+            return;
+        }
+        long money;
+        try {
+            money = Long.parseLong(args[2]);
+        } catch (NumberFormatException | IndexOutOfBoundsException ignored){
+            reply.editMessage("Please enter a valid number.").queue();
+            return;
+        }
+
         totalXP = 0;
 
         if (money < 0) return;

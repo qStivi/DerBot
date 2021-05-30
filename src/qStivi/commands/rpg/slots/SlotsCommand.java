@@ -46,6 +46,7 @@ public class SlotsCommand implements ICommand {
         try {
             bet = Long.parseLong(args[1]);
         } catch (NumberFormatException | IndexOutOfBoundsException e) {
+            reply.editMessage("Please enter a valid number.").queue();
             return;
         }
         var money = db.getMoney(id);
@@ -63,7 +64,10 @@ public class SlotsCommand implements ICommand {
         }
 
         // Wait for new game
-        if (new Date().getTime() / 1000 - db.getGameLastPlayed(getName(), id) / 1000 < 3) return;
+        if (new Date().getTime() / 1000 - db.getGameLastPlayed(getName(), id) / 1000 < 3) {
+            reply.editMessage("Please wait 3 seconds after you played Slots.").queue();
+            return;
+        }
 
         db.decrementMoney(bet, id);
         db.incrementGamePlays(getName(), 1, id);
