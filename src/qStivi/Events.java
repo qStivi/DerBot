@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.User;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,6 +21,7 @@ public class Events {
     boolean resultSent = false;
     private boolean happyHourMessageSent = false;
     private boolean happyHourOverSent = false;
+    private boolean sportbets = false;
 
     public Events(JDA jda) {
         this.jda = jda;
@@ -101,7 +103,28 @@ public class Events {
                 }
                 // Happy half end
 
+                //Sportbets
+                if(hour == 23 && !sportbets){
+                    ArrayList<Long> user = new ArrayList<Long>();
+                    try {
+                        user = DB.getInstance().getBetUserID();
+                    } catch (SQLException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
 
+                    for(int i = 0; i < user.size(); i++){
+                        try {
+                            DB.getInstance().getProfit(user.get(i));
+                        } catch (SQLException | ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    sportbets = true;
+                }
+
+                if (hour == 0) {
+                    sportbets = false;
+                }
             }
         }, 0, 1000)).start();
     }
