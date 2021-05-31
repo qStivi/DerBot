@@ -61,7 +61,7 @@ public class StatsCommand implements ICommand {
         gameStatistics.addField("Wins", String.valueOf(db.getGameWins("slots", userID)), true);
         gameStatistics.addField("Loses", String.valueOf(db.getGameLoses("slots", userID)), true);
 
-        reply.editMessage(embed.build()).queue();
+        reply.editMessage(embed.build()).complete();
         event.getChannel().sendMessage(gameStatistics.build()).queue();
 
         totalXP = 3 + (long) (3 * SkillsCommand.getSocialXPPMultiplier(event.getAuthor().getIdLong()));

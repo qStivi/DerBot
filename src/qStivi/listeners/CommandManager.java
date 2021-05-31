@@ -71,7 +71,7 @@ public class CommandManager extends ListenerAdapter {
                 });
                 thread.start();
             }
-        }, 1000, 1000);
+        }, 0, 500);
     }
 
     public static String cleanForCommand(String str) {

@@ -1,5 +1,6 @@
 package qStivi.commands;
 
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
@@ -15,6 +16,10 @@ public class ShutdownCommand implements ICommand {
 
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) {
+        var member = event.getMember();
+        if (member == null) return;
+        if (!member.hasPermission(Permission.ADMINISTRATOR)) return;
+
         reply.editMessage("Shutting down...").queue();
 
         logger.info("Shutting down...");
