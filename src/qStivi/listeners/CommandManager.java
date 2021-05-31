@@ -55,6 +55,10 @@ public class CommandManager extends ListenerAdapter {
         commandList.add(new SlotsCommand());
         commandList.add(new LottoCommand());
         commandList.add(new SkillsCommand());
+        commandList.add(new BetCommand());
+        commandList.add(new SalesCommand());
+        commandList.add(new InfoCommand());
+        commandList.add(new ResultCommand());
 
         var timer = new Timer();
 

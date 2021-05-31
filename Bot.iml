@@ -17,8 +17,8 @@
     <orderEntry type="library" exported="" name="net.dean.jraw:JRAW:1.1.0" level="application" />
     <orderEntry type="library" exported="" name="net.dv8tion:JDA:4.2.1_253" level="application" />
     <orderEntry type="library" exported="" name="org.json:json:20210307" level="application" />
-    <orderEntry type="library" scope="TEST" name="org.junit.jupiter:junit-jupiter:5.7.2" level="application" />
-    <orderEntry type="library" exported="" name="org.slf4j:slf4j-simple:1.7.30" level="application" />
+    <orderEntry type="library" exported="" scope="TEST" name="org.junit.jupiter:junit-jupiter:5.7.2" level="application" />
+    <orderEntry type="library" exported="" name="Simple Logging Facade for Java:1.7.30" level="application" />
     <orderEntry type="library" exported="" name="org.xerial:sqlite-jdbc:3.34.0" level="application" />
     <orderEntry type="library" exported="" name="se.michaelthelin.spotify:spotify-web-api-java:6.5.4" level="application" />
   </component>

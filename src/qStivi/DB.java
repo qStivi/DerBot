@@ -1,14 +1,17 @@
 package qStivi;
 
 import org.slf4j.Logger;
+import qStivi.sportBet.crawler.CrawlerInfo;
+import qStivi.sportBet.objects.Match;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
+import static qStivi.sportBet.crawler.CrawlerResult.isFinished;
+import static qStivi.sportBet.crawler.CrawlerResult.isWinner;
+import static qStivi.sportBet.objects.Result.getActualTeam;
 
 @SuppressWarnings("unused")
 public class DB {
@@ -89,6 +92,19 @@ public class DB {
                 INSERT INTO "UserData"("UserID") VALUES (0) ON CONFLICT DO NOTHING;
                                 """;
 
+        String createWette = """
+                create table if not exists Wette(
+                    UserID   int
+                    references UserData,
+                    Mannschaft TEXT,
+                    Einsatz    int,
+                    WettID     INTEGER
+                    constraint Wette_pk
+                    primary key autoincrement,
+                    Quote      double
+                    );
+                                """;
+
 
         if (connection != null) {
             var stmt = connection.createStatement();
@@ -100,6 +116,7 @@ public class DB {
             stmt.addBatch(insertLottoPoolUser);
             stmt.addBatch(insertLottoPool);
             stmt.addBatch(setupSkillTree);
+            stmt.addBatch(createWette);
             stmt.executeBatch();
         }
 
@@ -145,7 +162,7 @@ public class DB {
                 UPDATE "Lotto"
                 SET "Vote" = "Vote" + %S
                 WHERE "UserID" = 0
-                """.formatted(amount/4));
+                """.formatted(amount / 4));
     }
 
     public Long getLevel(Long id) throws SQLException {
@@ -1053,4 +1070,110 @@ public class DB {
                 """.formatted(time, id);
         connection.createStatement().execute(sql);
     }
+
+    //__________________________________________________________________________________________________________________
+
+    public boolean makeBet(long userID, int bet, String team) throws SQLException {
+        boolean condition1 = false;
+        if (pay(userID, bet) && bet > 0) {
+            double quote = 0;
+            boolean condition = false;
+            ArrayList<Match> matches = new ArrayList<Match>();
+            CrawlerInfo.saveInMatches(matches);
+            for (int i = 0; i < matches.size(); i++) {
+                if (matches.get(i).getTeam1().equals(team)) {
+                    quote = matches.get(i).getWinRateTeam1();
+                    condition = true;
+                }
+                if (matches.get(i).getTeam2().equals(team)) {
+                    quote = matches.get(i).getWinRateTeam2();
+                    condition = true;
+                }
+            }
+            String actualTeam = getActualTeam(team);
+            if (condition) {
+                Statement statement = connection.createStatement();
+                String sql = "INSERT INTO Wette (UserID, Mannschaft, Einsatz, Quote) VALUES (%s, '%s', %s, %s)".formatted(userID, actualTeam, bet, quote);
+                statement.executeUpdate(sql);
+                condition1 = true;
+            }
+        }
+        return condition1;
+    }
+
+    public ArrayList<Long> getBetUserID() throws SQLException{
+        ArrayList<Long> user = new ArrayList<Long>();
+        Statement statement = connection.createStatement();
+        String sql = "SELECT UserID FROM Wette";
+        ResultSet rs = statement.executeQuery(sql);
+        while (rs.next()) {
+            user.add(Long.parseLong(rs.getString("UserID")));
+        }
+        return user;
+    }
+
+    public void getProfit(long userID) throws SQLException {
+        Statement statement = connection.createStatement();
+        ArrayList<String> teams = new ArrayList<String>();
+        ArrayList<Integer> bet = new ArrayList<Integer>();
+        ArrayList<Double> quote = new ArrayList<Double>();
+        String sql1 = "SELECT Einsatz, Mannschaft, Quote FROM Wette WHERE UserID = %s".formatted(userID);
+        ResultSet rs = statement.executeQuery(sql1);
+        while (rs.next()) {
+            teams.add(rs.getString("Mannschaft"));
+            bet.add(Integer.parseInt(rs.getString("Einsatz")));
+            quote.add(Double.parseDouble(rs.getString("Quote")));
+        }
+        String url = "https://livescore.bet3000.com/de/handball/deutschland";
+        for (int i = 0; i < teams.size(); i++) {
+            if (isFinished(url, new ArrayList<String>(), teams.get(i)) && isWinner(teams.get(i))) {
+                String sql2 = "UPDATE UserData SET Money = Money + %s * %s WHERE UserID = %s"
+                        .formatted(bet.get(i), quote.get(i), userID);
+                statement.executeUpdate(sql2);
+                String sql3 = "DELETE FROM Wette WHERE Mannschaft = '%s'"
+                        .formatted(teams.get(i));
+                statement.executeUpdate(sql3);
+            }
+        }
+    }
+
+    private boolean pay(long userID, int bet) throws SQLException {
+        boolean condition = false;
+        Statement statement = connection.createStatement();
+        String sql1 = "SELECT Money FROM UserData WHERE UserID = %s".formatted(userID);
+        ResultSet rs = statement.executeQuery(sql1);
+        while (rs.next()) {
+            int kontostand = Integer.parseInt(rs.getString("Money"));
+            if (kontostand - bet >= 0) {
+                String sql = "Update UserData SET Money = Money - %s WHERE UserID = %s".formatted(bet, userID);
+                statement.executeUpdate(sql);
+                condition = true;
+            }
+        }
+        return condition;
+    }
+
+    public void nPlayer(long userID) throws SQLException {
+        if (!getPlayer(userID)) {
+            Statement statement = connection.createStatement();
+            String sql = "INSERT INTO UserData (UserID, Money) VALUES (%s, 0)".formatted(userID);
+            statement.executeUpdate(sql);
+        }
+    }
+
+
+    private boolean getPlayer(long userID) throws SQLException {
+        boolean a = false;
+        String sql = "SELECT UserID FROM UserData WHERE UserID = %s".formatted(userID);
+        if (connection != null) {
+            ResultSet rs = connection.createStatement().executeQuery(sql);
+            while (rs.next()) {
+                if (rs.getString("UserID").equals(String.valueOf(userID))) {
+                    a = true;
+                }
+            }
+        }
+        return a;
+    }
+
 }
