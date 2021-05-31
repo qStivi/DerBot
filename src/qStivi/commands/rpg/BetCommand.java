@@ -8,6 +8,8 @@ import qStivi.ICommand;
 
 import java.sql.SQLException;
 
+import static qStivi.sportBet.objects.Result.getActualTeam;
+
 public class BetCommand implements ICommand {
 
 
@@ -25,8 +27,9 @@ public class BetCommand implements ICommand {
             }
             try {
                 if(db.makeBet(id, Integer.parseInt(args[1]), team.toString().strip())){
+                    String actualTeam = getActualTeam(team.toString().strip());
                     event.getChannel().sendMessage("Du hast " + Integer.parseInt(args[1]) + " auf "
-                            + team.toString().strip() + " gesetzt.").queue();
+                            + actualTeam + " gesetzt.").queue();
                 }else{
                     event.getChannel().sendMessage("Entweder existiert das Team nicht oder du hast zu wenig Geld.").queue();
                 }

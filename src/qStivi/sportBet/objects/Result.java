@@ -120,83 +120,83 @@ public class Result {
         public static String getActualTeam(String team){
             String s = "error";
             switch (team) {
-                case "THW Kiel":
+                case "thw kiel":
                     s = "Kiel";
                     break;
 
-                case "SG Flensburg":
+                case "sg flensburg":
                     s = "SG Flensburg";
                     break;
 
-                case "Rhein Neckar":
+                case "rhein neckar":
                     s = "Rhein Neckar";
                     break;
 
-                case "SC Magdeburg":
+                case "sc magdeburg":
                     s = "Magdeburg";
                     break;
 
-                case "Göppingen":
+                case "göppingen":
                     s = "Göppingen";
                     break;
 
-                case "Füchse Berlin":
+                case "füchse berlin":
                     s = "Füchse Berlin";
                     break;
 
-                case "MT Melsungen":
+                case "mt melsungen":
                     s = "Melsungen";
                     break;
 
-                case "HSG Wetzlar":
+                case "hsg wetzlar":
                     s = "HSG Wetzlar";
                     break;
 
-                case "TBV Lemgo":
+                case "tbv lemgo":
                     s = "TBV Lemgo";
                     break;
 
-                case "SC Leipzig":
+                case "sc leipzig":
                     s = "SC Leipzig";
                     break;
 
-                case "Bergischer HC":
+                case "bergischer hc":
                     s = "Bergischer HC";
                     break;
 
-                case "HC Erlangen":
+                case "hc erlangen":
                     s = "Erlangen";
                     break;
 
-                case "TVB Stuttgart":
+                case "tvb stuttgart":
                     s = "TVB Stuttgart";
                     break;
 
-                case "TSV Hannover":
+                case "tsv hannover":
                     s = "TSV Hannover";
                     break;
 
-                case "TSV Minden":
+                case "tsv minden":
                     s = "TSV Minden";
                     break;
 
-                case "HBW Balingen":
+                case "hbw balingen":
                     s = "HBW Balingen";
                     break;
 
-                case "Ludwigshafen":
+                case "ludwigshafen":
                     s = "Ludwigshafen";
                     break;
 
-                case "Nordhorn Lingen":
+                case "nordhorn lingen":
                     s = "Nordhorn Lingen";
                     break;
 
-                case "TuSEM Essen":
+                case "tusem essen":
                     s = "Essen";
                     break;
 
-                case "HSC Coburg":
+                case "hsc coburg":
                     s = "HSC Coburg";
                     break;
             }

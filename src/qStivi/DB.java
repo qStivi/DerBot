@@ -1075,28 +1075,28 @@ public class DB {
 
     public boolean makeBet(long userID, int bet, String team) throws SQLException {
         boolean condition1 = false;
-        if (pay(userID, bet) && bet > 0) {
-            double quote = 0;
-            boolean condition = false;
-            ArrayList<Match> matches = new ArrayList<Match>();
-            CrawlerInfo.saveInMatches(matches);
-            for (int i = 0; i < matches.size(); i++) {
-                if (matches.get(i).getTeam1().equals(team)) {
-                    quote = matches.get(i).getWinRateTeam1();
-                    condition = true;
-                }
-                if (matches.get(i).getTeam2().equals(team)) {
-                    quote = matches.get(i).getWinRateTeam2();
-                    condition = true;
-                }
+        double quote = 0;
+        boolean condition = false;
+        ArrayList<Match> matches = new ArrayList<Match>();
+        CrawlerInfo.saveInMatches(matches);
+        for (int i = 0; i < matches.size(); i++) {
+            if (matches.get(i).getTeam1().equalsIgnoreCase(team)) {
+                quote = matches.get(i).getWinRateTeam1();
+                condition = true;
             }
+            if (matches.get(i).getTeam2().equalsIgnoreCase(team)) {
+                quote = matches.get(i).getWinRateTeam2();
+                condition = true;
+            }
+        }
+        if(condition){
+        if (pay(userID, bet) && bet > 0) {
             String actualTeam = getActualTeam(team);
-            if (condition) {
                 Statement statement = connection.createStatement();
                 String sql = "INSERT INTO Wette (UserID, Mannschaft, Einsatz, Quote) VALUES (%s, '%s', %s, %s)".formatted(userID, actualTeam, bet, quote);
                 statement.executeUpdate(sql);
                 condition1 = true;
-            }
+        }
         }
         return condition1;
     }
