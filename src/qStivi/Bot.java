@@ -43,9 +43,9 @@ public class Bot {
         JDA jda = JDABuilder.createLight(token)
                 .addEventListeners(ControlsManager.getINSTANCE(), new Listener(), new BlackjackCommand(), new ReactionRoles())
                 .enableCache(CacheFlag.VOICE_STATE)
-                .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES)
+                .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
                 .setChunkingFilter(ChunkingFilter.NONE)
-                .setMemberCachePolicy(MemberCachePolicy.VOICE)
+                .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .setLargeThreshold(50)
                 .setActivity(getActivity())
                 .build();
