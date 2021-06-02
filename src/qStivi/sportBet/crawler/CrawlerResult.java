@@ -93,7 +93,7 @@ public class CrawlerResult {
             if (condition2 && results.get(i).getTeam1().equals(team) && score1 > score2) {
                 condition = true;
             }
-            if (condition2 && results.get(i).getTeam2().equals(team) && score1 > score2) {
+            if (condition2 && results.get(i).getTeam2().equals(team) && score2 > score1) {
                 condition = true;
             }
         }
