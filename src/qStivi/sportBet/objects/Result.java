@@ -136,11 +136,11 @@ public class Result {
                     s = "Magdeburg";
                     break;
 
-                case "göppingen":
+                case "gppingen":
                     s = "Göppingen";
                     break;
 
-                case "füchse berlin":
+                case "fchse berlin":
                     s = "Füchse Berlin";
                     break;
 
