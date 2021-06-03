@@ -22,11 +22,9 @@ public class moneyCommand implements ICommand {
         var amount = Long.parseLong(args[3]);
 
         if (subcommand.equals("give")) {
-//            db.increment("users", "money", "id", userID, amount);
             db.incrementMoney(amount, userID);
         }
         if (subcommand.equals("remove")) {
-//            db.decrement("users", "money", "id", userID, amount);
             db.decrementMoney(amount, userID);
         }
         reply.editMessage("Done!").queue();
