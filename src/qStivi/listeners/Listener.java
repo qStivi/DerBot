@@ -85,7 +85,7 @@ public class Listener extends ListenerAdapter {
 
                         db.incrementXPVoice(xp, id);
                         db.incrementXP(xp, id);
-                        logger.info(event.getMember().getEffectiveName());
+                        logger.info("%s received %s voice xp.".formatted(event.getMember().getEffectiveName(), xp));
 
                     } catch (ClassNotFoundException | SQLException e) {
                         e.printStackTrace();
