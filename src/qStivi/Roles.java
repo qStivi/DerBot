@@ -20,6 +20,22 @@ public class Roles {
     public static final long HEARTHSTONE = 846786187653677077L;
     public static final long VR = 846786480381624410L;
     public static final long ROCKETLEAGUE = 846786687484821545L;
+    public static final long SHISHA = 846808961894318110L;
+    public static final long VALORANT = 846815650260451429L;
+    public static final long CSGO = 846819632161226803L;
+    public static final long RAINBOW = 846819632161226803L;
+    public static final long ROUNDS = 846829319091126293L;
+    public static final long PUMMELPARTY = 846832373374517278L;
+    public static final long SATISFACTORY = 846833665191051314L;
+    public static final long FORTNIGHT = 846836340729315379L;
+    public static final long ANIME = 846838972093300786L;
+    public static final long DAIBLO = 846830616129175642L;
+    public static final long CODING = 849930431902384128L;
+    public static final long TABLETOP = 846817735798685696L;
+    public static final long ALCOHOL = 846810390196256798L;
+    public static final long BROWN = 843120253566320672L;
+    public static final long GREEN = 843120087245389824L;
+    public static final long BLUE = 843120087245389824L;
     JDA jda;
 
     public Roles(JDA jda) {
