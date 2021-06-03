@@ -85,6 +85,7 @@ public class Emotes {
     public final static String FORTNITE = "Fortnite:846836183748706354";
     public final static String ANIME = "ayaya:846839910862028811";
     public final static String DIABLO = "Diablo3:846841047954096188";
+    public final static String CODING = "Coding:849929211263057950";
 
     public static long getEmoteIDLong(String emote) {
         return Long.parseLong(emote.split(":")[1]);
