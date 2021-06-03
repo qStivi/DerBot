@@ -103,18 +103,18 @@ public class Events {
                 }
                 // Happy half end
 
-                //Sportbets
+                // Sports bets
                 if(hour == 23 && !sportbets){
-                    ArrayList<Long> user = new ArrayList<Long>();
+                    ArrayList<Long> user = new ArrayList<>();
                     try {
                         user = DB.getInstance().getBetUserID();
                     } catch (SQLException | ClassNotFoundException e) {
                         e.printStackTrace();
                     }
 
-                    for(int i = 0; i < user.size(); i++){
+                    for (Long aLong : user) {
                         try {
-                            DB.getInstance().getProfit(user.get(i));
+                            DB.getInstance().getProfit(aLong);
                         } catch (SQLException | ClassNotFoundException e) {
                             e.printStackTrace();
                         }
@@ -125,6 +125,8 @@ public class Events {
                 if (hour == 0) {
                     sportbets = false;
                 }
+                // Sports bets end
+
             }
         }, 0, 1000)).start();
     }

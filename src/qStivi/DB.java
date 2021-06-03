@@ -1077,15 +1077,15 @@ public class DB {
         boolean condition1 = false;
         double quote = 0;
         boolean condition = false;
-        ArrayList<Match> matches = new ArrayList<Match>();
+        ArrayList<Match> matches = new ArrayList<>();
         CrawlerInfo.saveInMatches(matches);
-        for (int i = 0; i < matches.size(); i++) {
-            if (matches.get(i).getTeam1().equalsIgnoreCase(team)) {
-                quote = matches.get(i).getWinRateTeam1();
+        for (Match match : matches) {
+            if (match.getTeam1().equalsIgnoreCase(team)) {
+                quote = match.getWinRateTeam1();
                 condition = true;
             }
-            if (matches.get(i).getTeam2().equalsIgnoreCase(team)) {
-                quote = matches.get(i).getWinRateTeam2();
+            if (match.getTeam2().equalsIgnoreCase(team)) {
+                quote = match.getWinRateTeam2();
                 condition = true;
             }
         }
@@ -1102,7 +1102,7 @@ public class DB {
     }
 
     public ArrayList<Long> getBetUserID() throws SQLException{
-        ArrayList<Long> user = new ArrayList<Long>();
+        ArrayList<Long> user = new ArrayList<>();
         Statement statement = connection.createStatement();
         String sql = "SELECT UserID FROM Wette";
         ResultSet rs = statement.executeQuery(sql);
@@ -1112,11 +1112,12 @@ public class DB {
         return user;
     }
 
+    // TODO add DB.incrementGameWins("sports", 1, id) and such in the right places (Wins, Draws and Loses)
     public void getProfit(long userID) throws SQLException {
         Statement statement = connection.createStatement();
-        ArrayList<String> teams = new ArrayList<String>();
-        ArrayList<Integer> bet = new ArrayList<Integer>();
-        ArrayList<Double> quote = new ArrayList<Double>();
+        ArrayList<String> teams = new ArrayList<>();
+        ArrayList<Integer> bet = new ArrayList<>();
+        ArrayList<Double> quote = new ArrayList<>();
         String sql1 = "SELECT Einsatz, Mannschaft, Quote FROM Wette WHERE UserID = %s".formatted(userID);
         ResultSet rs = statement.executeQuery(sql1);
         while (rs.next()) {
@@ -1126,7 +1127,7 @@ public class DB {
         }
         String url = "https://livescore.bet3000.com/de/handball/deutschland";
         for (int i = 0; i < teams.size(); i++) {
-            if (isFinished(url, new ArrayList<String>(), teams.get(i)) && isWinner(teams.get(i))) {
+            if (isFinished(url, new ArrayList<>(), teams.get(i)) && isWinner(teams.get(i))) {
                 String sql2 = "UPDATE UserData SET Money = Money + %s * %s WHERE UserID = %s"
                         .formatted(bet.get(i), quote.get(i), userID);
                 statement.executeUpdate(sql2);
