@@ -27,7 +27,7 @@ public class Bot {
     private static final Timer activityUpdate = new Timer();
     private static final String ACTIVITY = "Evolving...";
     private static final Logger logger = getLogger(Bot.class);
-    public static boolean DEV_MODE = true;
+    public static boolean DEV_MODE = false;
     public static long happyHour = 1;
 
     public static void main(String[] args) throws LoginException, SQLException, ClassNotFoundException {

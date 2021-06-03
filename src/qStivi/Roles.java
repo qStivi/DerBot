@@ -1,8 +1,5 @@
 package qStivi;
 
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Role;
-
 public class Roles {
     public static final long LOL = 843108657079779359L;
     public static final long MINECRAFT = 755490059976966254L;
@@ -29,20 +26,16 @@ public class Roles {
     public static final long SATISFACTORY = 846833665191051314L;
     public static final long FORTNIGHT = 846836340729315379L;
     public static final long ANIME = 846838972093300786L;
-    public static final long DAIBLO = 846830616129175642L;
+    public static final long DIABLO = 846830616129175642L;
     public static final long CODING = 849930431902384128L;
     public static final long TABLETOP = 846817735798685696L;
     public static final long ALCOHOL = 846810390196256798L;
     public static final long BROWN = 843120253566320672L;
     public static final long GREEN = 843120087245389824L;
-    public static final long BLUE = 843120087245389824L;
-    JDA jda;
-
-    public Roles(JDA jda) {
-        this.jda = jda;
-    }
-
-    public Role getRole(long roleId) {
-        return jda.getRoleById(roleId);
-    }
+    public static final long BLUE = 843120035853107210L;
+    public static final long PURPLE = 843119963270545439L;
+    public static final long YELLOW = 843120339508658186L;
+    public static final long ORANGE = 843120410190020628L;
+    public static final long RED = 843120454067945483L;
+    public static final long NINTENDO = 846785268694777896L;
 }
