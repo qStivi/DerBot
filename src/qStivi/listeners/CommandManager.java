@@ -81,6 +81,8 @@ public class CommandManager extends ListenerAdapter {
     public static String cleanForCommand(String str) {
         str = str.toLowerCase().strip();
         str = Normalizer.normalize(str, Normalizer.Form.NFKD);
+        // TODO Make sure to not break anything before doing this
+//        str = str.replaceAll("ä", "ae").replaceAll("ö", "oe").replaceAll("ü", "ue");
         str = str.replaceAll("[^a-z0-9A-Z -]", ""); // Remove all non valid chars
         str = str.replaceAll("[ \\t]+", " ").trim(); // convert multiple spaces into one space
         return str;
