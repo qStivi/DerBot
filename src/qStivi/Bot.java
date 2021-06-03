@@ -21,13 +21,15 @@ import java.util.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Bot {
-    public static final long CHANNEL_ID = 742024523502846052L;
-    public static final long DEV_CHANNEL_ID = 834012016481271908L;
-    public static final long DEV_VOICE_CHANNEL_ID = 805955515241725983L;
+    public static final long GUILD_ID = Long.parseLong(Config.get("GUILD_ID"));
+    public static final long CATEGORY_ID = Long.parseLong(Config.get("CATEGORY_ID"));
+    public static final long CHANNEL_ID = Long.parseLong(Config.get("CHANNEL_ID"));
+    public static final long DEV_CHANNEL_ID = Long.parseLong(Config.get("DEV_CHANNEL_ID"));
+    public static final long DEV_VOICE_CHANNEL_ID = Long.parseLong(Config.get("DEV_VOICE_CHANNEL_ID"));
+    public static final boolean DEV_MODE = Boolean.parseBoolean(Config.get("DEV_MODE"));
     private static final Timer activityUpdate = new Timer();
     private static final String ACTIVITY = "Evolving...";
     private static final Logger logger = getLogger(Bot.class);
-    public static boolean DEV_MODE = true;
     public static long happyHour = 1;
 
     public static void main(String[] args) throws LoginException, SQLException, ClassNotFoundException {

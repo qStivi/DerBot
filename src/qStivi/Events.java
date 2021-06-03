@@ -21,14 +21,14 @@ public class Events {
     boolean resultSent = false;
     private boolean happyHourMessageSent = false;
     private boolean happyHourOverSent = false;
-    private boolean sportbets = false;
+    private boolean sportsBets = false;
 
     public Events(JDA jda) {
         this.jda = jda;
         long id = Bot.DEV_MODE ? Bot.DEV_CHANNEL_ID : Bot.CHANNEL_ID;
 
         AtomicReference<Guild> guild = new AtomicReference<>();
-        guild.set(jda.getGuildById(703363806356701295L));
+        guild.set(jda.getGuildById(Bot.GUILD_ID));
         while (guild.get() == null) {
             Thread.onSpinWait();
         }
@@ -104,7 +104,7 @@ public class Events {
                 // Happy half end
 
                 // Sports bets
-                if(hour == 23 && !sportbets){
+                if(hour == 23 && !sportsBets){
                     ArrayList<Long> user = new ArrayList<>();
                     try {
                         user = DB.getInstance().getBetUserID();
@@ -119,11 +119,11 @@ public class Events {
                             e.printStackTrace();
                         }
                     }
-                    sportbets = true;
+                    sportsBets = true;
                 }
 
                 if (hour == 0) {
-                    sportbets = false;
+                    sportsBets = false;
                 }
                 // Sports bets end
 
