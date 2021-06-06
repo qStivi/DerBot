@@ -1126,12 +1126,17 @@ public class DB {
         }
         String url = "https://livescore.bet3000.com/de/handball/deutschland";
         for (int i = 0; i < teams.size(); i++) {
-            if (isFinished(url, new ArrayList<String>(), teams.get(i)) && isWinner(teams.get(i))) {
+            var winner = isWinner(teams.get(i));
+            var team = teams.get(i);
+            if (isFinished(url, new ArrayList<String>(), team) && winner) {
                 String sql2 = "UPDATE UserData SET Money = Money + %s * %s WHERE UserID = %s"
                         .formatted(bet.get(i), quote.get(i), userID);
                 statement.executeUpdate(sql2);
-                String sql3 = "DELETE FROM Wette WHERE Mannschaft = '%s'"
-                        .formatted(teams.get(i));
+                String sql3 = "DELETE FROM Wette WHERE Mannschaft = '%s' AND UserID = %s".formatted(teams.get(i), userID);
+                statement.executeUpdate(sql3);
+            }
+            else if(isFinished(url, new ArrayList<String>(), team)){
+                String sql3 = "DELETE FROM Wette WHERE Mannschaft = '%s' AND UserID = %s".formatted(teams.get(i), userID);
                 statement.executeUpdate(sql3);
             }
         }
