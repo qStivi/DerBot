@@ -41,7 +41,7 @@ public class Bot {
 
         logger.info("Bot token: " + token);
         JDA jda = JDABuilder.createLight(token)
-                .addEventListeners(ControlsManager.getINSTANCE(), new Listener(), new BlackjackCommand(), new ReactionRoles())
+                .addEventListeners(ControlsManager.getINSTANCE(), new Listener(), new BlackjackCommand(), new CommandManager())
                 .enableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE)
                 .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
                 .setChunkingFilter(ChunkingFilter.NONE)
@@ -51,7 +51,7 @@ public class Bot {
                 .build();
         logger.info(String.valueOf(Bot.DEV_MODE));
 
-        jda.addEventListener(new CommandManager());
+        jda.addEventListener(new ReactionRoles(jda));
 
         DB.getInstance();
         new Events(jda);

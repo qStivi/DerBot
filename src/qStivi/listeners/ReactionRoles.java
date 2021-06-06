@@ -1,6 +1,9 @@
 package qStivi.listeners;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
@@ -9,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import qStivi.Bot;
 import qStivi.Emotes;
+import qStivi.Role;
 import qStivi.Roles;
 
 import java.util.Objects;
@@ -18,6 +22,18 @@ import static org.slf4j.LoggerFactory.getLogger;
 // TODO Make everything more readable and try to fix warnings
 public class ReactionRoles extends ListenerAdapter {
     private static final Logger logger = getLogger(ReactionRoles.class);
+
+    Guild guild;
+    TextChannel channel;
+
+    public ReactionRoles(JDA jda) {
+        guild = jda.getGuildById(703363806356701295L);
+        if (guild == null) {
+            logger.error("Guild is null!");
+            return;
+        }
+        channel = guild.getTextChannelById(843093823366365184L);
+    }
 
     @Override
     public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
@@ -67,8 +83,8 @@ public class ReactionRoles extends ListenerAdapter {
         }
     }
 
-    private void addRoleToMember(GuildMessageReactionAddEvent event, long roleId) {
-        event.getGuild().addRoleToMember(event.getMember(), Objects.requireNonNull(event.getGuild().getRoleById(roleId))).queue();
+    private void addRoleToMember(GuildMessageReactionAddEvent event, Role role) {
+        guild.addRoleToMember(event.getMember(), Objects.requireNonNull(guild.getRoleById(role.getRoleID()))).queue();
     }
 
     @Override
@@ -119,8 +135,8 @@ public class ReactionRoles extends ListenerAdapter {
         }
     }
 
-    private void removeRoleFromMember(GuildMessageReactionRemoveEvent event, long roleId) {
-        event.getGuild().removeRoleFromMember(Objects.requireNonNull(event.getMember()), Objects.requireNonNull(event.getGuild().getRoleById(roleId))).queue();
+    private void removeRoleFromMember(GuildMessageReactionRemoveEvent event, Role role) {
+        guild.removeRoleFromMember(Objects.requireNonNull(event.getMember()), Objects.requireNonNull(guild.getRoleById(role.getRoleID()))).queue();
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -130,20 +146,16 @@ public class ReactionRoles extends ListenerAdapter {
         if (Bot.DEV_MODE) return;
 
         var jda = event.getJDA();
-
-        var guild = jda.getGuildById(703363806356701295L);
         if (guild == null) {
             logger.error("Guild is null!");
             return;
         }
 
-        var channel = jda.getTextChannelById(843093823366365184L);
-
         EmbedBuilder games = new EmbedBuilder();
         games.setTitle("Video Games");
         games.setFooter("Video Games", jda.getSelfUser().getAvatarUrl());
-        addField(event, games, Emotes.LOL, Roles.LOL);
-        addField(event, games, Emotes.MINECRAFT, Roles.MINECRAFT);
+        addField(event, games, Roles.LOL);
+        addField(event, games, Roles.MINECRAFT);
         addField(event, games, Emotes.WARZONE, Roles.WARZONE);
         addField(event, games, Emotes.APEX, Roles.APEX);
         addField(event, games, Emotes.GMOD, Roles.GMOD);
@@ -236,8 +248,8 @@ public class ReactionRoles extends ListenerAdapter {
         });
     }
 
-    private void addField(ReadyEvent event, EmbedBuilder embed, String emoteId, long roleId) {
+    private void addField(ReadyEvent event, EmbedBuilder embed, Role role) {
         var jda = event.getJDA();
-        embed.addField(Objects.requireNonNull(jda.getEmoteById(Emotes.getEmoteIDLong(emoteId))).getAsMention(), Objects.requireNonNull(Objects.requireNonNull(jda.getGuildById(703363806356701295L)).getRoleById(roleId)).getAsMention(), true);
+        embed.addField(Objects.requireNonNull(jda.getEmoteById(role.getEmoteIDLong())).getAsMention(), Objects.requireNonNull(guild.getRoleById(role.getRoleID())).getAsMention(), true);
     }
 }
