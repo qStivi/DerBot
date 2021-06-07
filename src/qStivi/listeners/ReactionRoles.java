@@ -19,7 +19,6 @@ import java.util.Objects;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-// TODO Make everything more readable and try to fix warnings
 public class ReactionRoles extends ListenerAdapter {
     private static final Logger logger = getLogger(ReactionRoles.class);
 
@@ -66,7 +65,7 @@ public class ReactionRoles extends ListenerAdapter {
                 case "Rounds" -> addRoleToMember(event, Roles.ROUNDS);
                 case "Pummel" -> addRoleToMember(event, Roles.PUMMELPARTY);
                 case "Satisfactory" -> addRoleToMember(event, Roles.SATISFACTORY);
-                case "Fortnite" -> addRoleToMember(event, Roles.FORTNIGHT);
+                case "Fortnite" -> addRoleToMember(event, Roles.FORTNITE);
                 case "ayaya" -> addRoleToMember(event, Roles.ANIME);
                 case "Diablo3" -> addRoleToMember(event, Roles.DIABLO);
                 case "Coding" -> addRoleToMember(event, Roles.CODING);
@@ -118,7 +117,7 @@ public class ReactionRoles extends ListenerAdapter {
                 case "Rounds" -> removeRoleFromMember(event, Roles.ROUNDS);
                 case "Pummel" -> removeRoleFromMember(event, Roles.PUMMELPARTY);
                 case "Satisfactory" -> removeRoleFromMember(event, Roles.SATISFACTORY);
-                case "Fortnite" -> removeRoleFromMember(event, Roles.FORTNIGHT);
+                case "Fortnite" -> removeRoleFromMember(event, Roles.FORTNITE);
                 case "ayaya" -> removeRoleFromMember(event, Roles.ANIME);
                 case "Diablo3" -> removeRoleFromMember(event, Roles.DIABLO);
                 case "Coding" -> removeRoleFromMember(event, Roles.CODING);
@@ -156,48 +155,48 @@ public class ReactionRoles extends ListenerAdapter {
         games.setFooter("Video Games", jda.getSelfUser().getAvatarUrl());
         addField(event, games, Roles.LOL);
         addField(event, games, Roles.MINECRAFT);
-        addField(event, games, Emotes.WARZONE, Roles.WARZONE);
-        addField(event, games, Emotes.APEX, Roles.APEX);
-        addField(event, games, Emotes.GMOD, Roles.GMOD);
-        addField(event, games, Emotes.CIV, Roles.CIV);
-        addField(event, games, Emotes.ARK, Roles.ARK);
-        addField(event, games, Emotes.GTA, Roles.GTA);
-        addField(event, games, Emotes.HEARTHSTONE, Roles.HEARTHSTONE);
-        addField(event, games, Emotes.ROCKETLEAGUE, Roles.ROCKETLEAGUE);
-        addField(event, games, Emotes.AMONGUS, Roles.AMONGUS);
-        addField(event, games, Emotes.VALORANT, Roles.VALORANT);
-        addField(event, games, Emotes.CSGO, Roles.CSGO);
-        addField(event, games, Emotes.RAINBOW, Roles.RAINBOW);
-        addField(event, games, Emotes.ROUNDS, Roles.ROUNDS);
-        addField(event, games, Emotes.PUMMELPARTY, Roles.PUMMELPARTY);
-        addField(event, games, Emotes.SATISFACTORY, Roles.SATISFACTORY);
-        addField(event, games, Emotes.FORTNITE, Roles.FORTNIGHT);
-        games.addField(":chess_pawn:", guild.getRoleById(Roles.TABLETOP).getAsMention(), true);
-        addField(event, games, Emotes.DIABLO, Roles.DIABLO);
+        addField(event, games, Roles.WARZONE);
+        addField(event, games, Roles.APEX);
+        addField(event, games, Roles.GMOD);
+        addField(event, games, Roles.CIV);
+        addField(event, games, Roles.ARK);
+        addField(event, games, Roles.GTA);
+        addField(event, games, Roles.HEARTHSTONE);
+        addField(event, games, Roles.ROCKETLEAGUE);
+        addField(event, games, Roles.AMONGUS);
+        addField(event, games, Roles.VALORANT);
+        addField(event, games, Roles.CSGO);
+        addField(event, games, Roles.RAINBOW);
+        addField(event, games, Roles.ROUNDS);
+        addField(event, games, Roles.PUMMELPARTY);
+        addField(event, games, Roles.SATISFACTORY);
+        addField(event, games, Roles.FORTNITE);
+        games.addField(Roles.TABLETOP.getEmoteID(), guild.getRoleById(Roles.TABLETOP.getRoleID()).getAsMention(), true);
+        addField(event, games, Roles.DIABLO);
 
         EmbedBuilder other = new EmbedBuilder();
         other.setTitle("Other");
         other.setFooter("Other", jda.getSelfUser().getAvatarUrl());
-        addField(event, other, Emotes.PLAYSTATION, Roles.PLAYSTATION);
-        addField(event, other, Emotes.XBOX, Roles.XBOX);
-        addField(event, other, Emotes.NINTENDO, Roles.NINTENDO);
-        addField(event, other, Emotes.VR, Roles.VR);
-        addField(event, other, Emotes.BOT, Roles.BOT);
-        addField(event, other, Emotes.SHISHA, Roles.SHISHA);
-        addField(event, other, Emotes.ANIME, Roles.ANIME);
-        addField(event, other, Emotes.CODING, Roles.CODING);
-        other.addField(":champagne:", guild.getRoleById(Roles.ALCOHOL).getAsMention(), true);
+        addField(event, other, Roles.PLAYSTATION);
+        addField(event, other, Roles.XBOX);
+        addField(event, other, Roles.NINTENDO);
+        addField(event, other, Roles.VR);
+        addField(event, other, Roles.BOT);
+        addField(event, other, Roles.SHISHA);
+        addField(event, other, Roles.ANIME);
+        addField(event, other, Roles.CODING);
+        other.addField(Roles.ALCOHOL.getEmoteID(), guild.getRoleById(Roles.ALCOHOL.getRoleID()).getAsMention(), true);
 
         EmbedBuilder colors = new EmbedBuilder();
         colors.setTitle("Colors");
         colors.setFooter("Colors", jda.getSelfUser().getAvatarUrl());
-        colors.addField(":brown_circle:", guild.getRoleById(Roles.BROWN).getAsMention(), true);
-        colors.addField(":green_circle:", guild.getRoleById(Roles.GREEN).getAsMention(), true);
-        colors.addField(":blue_circle:", guild.getRoleById(Roles.BLUE).getAsMention(), true);
-        colors.addField(":purple_circle:", guild.getRoleById(Roles.PURPLE).getAsMention(), true);
-        colors.addField(":yellow_circle:", guild.getRoleById(Roles.YELLOW).getAsMention(), true);
-        colors.addField(":orange_circle:", guild.getRoleById(Roles.ORANGE).getAsMention(), true);
-        colors.addField(":red_circle:", guild.getRoleById(Roles.RED).getAsMention(), true);
+        colors.addField(Roles.BROWN.getEmoteID(), guild.getRoleById(Roles.BROWN.getRoleID()).getAsMention(), true);
+        colors.addField(Roles.GREEN.getEmoteID(), guild.getRoleById(Roles.GREEN.getRoleID()).getAsMention(), true);
+        colors.addField(Roles.BLUE.getEmoteID(), guild.getRoleById(Roles.BLUE.getRoleID()).getAsMention(), true);
+        colors.addField(Roles.PURPLE.getEmoteID(), guild.getRoleById(Roles.PURPLE.getRoleID()).getAsMention(), true);
+        colors.addField(Roles.YELLOW.getEmoteID(), guild.getRoleById(Roles.YELLOW.getRoleID()).getAsMention(), true);
+        colors.addField(Roles.ORANGE.getEmoteID(), guild.getRoleById(Roles.ORANGE.getRoleID()).getAsMention(), true);
+        colors.addField(Roles.RED.getEmoteID(), guild.getRoleById(Roles.RED.getRoleID()).getAsMention(), true);
 
         channel.editMessageById(846850718462902272L, "@everyone\nIn this Channel you can give yourself roles which will be pinged when something relevant happens or someone wants to talk to you. Simply react with the corresponding emote and your role will be granted. If you want to remove a role simply remove your reaction.").queue();
 
@@ -228,7 +227,7 @@ public class ReactionRoles extends ListenerAdapter {
         ).queue(message -> {
             message.addReaction(Emotes.PLAYSTATION).queue();
             message.addReaction(Emotes.BOT).queue();
-            message.addReaction(Emotes.NINTENDO).queue();
+            message.addReaction(Emotes.SWITCH).queue();
             message.addReaction(Emotes.XBOX).queue();
             message.addReaction(Emotes.VR).queue();
             message.addReaction(Emotes.SHISHA).queue();
