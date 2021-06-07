@@ -82,3 +82,9 @@ NapoleonBot.jar
 *.jar
 
 .idea
+
+target
+
+discord.xml
+
+vcs.xml
