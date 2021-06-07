@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
+import static qStivi.Util.isValidLink;
 import static qStivi.commands.JoinCommand.join;
 
 public class PlayCommand implements ICommand {
@@ -180,10 +181,6 @@ public class PlayCommand implements ICommand {
         }
         logger.error("Something went wrong!");
         return null;
-    }
-
-    private boolean isValidLink(String link) {
-        return link.matches("(.*)open.spotify.com(.*)|spotify(.*)|(.*)youtube.com(.*)|(.*)youtu.be(.*)");
     }
 
     private String searchPlay(String search, TextChannel channel) throws IOException {

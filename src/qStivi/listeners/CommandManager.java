@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 import static qStivi.Bot.DEV_CHANNEL_ID;
+import static qStivi.Util.isValidLink;
 
 public class CommandManager extends ListenerAdapter {
     private static final Logger logger = getLogger(CommandManager.class);
@@ -119,7 +120,23 @@ public class CommandManager extends ListenerAdapter {
         try {
             if (isCommand(event)) {
 
-                var message = cleanForCommand(event.getMessage().getContentRaw());
+                String message = null;
+
+                // Play command exception
+                if (event.getMessage().getContentRaw().toLowerCase().startsWith("/play")){
+                    var potentialLink = event.getMessage().getContentRaw().toLowerCase().split(" ")[1];
+                    if (!isValidLink(potentialLink)) {
+                        message = cleanForCommand(event.getMessage().getContentRaw());
+                    }else{
+                        message = event.getMessage().getContentRaw().replaceFirst("/", "");
+                    }
+                }
+                if (message == null) {
+                    logger.error("Message is null!");
+                    return;
+                }
+                // Play command exception end
+
                 var args = message.split(" ");
 
                 for (var command : commandList) {
