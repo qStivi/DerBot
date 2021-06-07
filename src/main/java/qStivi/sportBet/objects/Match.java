@@ -20,20 +20,20 @@ public class Match {
         this.date = date;
     }
 
-    public String getTeam1(){
+    public String getTeam1() {
         return this.team1;
     }
 
 
-    public String getTeam2(){
+    public String getTeam2() {
         return this.team2;
     }
 
-    public double getWinRateTeam1(){
+    public double getWinRateTeam1() {
         return this.winRateTeam1;
     }
 
-    public double getWinRateTeam2(){
+    public double getWinRateTeam2() {
         return this.winRateTeam2;
     }
 

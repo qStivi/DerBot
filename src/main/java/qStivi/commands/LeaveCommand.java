@@ -3,9 +3,9 @@ package qStivi.commands;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
+import qStivi.DB;
 import qStivi.ICommand;
 import qStivi.commands.rpg.SkillsCommand;
-import qStivi.DB;
 
 import java.sql.SQLException;
 

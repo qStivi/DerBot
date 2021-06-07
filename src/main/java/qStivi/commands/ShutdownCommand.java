@@ -4,8 +4,8 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
-import qStivi.ICommand;
 import qStivi.DB;
+import qStivi.ICommand;
 
 import javax.annotation.Nonnull;
 

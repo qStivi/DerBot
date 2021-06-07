@@ -5,11 +5,11 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import qStivi.Bot;
+import qStivi.DB;
 import qStivi.ICommand;
 import qStivi.commands.*;
 import qStivi.commands.music.*;
 import qStivi.commands.rpg.*;
-import qStivi.DB;
 import qStivi.commands.rpg.slots.SlotsCommand;
 
 import java.sql.SQLException;

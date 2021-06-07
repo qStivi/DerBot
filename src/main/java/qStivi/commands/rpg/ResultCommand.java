@@ -25,7 +25,7 @@ public class ResultCommand implements ICommand {
         result.setTitle("Ergebnis");
         String url = "https://livescore.bet3000.com/de/handball/deutschland";
         for (int i = 0; i < results.size(); i++) {
-            if(isFinished(url, new ArrayList<String>(), results.get(i).getTeam1())){
+            if (isFinished(url, new ArrayList<String>(), results.get(i).getTeam1())) {
                 result.addField(results.get(i).getTeams(), results.get(i).toString(), false);
                 result.addBlankField(false);
             }

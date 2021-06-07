@@ -8,12 +8,12 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.apache.hc.core5.http.ParseException;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import qStivi.DB;
 import qStivi.ICommand;
 import qStivi.apis.Spotify;
 import qStivi.apis.YouTube;
 import qStivi.audioManagers.PlayerManager;
 import qStivi.commands.rpg.SkillsCommand;
-import qStivi.DB;
 import qStivi.listeners.ControlsManager;
 
 import java.io.IOException;

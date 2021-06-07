@@ -1089,19 +1089,19 @@ public class DB {
                 condition = true;
             }
         }
-        if(condition){
-        if (pay(userID, bet) && bet > 0) {
-            String actualTeam = getActualTeam(team);
+        if (condition) {
+            if (pay(userID, bet) && bet > 0) {
+                String actualTeam = getActualTeam(team);
                 Statement statement = connection.createStatement();
                 String sql = "INSERT INTO Wette (UserID, Mannschaft, Einsatz, Quote) VALUES (%s, '%s', %s, %s)".formatted(userID, actualTeam, bet, quote);
                 statement.executeUpdate(sql);
                 condition1 = true;
-        }
+            }
         }
         return condition1;
     }
 
-    public ArrayList<Long> getBetUserID() throws SQLException{
+    public ArrayList<Long> getBetUserID() throws SQLException {
         ArrayList<Long> user = new ArrayList<Long>();
         Statement statement = connection.createStatement();
         String sql = "SELECT UserID FROM Wette";
@@ -1134,8 +1134,7 @@ public class DB {
                 statement.executeUpdate(sql2);
                 String sql3 = "DELETE FROM Wette WHERE Mannschaft = '%s' AND UserID = %s".formatted(teams.get(i), userID);
                 statement.executeUpdate(sql3);
-            }
-            else if(isFinished(url, new ArrayList<String>(), team)){
+            } else if (isFinished(url, new ArrayList<String>(), team)) {
                 String sql3 = "DELETE FROM Wette WHERE Mannschaft = '%s' AND UserID = %s".formatted(teams.get(i), userID);
                 statement.executeUpdate(sql3);
             }

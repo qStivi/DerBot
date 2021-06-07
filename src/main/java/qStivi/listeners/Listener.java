@@ -10,8 +10,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import qStivi.Bot;
-import qStivi.commands.rpg.SkillsCommand;
 import qStivi.DB;
+import qStivi.commands.rpg.SkillsCommand;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -38,10 +38,10 @@ public class Listener extends ListenerAdapter {
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         logger.info("Ready!");
-        if (Bot.DEV_MODE){
+        if (Bot.DEV_MODE) {
             var channel = event.getJDA().getTextChannelById(DEV_CHANNEL_ID);
             if (channel == null) return;
-                    channel.sendMessage("Ready!").queue();
+            channel.sendMessage("Ready!").queue();
         } else {
             var channel = event.getJDA().getTextChannelById(CHANNEL_ID);
             if (channel == null) return;

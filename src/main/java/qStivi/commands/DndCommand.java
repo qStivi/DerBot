@@ -2,9 +2,9 @@ package qStivi.commands;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import qStivi.DB;
 import qStivi.ICommand;
 import qStivi.audioManagers.PlayerManager;
-import qStivi.DB;
 import qStivi.listeners.ControlsManager;
 
 import javax.annotation.Nonnull;

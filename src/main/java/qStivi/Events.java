@@ -104,7 +104,7 @@ public class Events {
                 // Happy half end
 
                 //Sportbets
-                if(hour == 23 && !sportbets){
+                if (hour == 23 && !sportbets) {
                     ArrayList<Long> user = new ArrayList<Long>();
                     try {
                         user = DB.getInstance().getBetUserID();
@@ -112,7 +112,7 @@ public class Events {
                         e.printStackTrace();
                     }
 
-                    for(int i = 0; i < user.size(); i++){
+                    for (int i = 0; i < user.size(); i++) {
                         try {
                             DB.getInstance().getProfit(user.get(i));
                         } catch (SQLException | ClassNotFoundException e) {

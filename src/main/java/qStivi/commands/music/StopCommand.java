@@ -2,10 +2,10 @@ package qStivi.commands.music;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import qStivi.DB;
 import qStivi.ICommand;
 import qStivi.audioManagers.PlayerManager;
 import qStivi.commands.rpg.SkillsCommand;
-import qStivi.DB;
 
 import javax.annotation.Nonnull;
 import java.sql.SQLException;

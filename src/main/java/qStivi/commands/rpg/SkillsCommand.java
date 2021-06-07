@@ -4,8 +4,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
-import qStivi.ICommand;
 import qStivi.DB;
+import qStivi.ICommand;
 
 import java.sql.SQLException;
 import java.util.Date;

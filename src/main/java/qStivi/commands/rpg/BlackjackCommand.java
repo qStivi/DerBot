@@ -5,11 +5,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-import qStivi.BlackJack;
-import qStivi.Bot;
-import qStivi.Card;
-import qStivi.ICommand;
-import qStivi.DB;
+import qStivi.*;
 
 import java.awt.*;
 import java.sql.SQLException;
@@ -28,7 +24,7 @@ public class BlackjackCommand extends ListenerAdapter implements ICommand {
 
         try {
             bet = Long.parseLong(args[1]);
-        } catch (NumberFormatException | ArrayIndexOutOfBoundsException ignored){
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException ignored) {
             reply.editMessage("Please enter a valid number.").queue();
             return;
         }
