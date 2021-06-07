@@ -2,7 +2,7 @@
   <artifact type="jar" name="Bot">
     <output-path>$PROJECT_DIR$</output-path>
     <root id="archive" name="Bot.jar">
-      <element id="module-output" name="Bot" />
+      <element id="module-output" name="DerBot" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jsoup/jsoup/1.13.1/jsoup-1.13.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/faendir/jraw/JRAW/1.2.0/JRAW-1.2.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar" path-in-jar="/" />
