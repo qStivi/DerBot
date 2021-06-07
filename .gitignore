@@ -92,3 +92,5 @@ dataSources.xml
 compiler.xml
 
 sqldialects.xml
+
+.idea/dataSources
