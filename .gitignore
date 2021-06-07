@@ -2,6 +2,9 @@
 
 !src/*
 
+!.github
+!.github/*
+
 !.idea/runConfigurations
 !.idea/artifacts
 
