@@ -5,11 +5,11 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import qStivi.Bot;
+import qStivi.DB;
 import qStivi.ICommand;
 import qStivi.commands.*;
 import qStivi.commands.music.*;
 import qStivi.commands.rpg.*;
-import qStivi.DB;
 import qStivi.commands.rpg.slots.SlotsCommand;
 
 import java.sql.SQLException;
@@ -120,16 +120,17 @@ public class CommandManager extends ListenerAdapter {
         try {
             if (isCommand(event)) {
 
-                String message = null;
+                String message;
+                String potentialLink = "";
 
                 // Play command exception
-                if (event.getMessage().getContentRaw().toLowerCase().startsWith("/play")){
-                    var potentialLink = event.getMessage().getContentRaw().toLowerCase().split(" ")[1];
-                    if (!isValidLink(potentialLink)) {
-                        message = cleanForCommand(event.getMessage().getContentRaw());
-                    }else{
-                        message = event.getMessage().getContentRaw().replaceFirst("/", "");
-                    }
+                if (event.getMessage().getContentRaw().toLowerCase().split(" ").length >= 2) {
+                    potentialLink = event.getMessage().getContentRaw().toLowerCase().split(" ")[1];
+                }
+                if (!isValidLink(potentialLink)) {
+                    message = cleanForCommand(event.getMessage().getContentRaw());
+                } else {
+                    message = event.getMessage().getContentRaw().replaceFirst("/", "");
                 }
                 if (message == null) {
                     logger.error("Message is null!");
