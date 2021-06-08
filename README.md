@@ -1,4 +1,4 @@
-# NapoleonBot
+# DerBot
 
 
-Request will be prioritized by ❤️ reactions.
+Thanks to Andre, Kaan, Niklas and Sebastian for all their help. ❤️
