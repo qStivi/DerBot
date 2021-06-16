@@ -185,6 +185,8 @@ public class ReactionRoles extends ListenerAdapter {
         addField(event, other, Roles.SHISHA);
         addField(event, other, Roles.ANIME);
         addField(event, other, Roles.CODING);
+        addField(event, other, Roles.STEAM);
+        addField(event, other, Roles.EPIC);
         other.addField(Roles.ALCOHOL.getEmoteID(), guild.getRoleById(Roles.ALCOHOL.getRoleID()).getAsMention(), true);
 
         EmbedBuilder colors = new EmbedBuilder();
@@ -233,6 +235,8 @@ public class ReactionRoles extends ListenerAdapter {
             message.addReaction(Emotes.SHISHA).queue();
             message.addReaction(Emotes.ANIME).queue();
             message.addReaction(Emotes.CODING).queue();
+            message.addReaction(Emotes.STEAM).queue();
+            message.addReaction(Emotes.EPIC).queue();
             message.addReaction("\uD83C\uDF7E").queue();
         });
         channel.editMessageById(846850724528914463L, colors.build()
