@@ -1,6 +1,10 @@
 package qStivi;
 
 public class Roles {
+    private static final long EPIC_ID = 854631372667748382L;
+    public static final Role EPIC = new Role(EPIC_ID, Emotes.EPIC);
+    private static final long STEAM_ID = 854625120197672991L;
+    public static final Role STEAM = new Role(STEAM_ID, Emotes.STEAM);
     private static final long LOL_ID = 843108657079779359L;
     public static final Role LOL = new Role(LOL_ID, Emotes.LOL);
     private static final long MINECRAFT_ID = 755490059976966254L;
