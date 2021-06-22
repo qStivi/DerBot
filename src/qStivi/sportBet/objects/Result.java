@@ -62,7 +62,7 @@ public class Result {
                     s = Emote.MTMelsungen;
                     break;
 
-                case "HSG Wetzlar":
+                case "Wetzlar":
                     s = Emote.HSGWetzlar;
                     break;
 
@@ -149,7 +149,7 @@ public class Result {
                     break;
 
                 case "hsg wetzlar":
-                    s = "HSG Wetzlar";
+                    s = "Wetzlar";
                     break;
 
                 case "tbv lemgo":
