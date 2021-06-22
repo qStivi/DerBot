@@ -69,6 +69,9 @@ public class ReactionRoles extends ListenerAdapter {
                 case "ayaya" -> addRoleToMember(event, Roles.ANIME);
                 case "Diablo3" -> addRoleToMember(event, Roles.DIABLO);
                 case "Coding" -> addRoleToMember(event, Roles.CODING);
+                case "Steam" -> addRoleToMember(event, Roles.STEAM);
+                case "Epic" -> addRoleToMember(event, Roles.EPIC);
+                case "Reddit" -> addRoleToMember(event, Roles.REDDIT);
                 case "♟" -> addRoleToMember(event, Roles.TABLETOP);
                 case "\uD83C\uDF7E" -> addRoleToMember(event, Roles.ALCOHOL);
                 case "\uD83D\uDFE4" -> addRoleToMember(event, Roles.BROWN);
@@ -121,6 +124,9 @@ public class ReactionRoles extends ListenerAdapter {
                 case "ayaya" -> removeRoleFromMember(event, Roles.ANIME);
                 case "Diablo3" -> removeRoleFromMember(event, Roles.DIABLO);
                 case "Coding" -> removeRoleFromMember(event, Roles.CODING);
+                case "Steam" -> removeRoleFromMember(event, Roles.STEAM);
+                case "Epic" -> removeRoleFromMember(event, Roles.EPIC);
+                case "Reddit" -> removeRoleFromMember(event, Roles.REDDIT);
                 case "♟" -> removeRoleFromMember(event, Roles.TABLETOP);
                 case "\uD83C\uDF7E" -> removeRoleFromMember(event, Roles.ALCOHOL);
                 case "\uD83D\uDFE4" -> removeRoleFromMember(event, Roles.BROWN);
@@ -185,6 +191,9 @@ public class ReactionRoles extends ListenerAdapter {
         addField(event, other, Roles.SHISHA);
         addField(event, other, Roles.ANIME);
         addField(event, other, Roles.CODING);
+        addField(event, other, Roles.STEAM);
+        addField(event, other, Roles.EPIC);
+        addField(event, other, Roles.REDDIT);
         other.addField(Roles.ALCOHOL.getEmoteID(), guild.getRoleById(Roles.ALCOHOL.getRoleID()).getAsMention(), true);
 
         EmbedBuilder colors = new EmbedBuilder();
@@ -233,6 +242,9 @@ public class ReactionRoles extends ListenerAdapter {
             message.addReaction(Emotes.SHISHA).queue();
             message.addReaction(Emotes.ANIME).queue();
             message.addReaction(Emotes.CODING).queue();
+            message.addReaction(Emotes.STEAM).queue();
+            message.addReaction(Emotes.EPIC).queue();
+            message.addReaction(Emotes.REDDIT).queue();
             message.addReaction("\uD83C\uDF7E").queue();
         });
         channel.editMessageById(846850724528914463L, colors.build()
