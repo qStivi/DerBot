@@ -67,7 +67,7 @@ public class Emotes {
     public final static String PLAYSTATION = "Playstation:846773573061967892";
     public final static String BOT = "Bot:846773804859392061";
     public final static String GMOD = "GMod:846773924310024253";
-    public final static String NINTENDO = "Switch:846842977249787944";
+    public final static String SWITCH = "Switch:846842977249787944";
     public final static String CIV = "Civ:846774135124525106";
     public final static String XBOX = "Xbox:846774297338445924";
     public final static String ARK = "ARK:846780314314997820";
@@ -85,6 +85,19 @@ public class Emotes {
     public final static String FORTNITE = "Fortnite:846836183748706354";
     public final static String ANIME = "ayaya:846839910862028811";
     public final static String DIABLO = "Diablo3:846841047954096188";
+    public final static String CODING = "Coding:849929211263057950";
+    public final static String STEAM = "Steam:854628425095839754";
+    public final static String EPIC = "Epic:854630286943191050";
+    public final static String REDDIT = "Reddit:856821271248502815";
+    public final static String TABLETOP = "♟";
+    public final static String ALCOHOL = "\uD83C\uDF7E";
+    public final static String BROWN = "\uD83D\uDFE4";
+    public final static String GREEN = "\uD83D\uDFE2";
+    public final static String BLUE = "\uD83D\uDD35";
+    public final static String PURPLE = "\uD83D\uDFE3";
+    public final static String YELLOW = "\uD83D\uDFE1";
+    public final static String ORANGE = "\uD83D\uDFE0";
+    public final static String RED = "\uD83D\uDD34";
 
     public static long getEmoteIDLong(String emote) {
         return Long.parseLong(emote.split(":")[1]);
