@@ -22,16 +22,19 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ReactionRoles extends ListenerAdapter {
     private static final Logger logger = getLogger(ReactionRoles.class);
 
-    Guild guild;
-    TextChannel channel;
+    volatile Guild guild;
+    volatile TextChannel channel;
 
     public ReactionRoles(JDA jda) {
         guild = jda.getGuildById(703363806356701295L);
-        if (guild == null) {
-            logger.error("Guild is null!");
-            return;
+        while (guild == null) {
+            Thread.onSpinWait();
         }
         channel = guild.getTextChannelById(843093823366365184L);
+        while (channel == null) {
+            Thread.onSpinWait();
+        }
+
     }
 
     @Override
