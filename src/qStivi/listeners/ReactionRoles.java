@@ -80,16 +80,16 @@ public class ReactionRoles extends ListenerAdapter {
 
     private void addRoleToMember(@NotNull GuildMessageReactionAddEvent event, @NotNull Role role) {
 
-        getGuildChannelJDA(jda, event);
+        getGuildChannelJDA(event);
         guild.addRoleToMember(event.getMember(), Objects.requireNonNull(guild.getRoleById(role.getRoleID()))).queue();
     }
 
-    private void getGuildChannelJDA(JDA jda, @NotNull GuildMessageReactionAddEvent event) {
-        if (jda == null) {
-            jda = event.getJDA();
+    private void getGuildChannelJDA(@NotNull GuildMessageReactionAddEvent event) {
+        if (this.jda == null) {
+            this.jda = event.getJDA();
         }
         if (guild == null) {
-            guild = jda.getGuildById(703363806356701295L);
+            guild = this.jda.getGuildById(703363806356701295L);
             while (guild == null) {
                 Thread.onSpinWait();
             }
@@ -102,12 +102,12 @@ public class ReactionRoles extends ListenerAdapter {
         }
     }
 
-    private void getGuildChannelJDA(JDA jda, @NotNull GuildMessageReactionRemoveEvent event) {
-        if (jda == null) {
-            jda = event.getJDA();
+    private void getGuildChannelJDA(@NotNull GuildMessageReactionRemoveEvent event) {
+        if (this.jda == null) {
+            this.jda = event.getJDA();
         }
         if (guild == null) {
-            guild = jda.getGuildById(703363806356701295L);
+            guild = this.jda.getGuildById(703363806356701295L);
             while (guild == null) {
                 Thread.onSpinWait();
             }
@@ -120,12 +120,12 @@ public class ReactionRoles extends ListenerAdapter {
         }
     }
 
-    private void getGuildChannelJDA(JDA jda, @NotNull ReadyEvent event) {
-        if (jda == null) {
-            jda = event.getJDA();
+    private void getGuildChannelJDA(@NotNull ReadyEvent event) {
+        if (this.jda == null) {
+            this.jda = event.getJDA();
         }
         if (guild == null) {
-            guild = jda.getGuildById(703363806356701295L);
+            guild = this.jda.getGuildById(703363806356701295L);
             while (guild == null) {
                 Thread.onSpinWait();
             }
@@ -191,7 +191,7 @@ public class ReactionRoles extends ListenerAdapter {
 
     private void removeRoleFromMember(@NotNull GuildMessageReactionRemoveEvent event, @NotNull Role role) {
 
-        getGuildChannelJDA(jda, event);
+        getGuildChannelJDA(event);
         guild.removeRoleFromMember(Objects.requireNonNull(event.getMember()), Objects.requireNonNull(guild.getRoleById(role.getRoleID()))).queue();
     }
 
@@ -200,14 +200,7 @@ public class ReactionRoles extends ListenerAdapter {
     public void onReady(@NotNull ReadyEvent event) {
 
         if (Bot.DEV_MODE) return;
-
-        if (jda == null) {
-            jda = event.getJDA();
-            while (jda == null) {
-                Thread.onSpinWait();
-            }
-        }
-        getGuildChannelJDA(jda, event);
+        getGuildChannelJDA(event);
 
         if (guild == null) {
             logger.error("Guild is null!");
@@ -318,14 +311,7 @@ public class ReactionRoles extends ListenerAdapter {
     }
 
     private void addField(@NotNull ReadyEvent event, @NotNull EmbedBuilder embed, @NotNull Role role) {
-
-        if (jda == null) {
-            jda = event.getJDA();
-            while (jda == null) {
-                Thread.onSpinWait();
-            }
-        }
-        getGuildChannelJDA(jda, event);
+        getGuildChannelJDA(event);
 
         embed.addField(Objects.requireNonNull(jda.getEmoteById(role.getEmoteIDLong())).getAsMention(), Objects.requireNonNull(guild.getRoleById(role.getRoleID())).getAsMention(), true);
     }

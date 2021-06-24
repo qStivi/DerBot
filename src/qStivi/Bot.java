@@ -49,10 +49,7 @@ public class Bot {
                 .setLargeThreshold(50)
                 .setActivity(getActivity())
                 .build();
-        jda.awaitReady();
         logger.info(String.valueOf(Bot.DEV_MODE));
-
-//        jda.addEventListener(new ReactionRoles());
 
         DB.getInstance();
         new Events(jda);
