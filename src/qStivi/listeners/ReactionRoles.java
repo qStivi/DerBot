@@ -19,20 +19,13 @@ import java.util.Objects;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+@SuppressWarnings("DuplicatedCode")
 public class ReactionRoles extends ListenerAdapter {
     private static final Logger logger = getLogger(ReactionRoles.class);
 
-    Guild guild;
-    TextChannel channel;
-
-    public ReactionRoles(JDA jda) {
-        guild = jda.getGuildById(703363806356701295L);
-        if (guild == null) {
-            logger.error("Guild is null!");
-            return;
-        }
-        channel = guild.getTextChannelById(843093823366365184L);
-    }
+    volatile Guild guild;
+    volatile TextChannel channel;
+    volatile JDA jda;
 
     @Override
     public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
@@ -85,8 +78,64 @@ public class ReactionRoles extends ListenerAdapter {
         }
     }
 
-    private void addRoleToMember(GuildMessageReactionAddEvent event, Role role) {
+    private void addRoleToMember(@NotNull GuildMessageReactionAddEvent event, @NotNull Role role) {
+
+        getGuildChannelJDA(event);
         guild.addRoleToMember(event.getMember(), Objects.requireNonNull(guild.getRoleById(role.getRoleID()))).queue();
+    }
+
+    private void getGuildChannelJDA(@NotNull GuildMessageReactionAddEvent event) {
+        if (this.jda == null) {
+            this.jda = event.getJDA();
+        }
+        if (guild == null) {
+            guild = this.jda.getGuildById(703363806356701295L);
+            while (guild == null) {
+                Thread.onSpinWait();
+            }
+        }
+        if (channel == null) {
+            channel = guild.getTextChannelById(843093823366365184L);
+            while (channel == null) {
+                Thread.onSpinWait();
+            }
+        }
+    }
+
+    private void getGuildChannelJDA(@NotNull GuildMessageReactionRemoveEvent event) {
+        if (this.jda == null) {
+            this.jda = event.getJDA();
+        }
+        if (guild == null) {
+            guild = this.jda.getGuildById(703363806356701295L);
+            while (guild == null) {
+                Thread.onSpinWait();
+            }
+        }
+        if (channel == null) {
+            channel = guild.getTextChannelById(843093823366365184L);
+            while (channel == null) {
+                Thread.onSpinWait();
+            }
+        }
+    }
+
+    private void getGuildChannelJDA(@NotNull ReadyEvent event) {
+        if (this.jda == null) {
+            this.jda = event.getJDA();
+        }
+        if (guild == null) {
+            guild = this.jda.getGuildById(703363806356701295L);
+            while (guild == null) {
+                Thread.onSpinWait();
+            }
+        }
+        if (channel == null) {
+            channel = guild.getTextChannelById(843093823366365184L);
+            while (channel == null) {
+                Thread.onSpinWait();
+            }
+        }
     }
 
     @Override
@@ -140,7 +189,9 @@ public class ReactionRoles extends ListenerAdapter {
         }
     }
 
-    private void removeRoleFromMember(GuildMessageReactionRemoveEvent event, Role role) {
+    private void removeRoleFromMember(@NotNull GuildMessageReactionRemoveEvent event, @NotNull Role role) {
+
+        getGuildChannelJDA(event);
         guild.removeRoleFromMember(Objects.requireNonNull(event.getMember()), Objects.requireNonNull(guild.getRoleById(role.getRoleID()))).queue();
     }
 
@@ -149,8 +200,8 @@ public class ReactionRoles extends ListenerAdapter {
     public void onReady(@NotNull ReadyEvent event) {
 
         if (Bot.DEV_MODE) return;
+        getGuildChannelJDA(event);
 
-        var jda = event.getJDA();
         if (guild == null) {
             logger.error("Guild is null!");
             return;
@@ -259,8 +310,9 @@ public class ReactionRoles extends ListenerAdapter {
         });
     }
 
-    private void addField(ReadyEvent event, EmbedBuilder embed, Role role) {
-        var jda = event.getJDA();
+    private void addField(@NotNull ReadyEvent event, @NotNull EmbedBuilder embed, @NotNull Role role) {
+        getGuildChannelJDA(event);
+
         embed.addField(Objects.requireNonNull(jda.getEmoteById(role.getEmoteIDLong())).getAsMention(), Objects.requireNonNull(guild.getRoleById(role.getRoleID())).getAsMention(), true);
     }
 }

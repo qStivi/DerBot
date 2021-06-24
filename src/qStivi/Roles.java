@@ -79,10 +79,6 @@ public class Roles {
     public static final Role RED = new Role(RED_ID, Emotes.RED);
     private static final long NINTENDO_ID = 846785268694777896L;
     public static final Role NINTENDO = new Role(NINTENDO_ID, Emotes.SWITCH);
-    private static final long STEAM_ID = 854625120197672991L;
-    public static final Role STEAM = new Role(STEAM_ID, Emotes.STEAM);
-    private static final long EPIC_ID = 854631372667748382L;
-    public static final Role EPIC = new Role(EPIC_ID, Emotes.EPIC);
     private static final long REDDIT_ID = 854633174544941106L;
     public static final Role REDDIT = new Role(REDDIT_ID, Emotes.REDDIT);
 }
