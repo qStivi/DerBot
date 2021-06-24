@@ -27,7 +27,7 @@ public class Bot {
     private static final Timer activityUpdate = new Timer();
     private static final String ACTIVITY = "Evolving...";
     private static final Logger logger = getLogger(Bot.class);
-    public static boolean DEV_MODE = true;
+    public static boolean DEV_MODE = false;
     public static long happyHour = 1;
 
     public static void main(String[] args) throws LoginException, SQLException, ClassNotFoundException {
@@ -41,7 +41,7 @@ public class Bot {
 
         logger.info("Bot token: " + token);
         JDA jda = JDABuilder.createLight(token)
-                .addEventListeners(ControlsManager.getINSTANCE(), new Listener(), new BlackjackCommand(), new ReactionRoles())
+                .addEventListeners(ControlsManager.getINSTANCE(), new Listener(), new BlackjackCommand(), new CommandManager(), new ReactionRoles())
                 .enableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE)
                 .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
                 .setChunkingFilter(ChunkingFilter.NONE)
@@ -50,8 +50,6 @@ public class Bot {
                 .setActivity(getActivity())
                 .build();
         logger.info(String.valueOf(Bot.DEV_MODE));
-
-        jda.addEventListener(new CommandManager());
 
         DB.getInstance();
         new Events(jda);
