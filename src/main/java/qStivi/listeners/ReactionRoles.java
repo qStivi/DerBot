@@ -1,13 +1,13 @@
 package qStivi.listeners;
 
-import qStivi.Bot;
-import qStivi.Emotes;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import qStivi.Bot;
+import qStivi.Emotes;
 
 @SuppressWarnings("ALL")
 public class ReactionRoles extends ListenerAdapter {

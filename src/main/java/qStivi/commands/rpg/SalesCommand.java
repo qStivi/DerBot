@@ -1,10 +1,10 @@
 package qStivi.commands.rpg;
 
-import qStivi.DB;
-import qStivi.ICommand;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
+import qStivi.DB;
+import qStivi.ICommand;
 
 import java.sql.SQLException;
 

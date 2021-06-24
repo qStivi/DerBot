@@ -4,10 +4,10 @@ import qStivi.sportBet.Emote;
 
 public class Result {
 
-    private String team1;
-    private String team2;
-    private String finalScore;
-    private int matchID;
+    private final String team1;
+    private final String team2;
+    private final String finalScore;
+    private final int matchID;
 
     public Result(String team1, String team2, String finalScore, int matchID) {
         this.team1 = team1;

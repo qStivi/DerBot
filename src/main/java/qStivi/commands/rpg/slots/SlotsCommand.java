@@ -1,14 +1,14 @@
 package qStivi.commands.rpg.slots;
 
-import qStivi.Bot;
-import qStivi.DB;
-import qStivi.ICommand;
-import qStivi.commands.rpg.SkillsCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
+import qStivi.Bot;
+import qStivi.DB;
+import qStivi.ICommand;
+import qStivi.commands.rpg.SkillsCommand;
 
 import java.awt.*;
 import java.sql.SQLException;

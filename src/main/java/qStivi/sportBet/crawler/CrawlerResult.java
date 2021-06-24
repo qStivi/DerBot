@@ -1,10 +1,10 @@
 package qStivi.sportBet.crawler;
 
-import qStivi.sportBet.objects.Result;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import qStivi.sportBet.objects.Result;
 
 import java.io.IOException;
 import java.text.Normalizer;
