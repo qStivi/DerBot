@@ -191,8 +191,8 @@ class Command {
         var db = DB.getInstance();
 
         var xp = command.getXp() * Bot.happyHour;
-        db.incrementCommandXP(name, xp, id);
         db.incrementXP(xp, id);
+        db.incrementCommandXP(name, xp, id);
         if (!name.equalsIgnoreCase("slots")) db.incrementCommandTimesHandled(name, 1, id);
         if (!name.equalsIgnoreCase("work")) db.setCommandLastHandled(name, new Date().getTime(), id);
 
