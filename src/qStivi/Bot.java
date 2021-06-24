@@ -30,7 +30,7 @@ public class Bot {
     public static boolean DEV_MODE = false;
     public static long happyHour = 1;
 
-    public static void main(String[] args) throws LoginException, SQLException, ClassNotFoundException, InterruptedException {
+    public static void main(String[] args) throws LoginException, SQLException, ClassNotFoundException {
         logger.info(String.valueOf(Bot.DEV_MODE));
         var token = DEV_MODE ? Config.get("DEV_TOKEN") : Config.get("TOKEN");
 
