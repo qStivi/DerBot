@@ -1,9 +1,9 @@
-package main.java.qStivi.commands.rpg.slots;
+package qStivi.commands.rpg.slots;
 
-import main.java.qStivi.Bot;
-import main.java.qStivi.DB;
-import main.java.qStivi.ICommand;
-import main.java.qStivi.commands.rpg.SkillsCommand;
+import qStivi.Bot;
+import qStivi.DB;
+import qStivi.ICommand;
+import qStivi.commands.rpg.SkillsCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;

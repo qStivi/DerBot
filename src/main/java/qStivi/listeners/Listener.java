@@ -1,8 +1,5 @@
-package main.java.qStivi.listeners;
+package qStivi.listeners;
 
-import main.java.qStivi.Bot;
-import main.java.qStivi.DB;
-import main.java.qStivi.commands.rpg.SkillsCommand;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
@@ -12,14 +9,17 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import qStivi.Bot;
+import qStivi.DB;
+import qStivi.commands.rpg.SkillsCommand;
 
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static main.java.qStivi.Bot.CHANNEL_ID;
-import static main.java.qStivi.Bot.DEV_CHANNEL_ID;
 import static org.slf4j.LoggerFactory.getLogger;
+import static qStivi.Bot.CHANNEL_ID;
+import static qStivi.Bot.DEV_CHANNEL_ID;
 
 public class Listener extends ListenerAdapter {
 

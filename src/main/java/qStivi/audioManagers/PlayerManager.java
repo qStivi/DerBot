@@ -1,4 +1,4 @@
-package main.java.qStivi.audioManagers;
+package qStivi.audioManagers;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioConfiguration;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;

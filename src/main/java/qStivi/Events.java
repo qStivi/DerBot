@@ -1,4 +1,4 @@
-package main.java.qStivi;
+package qStivi;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -28,7 +28,7 @@ public class Events {
         long id = Bot.DEV_MODE ? Bot.DEV_CHANNEL_ID : Bot.CHANNEL_ID;
 
         AtomicReference<Guild> guild = new AtomicReference<>();
-        guild.set(jda.getGuildById(Bot.GUILD_ID));
+        guild.set(jda.getGuildById(703363806356701295L));
         while (guild.get() == null) {
             Thread.onSpinWait();
         }

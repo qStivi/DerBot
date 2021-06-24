@@ -1,6 +1,6 @@
-package main.java.qStivi.sportBet.objects;
+package qStivi.sportBet.objects;
 
-import main.java.qStivi.sportBet.Emote;
+import qStivi.sportBet.Emote;
 
 public class Match {
 

@@ -1,12 +1,12 @@
-package main.java.qStivi.commands;
+package qStivi.commands;
 
-import main.java.qStivi.DB;
-import main.java.qStivi.ICommand;
-import main.java.qStivi.commands.rpg.SkillsCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import qStivi.DB;
+import qStivi.ICommand;
+import qStivi.commands.rpg.SkillsCommand;
 
 import javax.annotation.Nonnull;
 import java.awt.*;

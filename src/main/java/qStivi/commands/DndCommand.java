@@ -1,18 +1,18 @@
-package main.java.qStivi.commands;
+package qStivi.commands;
 
-import main.java.qStivi.DB;
-import main.java.qStivi.ICommand;
-import main.java.qStivi.audioManagers.PlayerManager;
-import main.java.qStivi.listeners.ControlsManager;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import qStivi.DB;
+import qStivi.ICommand;
+import qStivi.audioManagers.PlayerManager;
+import qStivi.listeners.ControlsManager;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static main.java.qStivi.commands.JoinCommand.join;
+import static qStivi.commands.JoinCommand.join;
 
 public class DndCommand implements ICommand {
 

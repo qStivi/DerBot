@@ -1,13 +1,13 @@
-package main.java.qStivi.sportBet.objects;
+package qStivi.sportBet.objects;
 
-import main.java.qStivi.sportBet.Emote;
+import qStivi.sportBet.Emote;
 
 public class Result {
 
-    private final String team1;
-    private final String team2;
-    private final String finalScore;
-    private final int matchID;
+    private String team1;
+    private String team2;
+    private String finalScore;
+    private int matchID;
 
     public Result(String team1, String team2, String finalScore, int matchID) {
         this.team1 = team1;
@@ -48,7 +48,7 @@ public class Result {
                 break;
 
             case "hsg wetzlar":
-                s = "HSG Wetzlar";
+                s = "Wetzlar";
                 break;
 
             case "tbv lemgo":
@@ -149,7 +149,7 @@ public class Result {
                 s = Emote.MTMelsungen;
                 break;
 
-            case "HSG Wetzlar":
+            case "Wetzlar":
                 s = Emote.HSGWetzlar;
                 break;
 

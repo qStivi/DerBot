@@ -1,9 +1,5 @@
-package main.java.qStivi.commands;
+package qStivi.commands;
 
-import main.java.qStivi.Config;
-import main.java.qStivi.DB;
-import main.java.qStivi.ICommand;
-import main.java.qStivi.commands.rpg.SkillsCommand;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkAdapter;
 import net.dean.jraw.http.OkHttpNetworkAdapter;
@@ -18,6 +14,10 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import qStivi.Config;
+import qStivi.DB;
+import qStivi.ICommand;
+import qStivi.commands.rpg.SkillsCommand;
 
 import javax.annotation.CheckReturnValue;
 import java.sql.SQLException;
@@ -29,8 +29,8 @@ public class RedditCommand implements ICommand {
 
     private static final Logger logger = getLogger(RedditCommand.class);
 
-    UserAgent userAgent = new UserAgent("Discord Bot", "qstivi.napoleon", "1", "src/main.java.qStivi");
-    Credentials credentials = Credentials.script("main/java/qStivi", Config.get("REDDIT_PASSWORD"), Config.get("REDDIT_ID"), Config.get("REDDIT_SECRET"));
+    UserAgent userAgent = new UserAgent("Discord Bot", "qStivi.DerBot", "1", "qStivi");
+    Credentials credentials = Credentials.script("qStivi", Config.get("REDDIT_PASSWORD"), Config.get("REDDIT_ID"), Config.get("REDDIT_SECRET"));
     NetworkAdapter adapter = new OkHttpNetworkAdapter(userAgent);
     RedditClient reddit = OAuthHelper.automatic(adapter, credentials);
     private long xp;

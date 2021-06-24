@@ -1,17 +1,17 @@
-package main.java.qStivi;
+package qStivi;
 
-import main.java.qStivi.sportBet.crawler.CrawlerInfo;
-import main.java.qStivi.sportBet.objects.Match;
 import org.slf4j.Logger;
+import qStivi.sportBet.crawler.CrawlerInfo;
+import qStivi.sportBet.objects.Match;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static main.java.qStivi.sportBet.crawler.CrawlerResult.isFinished;
-import static main.java.qStivi.sportBet.crawler.CrawlerResult.isWinner;
-import static main.java.qStivi.sportBet.objects.Result.getActualTeam;
 import static org.slf4j.LoggerFactory.getLogger;
+import static qStivi.sportBet.crawler.CrawlerResult.isFinished;
+import static qStivi.sportBet.crawler.CrawlerResult.isWinner;
+import static qStivi.sportBet.objects.Result.getActualTeam;
 
 @SuppressWarnings("unused")
 public class DB {
@@ -1127,12 +1127,16 @@ public class DB {
         }
         String url = "https://livescore.bet3000.com/de/handball/deutschland";
         for (int i = 0; i < teams.size(); i++) {
-            if (isFinished(url, new ArrayList<>(), teams.get(i)) && isWinner(teams.get(i))) {
+            var winner = isWinner(teams.get(i));
+            var team = teams.get(i);
+            if (isFinished(url, new ArrayList<String>(), team) && winner) {
                 String sql2 = "UPDATE UserData SET Money = Money + %s * %s WHERE UserID = %s"
                         .formatted(bet.get(i), quote.get(i), userID);
                 statement.executeUpdate(sql2);
-                String sql3 = "DELETE FROM Wette WHERE Mannschaft = '%s'"
-                        .formatted(teams.get(i));
+                String sql3 = "DELETE FROM Wette WHERE Mannschaft = '%s' AND UserID = %s".formatted(teams.get(i), userID);
+                statement.executeUpdate(sql3);
+            } else if (isFinished(url, new ArrayList<String>(), team)) {
+                String sql3 = "DELETE FROM Wette WHERE Mannschaft = '%s' AND UserID = %s".formatted(teams.get(i), userID);
                 statement.executeUpdate(sql3);
             }
         }

@@ -1,13 +1,13 @@
-package main.java.qStivi.commands;
+package qStivi.commands;
 
-import main.java.qStivi.DB;
-import main.java.qStivi.ICommand;
-import main.java.qStivi.commands.rpg.SkillsCommand;
-import main.java.qStivi.listeners.CommandManager;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
+import qStivi.DB;
+import qStivi.ICommand;
+import qStivi.commands.rpg.SkillsCommand;
+import qStivi.listeners.CommandManager;
 
 import javax.annotation.Nonnull;
 import java.sql.SQLException;

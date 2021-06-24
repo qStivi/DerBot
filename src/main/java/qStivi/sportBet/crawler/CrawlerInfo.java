@@ -1,6 +1,6 @@
-package main.java.qStivi.sportBet.crawler;
+package qStivi.sportBet.crawler;
 
-import main.java.qStivi.sportBet.objects.Match;
+import qStivi.sportBet.objects.Match;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

@@ -1,13 +1,6 @@
-package main.java.qStivi.commands.music;
+package qStivi.commands.music;
 
 import com.wrapper.spotify.exceptions.SpotifyWebApiException;
-import main.java.qStivi.DB;
-import main.java.qStivi.ICommand;
-import main.java.qStivi.apis.Spotify;
-import main.java.qStivi.apis.YouTube;
-import main.java.qStivi.audioManagers.PlayerManager;
-import main.java.qStivi.commands.rpg.SkillsCommand;
-import main.java.qStivi.listeners.ControlsManager;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -15,6 +8,13 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.apache.hc.core5.http.ParseException;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import qStivi.DB;
+import qStivi.ICommand;
+import qStivi.apis.Spotify;
+import qStivi.apis.YouTube;
+import qStivi.audioManagers.PlayerManager;
+import qStivi.commands.rpg.SkillsCommand;
+import qStivi.listeners.ControlsManager;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -22,9 +22,9 @@ import java.text.Normalizer;
 import java.util.Collections;
 import java.util.List;
 
-import static main.java.qStivi.Util.isValidLink;
-import static main.java.qStivi.commands.JoinCommand.join;
 import static org.slf4j.LoggerFactory.getLogger;
+import static qStivi.Util.isValidLink;
+import static qStivi.commands.JoinCommand.join;
 
 public class PlayCommand implements ICommand {
 

@@ -1,7 +1,7 @@
-package main.java.qStivi.listeners;
+package qStivi.listeners;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import main.java.qStivi.audioManagers.PlayerManager;
+import qStivi.audioManagers.PlayerManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;

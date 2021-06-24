@@ -1,9 +1,9 @@
-package main.java.qStivi.commands.rpg;
+package qStivi.commands.rpg;
 
-import main.java.qStivi.DB;
-import main.java.qStivi.ICommand;
-import main.java.qStivi.sportBet.crawler.CrawlerInfo;
-import main.java.qStivi.sportBet.objects.Match;
+import qStivi.DB;
+import qStivi.ICommand;
+import qStivi.sportBet.crawler.CrawlerInfo;
+import qStivi.sportBet.objects.Match;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;

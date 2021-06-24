@@ -1,7 +1,7 @@
-package main.java.qStivi.listeners;
+package qStivi.listeners;
 
-import main.java.qStivi.Bot;
-import main.java.qStivi.Emotes;
+import qStivi.Bot;
+import qStivi.Emotes;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
@@ -145,7 +145,7 @@ public class ReactionRoles extends ListenerAdapter {
         other.setFooter("Other", jda.getSelfUser().getAvatarUrl());
         other.addField(jda.getEmoteById(Emotes.getEmoteIDLong(Emotes.PLAYSTATION)).getAsMention(), jda.getGuildById(Bot.GUILD_ID).getRolesByName("Playstation", true).get(0).getAsMention(), true);
         other.addField(jda.getEmoteById(Emotes.getEmoteIDLong(Emotes.XBOX)).getAsMention(), jda.getGuildById(Bot.GUILD_ID).getRolesByName("XBOX", true).get(0).getAsMention(), true);
-        other.addField(jda.getEmoteById(Emotes.getEmoteIDLong(Emotes.NINTENDO)).getAsMention(), jda.getGuildById(Bot.GUILD_ID).getRolesByName("Nintendo", true).get(0).getAsMention(), true);
+        other.addField(jda.getEmoteById(Emotes.getEmoteIDLong(Emotes.SWITCH)).getAsMention(), jda.getGuildById(Bot.GUILD_ID).getRolesByName("Nintendo", true).get(0).getAsMention(), true);
         other.addField(jda.getEmoteById(Emotes.getEmoteIDLong(Emotes.VR)).getAsMention(), jda.getGuildById(Bot.GUILD_ID).getRolesByName("VR", true).get(0).getAsMention(), true);
         other.addField(jda.getEmoteById(Emotes.getEmoteIDLong(Emotes.BOT)).getAsMention(), jda.getGuildById(Bot.GUILD_ID).getRolesByName("Bot", true).get(0).getAsMention(), true);
         other.addField(jda.getEmoteById(Emotes.getEmoteIDLong(Emotes.SHISHA)).getAsMention(), jda.getGuildById(Bot.GUILD_ID).getRolesByName("Shisha", true).get(0).getAsMention(), true);
@@ -192,7 +192,7 @@ public class ReactionRoles extends ListenerAdapter {
         ).queue(message -> {
             message.addReaction(Emotes.PLAYSTATION).queue();
             message.addReaction(Emotes.BOT).queue();
-            message.addReaction(Emotes.NINTENDO).queue();
+            message.addReaction(Emotes.SWITCH).queue();
             message.addReaction(Emotes.XBOX).queue();
             message.addReaction(Emotes.VR).queue();
             message.addReaction(Emotes.SHISHA).queue();

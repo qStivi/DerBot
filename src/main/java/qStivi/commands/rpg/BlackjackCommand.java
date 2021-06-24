@@ -1,11 +1,11 @@
-package main.java.qStivi.commands.rpg;
+package qStivi.commands.rpg;
 
-import main.java.qStivi.*;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import qStivi.*;
 
 import java.awt.*;
 import java.sql.SQLException;

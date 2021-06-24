@@ -1,11 +1,11 @@
-package main.java.qStivi.commands;
+package qStivi.commands;
 
-import main.java.qStivi.DB;
-import main.java.qStivi.ICommand;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
+import qStivi.DB;
+import qStivi.ICommand;
 
 import javax.annotation.Nonnull;
 

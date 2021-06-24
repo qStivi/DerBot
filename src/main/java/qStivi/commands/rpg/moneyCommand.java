@@ -1,10 +1,10 @@
-package main.java.qStivi.commands.rpg;
+package qStivi.commands.rpg;
 
-import main.java.qStivi.DB;
-import main.java.qStivi.ICommand;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
+import qStivi.DB;
+import qStivi.ICommand;
 
 import java.sql.SQLException;
 
@@ -22,11 +22,9 @@ public class moneyCommand implements ICommand {
         var amount = Long.parseLong(args[3]);
 
         if (subcommand.equals("give")) {
-//            db.increment("users", "money", "id", userID, amount);
             db.incrementMoney(amount, userID);
         }
         if (subcommand.equals("remove")) {
-//            db.decrement("users", "money", "id", userID, amount);
             db.decrementMoney(amount, userID);
         }
         reply.editMessage("Done!").queue();

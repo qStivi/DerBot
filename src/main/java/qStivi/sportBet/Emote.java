@@ -1,4 +1,4 @@
-package main.java.qStivi.sportBet;
+package qStivi.sportBet;
 
 public class Emote {
     public final static String TVBStuttgart = "<:TVBStuttgart:845414970980302920>";

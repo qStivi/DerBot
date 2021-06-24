@@ -1,16 +1,16 @@
-package main.java.qStivi.listeners;
+package qStivi.listeners;
 
-import main.java.qStivi.Bot;
-import main.java.qStivi.DB;
-import main.java.qStivi.ICommand;
-import main.java.qStivi.commands.*;
-import main.java.qStivi.commands.music.*;
-import main.java.qStivi.commands.rpg.*;
-import main.java.qStivi.commands.rpg.slots.SlotsCommand;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import qStivi.Bot;
+import qStivi.DB;
+import qStivi.ICommand;
+import qStivi.commands.*;
+import qStivi.commands.music.*;
+import qStivi.commands.rpg.*;
+import qStivi.commands.rpg.slots.SlotsCommand;
 
 import java.sql.SQLException;
 import java.text.Normalizer;
@@ -19,9 +19,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import static main.java.qStivi.Bot.DEV_CHANNEL_ID;
-import static main.java.qStivi.Util.isValidLink;
 import static org.slf4j.LoggerFactory.getLogger;
+import static qStivi.Bot.DEV_CHANNEL_ID;
+import static qStivi.Util.isValidLink;
 
 public class CommandManager extends ListenerAdapter {
     private static final Logger logger = getLogger(CommandManager.class);

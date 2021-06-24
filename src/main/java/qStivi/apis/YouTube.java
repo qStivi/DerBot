@@ -1,6 +1,6 @@
-package main.java.qStivi.apis;
+package qStivi.apis;
 
-import main.java.qStivi.Config;
+import qStivi.Config;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

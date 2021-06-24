@@ -1,10 +1,5 @@
-package main.java.qStivi;
+package qStivi;
 
-import main.java.qStivi.commands.rpg.BlackjackCommand;
-import main.java.qStivi.listeners.CommandManager;
-import main.java.qStivi.listeners.ControlsManager;
-import main.java.qStivi.listeners.Listener;
-import main.java.qStivi.listeners.ReactionRoles;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -13,6 +8,11 @@ import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
+import qStivi.commands.rpg.BlackjackCommand;
+import qStivi.listeners.CommandManager;
+import qStivi.listeners.ControlsManager;
+import qStivi.listeners.Listener;
+import qStivi.listeners.ReactionRoles;
 
 import javax.security.auth.login.LoginException;
 import java.sql.SQLException;
@@ -43,7 +43,7 @@ public class Bot {
 
         logger.info("Bot token: " + token);
         JDA jda = JDABuilder.createLight(token)
-                .addEventListeners(ControlsManager.getINSTANCE(), new Listener(), new BlackjackCommand(), new ReactionRoles())
+                .addEventListeners(ControlsManager.getINSTANCE(), new Listener(), new BlackjackCommand(), new CommandManager(), new ReactionRoles())
                 .enableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE)
                 .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
                 .setChunkingFilter(ChunkingFilter.NONE)
@@ -52,8 +52,6 @@ public class Bot {
                 .setActivity(getActivity())
                 .build();
         logger.info(String.valueOf(Bot.DEV_MODE));
-
-        jda.addEventListener(new CommandManager());
 
         DB.getInstance();
         new Events(jda);

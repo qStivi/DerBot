@@ -1,4 +1,4 @@
-package main.java.qStivi.commands.rpg.slots;
+package qStivi.commands.rpg.slots;
 
 public record Symbol(float weight, String emote, double multiplier) {
 

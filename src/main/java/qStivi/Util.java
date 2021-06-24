@@ -1,4 +1,4 @@
-package main.java.qStivi;
+package qStivi;
 
 public class Util {
     public static boolean isValidLink(String link) {
