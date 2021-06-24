@@ -30,7 +30,7 @@ public class Bot {
     public static boolean DEV_MODE = false;
     public static long happyHour = 1;
 
-    public static void main(String[] args) throws LoginException, SQLException, ClassNotFoundException {
+    public static void main(String[] args) throws LoginException, SQLException, ClassNotFoundException, InterruptedException {
         logger.info(String.valueOf(Bot.DEV_MODE));
         var token = DEV_MODE ? Config.get("DEV_TOKEN") : Config.get("TOKEN");
 
@@ -41,7 +41,7 @@ public class Bot {
 
         logger.info("Bot token: " + token);
         JDA jda = JDABuilder.createLight(token)
-                .addEventListeners(ControlsManager.getINSTANCE(), new Listener(), new BlackjackCommand(), new CommandManager())
+                .addEventListeners(ControlsManager.getINSTANCE(), new Listener(), new BlackjackCommand(), new CommandManager(), new ReactionRoles())
                 .enableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE)
                 .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
                 .setChunkingFilter(ChunkingFilter.NONE)
@@ -49,9 +49,10 @@ public class Bot {
                 .setLargeThreshold(50)
                 .setActivity(getActivity())
                 .build();
+        jda.awaitReady();
         logger.info(String.valueOf(Bot.DEV_MODE));
 
-        jda.addEventListener(new ReactionRoles(jda));
+//        jda.addEventListener(new ReactionRoles());
 
         DB.getInstance();
         new Events(jda);
