@@ -56,7 +56,6 @@ public class Bot {
         DB.getInstance();
         new Events(jda);
 
-        logger.info(String.valueOf(Bot.DEV_MODE));
         if (DEV_MODE) return; // Don't continue if in development mode.
 
         activityUpdate.schedule(new TimerTask() {
