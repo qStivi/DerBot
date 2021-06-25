@@ -51,7 +51,6 @@ public class Bot {
                 .setLargeThreshold(50)
                 .setActivity(getActivity())
                 .build();
-        logger.info(String.valueOf(Bot.DEV_MODE));
 
         DB.getInstance();
         new Events(jda);
