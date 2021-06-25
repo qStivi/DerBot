@@ -1,3 +1,5 @@
+[![CodeQL](https://github.com/qStivi/DerBot/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/qStivi/DerBot/actions/workflows/codeql-analysis.yml)
+
 # DerBot
 
 
