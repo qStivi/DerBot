@@ -18,7 +18,7 @@ public class InfoCommand implements ICommand {
         EmbedBuilder info = new EmbedBuilder();
         ArrayList<Match> matches = new ArrayList<Match>();
         CrawlerInfo crawler = new CrawlerInfo();
-        crawler.saveInMatches(matches);
+        CrawlerInfo.saveInMatches(matches);
 
         info.setTitle("Infos");
         for (int i = 0; i < matches.size(); i++) {

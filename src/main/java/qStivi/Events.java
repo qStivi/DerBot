@@ -21,7 +21,7 @@ public class Events {
     boolean resultSent = false;
     private boolean happyHourMessageSent = false;
     private boolean happyHourOverSent = false;
-    private boolean sportbets = false;
+    private boolean sportsBets = false;
 
     public Events(JDA jda) {
         this.jda = jda;
@@ -103,28 +103,30 @@ public class Events {
                 }
                 // Happy half end
 
-                //Sportbets
-                if (hour == 23 && !sportbets) {
-                    ArrayList<Long> user = new ArrayList<Long>();
+                // Sports bets
+                if (hour == 23 && !sportsBets) {
+                    ArrayList<Long> user = new ArrayList<>();
                     try {
                         user = DB.getInstance().getBetUserID();
                     } catch (SQLException | ClassNotFoundException e) {
                         e.printStackTrace();
                     }
 
-                    for (int i = 0; i < user.size(); i++) {
+                    for (Long aLong : user) {
                         try {
-                            DB.getInstance().getProfit(user.get(i));
+                            DB.getInstance().getProfit(aLong);
                         } catch (SQLException | ClassNotFoundException e) {
                             e.printStackTrace();
                         }
                     }
-                    sportbets = true;
+                    sportsBets = true;
                 }
 
                 if (hour == 0) {
-                    sportbets = false;
+                    sportsBets = false;
                 }
+                // Sports bets end
+
             }
         }, 0, 1000)).start();
     }

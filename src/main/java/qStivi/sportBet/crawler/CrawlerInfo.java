@@ -10,12 +10,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class CrawlerInfo {
-    private static String pattern1 = "<(.*?)\\>";
+    private static final String pattern1 = "<(.*?)\\>";
 
-    private static ArrayList<String> dates = new ArrayList<String>();
-    private static ArrayList<String> teams = new ArrayList<String>();
-    private static ArrayList<Double> rates = new ArrayList<Double>();
-    private static String url = "https://www.bet3000.de/de/events/1891-bundesliga-manner";
+    private static final ArrayList<String> dates = new ArrayList<String>();
+    private static final ArrayList<String> teams = new ArrayList<String>();
+    private static final ArrayList<Double> rates = new ArrayList<Double>();
+    private static final String url = "https://www.bet3000.de/de/events/1891-bundesliga-manner";
 
 
     public static void saveInMatches(ArrayList<Match> matches) {

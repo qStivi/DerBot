@@ -92,18 +92,38 @@ public class RollCommand implements ICommand {
 
     MessageEmbed statsRoll() {
 
-        // 6*(2d6+6)
+        // 6*(4d6 drop lowest)
 
         List<Long> rolls = new ArrayList<>();
         long sum = 0;
 
-        for (long i = 0; i < 6; i++) {
-            long rand = ThreadLocalRandom.current().nextInt(1, 7);
-            long rand2 = ThreadLocalRandom.current().nextInt(1, 7);
-            rand += rand2;
-            rand += 6;
-            rolls.add(rand);
-            sum += rand;
+        for (int i = 0; i < 6; i++) {
+
+            List<Long> rolls1 = new ArrayList<>();
+            for (long j = 0; j < 4; j++) {
+                long rand = ThreadLocalRandom.current().nextInt(1, 7);
+                rolls1.add(rand);
+            }
+
+            long smallest = Long.MAX_VALUE;
+            for (long roll : rolls1) {
+                if (roll < smallest) smallest = roll;
+            }
+            long finalSmallest = smallest;
+            var smallestList = rolls1.stream().filter(aLong -> aLong == finalSmallest).toList();
+            rolls1.remove(smallestList.get(0));
+
+            long anotherSum = 0;
+            for (long roll : rolls1) {
+                anotherSum += roll;
+            }
+
+            rolls.add(anotherSum);
+
+        }
+
+        for (long roll : rolls) {
+            sum += roll;
         }
 
         EmbedBuilder embed = new EmbedBuilder().setDescription("∑=" + sum);
@@ -113,7 +133,6 @@ public class RollCommand implements ICommand {
         }
 
         return embed.build();
-
     }
 
     @Override

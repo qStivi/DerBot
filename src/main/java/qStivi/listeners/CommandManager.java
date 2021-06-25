@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 import static qStivi.Bot.DEV_CHANNEL_ID;
+import static qStivi.Util.isValidLink;
 
 public class CommandManager extends ListenerAdapter {
     private static final Logger logger = getLogger(CommandManager.class);
@@ -58,7 +59,7 @@ public class CommandManager extends ListenerAdapter {
         commandList.add(new BetCommand());
         commandList.add(new SalesCommand());
         commandList.add(new InfoCommand());
-        commandList.add(new ResultCommand());
+        commandList.add(new ScoreCommand());
 
         var timer = new Timer();
 
@@ -81,6 +82,8 @@ public class CommandManager extends ListenerAdapter {
     public static String cleanForCommand(String str) {
         str = str.toLowerCase().strip();
         str = Normalizer.normalize(str, Normalizer.Form.NFKD);
+        // TODO Make sure to not break anything before doing this
+//        str = str.replaceAll("ä", "ae").replaceAll("ö", "oe").replaceAll("ü", "ue");
         str = str.replaceAll("[^a-z0-9A-Z -]", ""); // Remove all non valid chars
         str = str.replaceAll("[ \\t]+", " ").trim(); // convert multiple spaces into one space
         return str;
@@ -117,7 +120,25 @@ public class CommandManager extends ListenerAdapter {
         try {
             if (isCommand(event)) {
 
-                var message = cleanForCommand(event.getMessage().getContentRaw());
+                String message;
+                String potentialLink = "";
+
+                // TODO there has to be a better way to do this
+                // Play command exception
+                if (event.getMessage().getContentRaw().toLowerCase().split(" ").length >= 2) {
+                    potentialLink = event.getMessage().getContentRaw().toLowerCase().split(" ")[1];
+                }
+                if (!isValidLink(potentialLink)) {
+                    message = cleanForCommand(event.getMessage().getContentRaw());
+                } else {
+                    message = event.getMessage().getContentRaw().replaceFirst("/", "");
+                }
+                if (message == null) {
+                    logger.error("Message is null!");
+                    return;
+                }
+                // Play command exception end
+
                 var args = message.split(" ");
 
                 for (var command : commandList) {
@@ -170,8 +191,8 @@ class Command {
         var db = DB.getInstance();
 
         var xp = command.getXp() * Bot.happyHour;
-        db.incrementCommandXP(name, xp, id);
         db.incrementXP(xp, id);
+        db.incrementCommandXP(name, xp, id);
         if (!name.equalsIgnoreCase("slots")) db.incrementCommandTimesHandled(name, 1, id);
         if (!name.equalsIgnoreCase("work")) db.setCommandLastHandled(name, new Date().getTime(), id);
 

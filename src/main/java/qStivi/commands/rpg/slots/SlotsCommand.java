@@ -71,7 +71,6 @@ public class SlotsCommand implements ICommand {
 
         db.decrementMoney(bet, id);
         db.incrementGamePlays(getName(), 1, id);
-        Thread.sleep(500);
         db.setGameLastPlayed(getName(), new Date().getTime(), id);
 
         EmbedBuilder embed = new EmbedBuilder();

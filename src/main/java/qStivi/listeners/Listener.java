@@ -85,7 +85,7 @@ public class Listener extends ListenerAdapter {
 
                         db.incrementXPVoice(xp, id);
                         db.incrementXP(xp, id);
-                        logger.info(event.getMember().getEffectiveName());
+                        logger.info("%s received %s voice xp.".formatted(event.getMember().getEffectiveName(), xp));
 
                     } catch (ClassNotFoundException | SQLException e) {
                         e.printStackTrace();
@@ -169,7 +169,7 @@ public class Listener extends ListenerAdapter {
             if (Bot.DEV_MODE) {
                 if (channelID != DEV_CHANNEL_ID) {
                     return;
-                } else if (!Bot.DEV_MODE && (channelID == DEV_CHANNEL_ID || categoryID != 833734651070775338L)) {
+                } else if (!Bot.DEV_MODE && (channelID == DEV_CHANNEL_ID || categoryID != Bot.CATEGORY_ID)) {
                     return;
                 }
             } else if (!Bot.DEV_MODE && channelID == DEV_CHANNEL_ID) {

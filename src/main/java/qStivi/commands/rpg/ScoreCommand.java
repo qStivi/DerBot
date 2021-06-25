@@ -14,24 +14,23 @@ import java.util.ArrayList;
 
 import static qStivi.sportBet.crawler.CrawlerResult.isFinished;
 
-public class ResultCommand implements ICommand {
+public class ScoreCommand implements ICommand {
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException, InterruptedException {
         EmbedBuilder result = new EmbedBuilder();
-        ArrayList<Result> results = new ArrayList<Result>();
-        CrawlerResult crawler = new CrawlerResult();
-        crawler.saveInResults(results);
+        ArrayList<Result> results = new ArrayList<>();
+        CrawlerResult.saveInResults(results);
 
-        result.setTitle("Ergebnis");
+        result.setTitle("Results");
         String url = "https://livescore.bet3000.com/de/handball/deutschland";
-        for (int i = 0; i < results.size(); i++) {
-            if (isFinished(url, new ArrayList<String>(), results.get(i).getTeam1())) {
-                result.addField(results.get(i).getTeams(), results.get(i).toString(), false);
+        for (Result value : results) {
+            if (isFinished(url, new ArrayList<>(), value.getTeam1())) {
+                result.addField(value.getTeams(), value.toString(), false);
                 result.addBlankField(false);
             }
         }
         if (results.size() == 0) {
-            result.setDescription("Heute gab es keine Spiele.");
+            result.setDescription("There were no games today.");
         }
         event.getChannel().sendMessage(result.build()).queue();
         result.clear();
@@ -46,7 +45,7 @@ public class ResultCommand implements ICommand {
     @NotNull
     @Override
     public String getDescription() {
-        return null;
+        return "TODO";
     }
 
     @Override

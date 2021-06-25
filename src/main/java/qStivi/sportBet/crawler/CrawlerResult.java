@@ -12,12 +12,12 @@ import java.util.ArrayList;
 
 public class CrawlerResult {
 
-    private static String pattern1 = "<(.*?)\\>";
+    private static final String pattern1 = "<(.*?)\\>";
 
-    private static ArrayList<String> teams = new ArrayList<String>();
-    private static ArrayList<String> finalScores = new ArrayList<String>();
-    private static ArrayList<Integer> matchIDS = new ArrayList<Integer>();
-    private static String url = "https://livescore.bet3000.com/de/handball/deutschland";
+    private static final ArrayList<String> teams = new ArrayList<String>();
+    private static final ArrayList<String> finalScores = new ArrayList<String>();
+    private static final ArrayList<Integer> matchIDS = new ArrayList<Integer>();
+    private static final String url = "https://livescore.bet3000.com/de/handball/deutschland";
 
     public static void saveInResults(ArrayList<Result> results) {
         crawlNames(url, new ArrayList<String>());
@@ -72,7 +72,6 @@ public class CrawlerResult {
         if (doc != null) {
             for (Element s : doc.select("[data-tournament-id=\"95\"]")) {
                 String status = s.attr("data-match-id");
-                ;
                 status = cleanForCommand(status);
                 matchIDS.add(Integer.parseInt(status));
             }
@@ -112,7 +111,7 @@ public class CrawlerResult {
             }
         }
         if (doc != null) {
-            for (Element s : doc.select("[data-match-id=\"" + String.valueOf(matchid) + "\"] > [data-type=\"status\"]")) {
+            for (Element s : doc.select("[data-match-id=\"" + matchid + "\"] > [data-type=\"status\"]")) {
                 String status = s.toString();
                 status = status.replaceAll(pattern1, "");
                 status = cleanForCommand(status);
@@ -125,10 +124,7 @@ public class CrawlerResult {
     }
 
     private static boolean isNumber(String s) {
-        boolean condition = false;
-        if (s.matches("[0-9]")) {
-            condition = true;
-        }
+        boolean condition = s.matches("[0-9]");
         return condition;
     }
 

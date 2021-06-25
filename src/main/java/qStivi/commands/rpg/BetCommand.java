@@ -8,6 +8,7 @@ import qStivi.DB;
 import qStivi.ICommand;
 
 import java.sql.SQLException;
+import java.util.Date;
 
 import static qStivi.sportBet.objects.Result.getActualTeam;
 
@@ -23,21 +24,14 @@ public class BetCommand implements ICommand {
         for (int i = 2; i < args.length; i++) {
             team.append(args[i]).append(" ");
         }
-        try {
-            db.nPlayer(id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        try {
-            if (db.makeBet(id, Integer.parseInt(args[1]), team.toString().strip())) {
-                String actualTeam = getActualTeam(team.toString().strip());
-                event.getChannel().sendMessage("Du hast " + Integer.parseInt(args[1]) + " auf "
-                        + actualTeam + " gesetzt.").queue();
-            } else {
-                event.getChannel().sendMessage("Entweder existiert das Team nicht oder du hast zu wenig Geld.").queue();
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        db.nPlayer(id);
+        if (db.makeBet(id, Integer.parseInt(args[1]), team.toString().strip())) {
+            db.incrementGamePlays("sports", 1, id);
+            db.setGameLastPlayed("sports", new Date().getTime(), id);
+            String actualTeam = getActualTeam(team.toString().strip());
+            event.getChannel().sendMessage("You bet " + Integer.parseInt(args[1]) + " on " + actualTeam).queue();
+        } else {
+            event.getChannel().sendMessage("That Team either does not exist or you don't have enough money!").queue();
         }
     }
 
@@ -55,6 +49,6 @@ public class BetCommand implements ICommand {
 
     @Override
     public long getXp() {
-        return 0;
+        return 3;
     }
 }
