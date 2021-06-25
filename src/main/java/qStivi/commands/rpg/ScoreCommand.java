@@ -23,15 +23,9 @@ public class ScoreCommand implements ICommand {
 
         result.setTitle("Results");
         String url = "https://livescore.bet3000.com/de/handball/deutschland";
-<<<<<<< HEAD:src/main/java/qStivi/commands/rpg/ScoreCommand.java
         for (Result value : results) {
             if (isFinished(url, new ArrayList<>(), value.getTeam1())) {
                 result.addField(value.getTeams(), value.toString(), false);
-=======
-        for (int i = 0; i < results.size(); i++) {
-            if (isFinished(url, new ArrayList<String>(), results.get(i).getTeam1())) {
-                result.addField(results.get(i).getTeams(), results.get(i).toString(), false);
->>>>>>> master:src/main/java/qStivi/commands/rpg/ResultCommand.java
                 result.addBlankField(false);
             }
         }
