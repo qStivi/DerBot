@@ -23,10 +23,10 @@ public class WorkCommand implements ICommand {
 
         var diff = new Date().getTime() / 1000 - db.getCommandLastHandled(getName(), id) / 1000;
         if (diff > 1200) {
-            long salary = (1000 + (lvl * 10)) * Bot.happyHour;
+            float salary = (1000 + (lvl * 10)) * Bot.happyHour;
             salary += salary * SkillsCommand.getWorkMoneyMultiplier(id);
-            db.incrementMoney(salary, id);
-            db.incrementCommandMoney(getName(), salary, id);
+            db.incrementMoney((long) salary, id);
+            db.incrementCommandMoney(getName(), (long) salary, id);
             reply.editMessage("You earned " + salary + " gems").queue();
             db.setCommandLastHandled(getName(), new Date().getTime(), id);
 

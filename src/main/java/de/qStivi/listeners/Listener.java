@@ -74,7 +74,7 @@ public class Listener extends ListenerAdapter {
                     if (voiceChannel == null) return;
 
                     var amountOfUsers = voiceChannel.getMembers().size();
-                    var xp = ((3L * amountOfUsers) + 2) * Bot.happyHour;
+                    float xp = ((3L * amountOfUsers) + 2) * Bot.happyHour;
                     try {
                         xp += xp * SkillsCommand.getSocialXPPMultiplier(id);
                     } catch (SQLException | ClassNotFoundException e) {
@@ -83,8 +83,8 @@ public class Listener extends ListenerAdapter {
                     try {
                         var db = DB.getInstance();
 
-                        db.incrementXPVoice(xp, id);
-                        db.incrementXP(xp, id);
+                        db.incrementXPVoice((long) xp, id);
+                        db.incrementXP((long) xp, id);
                         logger.info("%s received %s voice xp.".formatted(event.getMember().getEffectiveName(), xp));
 
                     } catch (ClassNotFoundException | SQLException e) {
