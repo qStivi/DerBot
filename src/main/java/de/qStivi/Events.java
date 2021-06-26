@@ -4,6 +4,8 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -14,29 +16,40 @@ import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class Events {
+    private static final Logger logger = getLogger(Events.class);
     JDA jda;
-    AtomicReference<TextChannel> channel = new AtomicReference<>();
+    Guild guild;
+    TextChannel channel;
     boolean lottoAnnouncement = false;
     boolean resultSent = false;
     private boolean happyHourMessageSent = false;
     private boolean happyHourOverSent = false;
     private boolean sportsBets = false;
 
+
+    private void getGuildChannelJDA(@NotNull JDA jda) {
+        if (this.jda == null) {
+            this.jda = jda;
+        }
+        if (guild == null) {
+            while (guild == null) {
+                guild = this.jda.getGuildById(Bot.GUILD_ID);
+                logger.info("Guild is null");
+            }
+        }
+        if (channel == null) {
+            while (channel == null) {
+                channel = guild.getTextChannelById(Bot.CHANNEL_ID);
+                logger.info("Channel is null");
+            }
+        }
+    }
+
     public Events(JDA jda) {
-        this.jda = jda;
-        long id = Bot.DEV_MODE ? Bot.DEV_CHANNEL_ID : Bot.CHANNEL_ID;
-
-        AtomicReference<Guild> guild = new AtomicReference<>();
-        guild.set(jda.getGuildById(703363806356701295L));
-        while (guild.get() == null) {
-            Thread.onSpinWait();
-        }
-        channel.set(guild.get().getTextChannelById(id));
-        while (channel.get() == null) {
-            Thread.onSpinWait();
-        }
-
+        getGuildChannelJDA(jda);
         run();
     }
 
@@ -65,7 +78,7 @@ public class Events {
                 }
 
                 if (minute >= 5 && !resultSent && lottoAnnouncement) {
-                    channel.get().sendMessage("https://media.giphy.com/media/Ps8XflhsT5EVa/giphy.gif").queue();
+                    channel.sendMessage("https://media.giphy.com/media/Ps8XflhsT5EVa/giphy.gif").queue();
 
                     try {
                         sendResult();
@@ -87,7 +100,7 @@ public class Events {
                 if (day.equalsIgnoreCase("friday") && hour == 19 && minute >= 30) {
                     Bot.happyHour = 2;
                     if (!happyHourMessageSent) {
-                        channel.get().sendMessage("Happy half is starting now! :clock730:").queue();
+                        channel.sendMessage("<@&846784745073672252> Happy half is starting now! :clock730:").queue();
                         happyHourMessageSent = true;
                         happyHourOverSent = false;
                     }
@@ -95,9 +108,9 @@ public class Events {
                     Bot.happyHour = 1;
                     happyHourMessageSent = false;
                 }
-                if (day.equalsIgnoreCase("friday") && hour == 20) {
+                if (day.equalsIgnoreCase("friday") && hour == 20) { // friday 20
                     if (!happyHourOverSent) {
-                        channel.get().sendMessage("Happy half is over... :clock8:").queue();
+                        channel.sendMessage("Happy half is over... :clock8:").queue();
                         happyHourOverSent = true;
                     }
                 }
@@ -141,13 +154,12 @@ public class Events {
             appendUsers(sb, id);
         }
 
-        channel.get().sendMessage(sb + " \nThe raffle will be held in 5 minutes!").queue();
+        channel.sendMessage("<@&846784745073672252> " + sb + " \nThe raffle will be held in 5 minutes!").queue();
     }
 
     private void appendUsers(StringBuilder sb, long id) {
         AtomicReference<User> user = new AtomicReference<>(jda.getUserById(id));
         jda.retrieveUserById(id).queue(user::set);
-        while (user.get() == null) Thread.onSpinWait();
         sb.append(user.get().getAsMention()).append(" ");
     }
 
@@ -158,7 +170,7 @@ public class Events {
         db = DB.getInstance();
         winners = db.getLottoParticipantsByVote(number);
         if (winners.isEmpty()) {
-            channel.get().sendMessage("Better luck next time. No one won this raffle. The lucky number was " + number).queue();
+            channel.sendMessage("Better luck next time. No one won this raffle. The lucky number was " + number).queue();
         } else {
 
             long money = 0;
@@ -171,7 +183,7 @@ public class Events {
                 db.incrementMoney(money, id);
                 db.incrementGameWins("lotto", 1, id);
             }
-            channel.get().sendMessage("Congratulations! " + sb + "has won the raffle. And will receive " + money + ":gem: each. The lucky number was " + number).queue();
+            channel.sendMessage("Congratulations! " + sb + "has won the raffle. And will receive " + money + ":gem: each. The lucky number was " + number).queue();
             db.resetLottoPool();
         }
         db.resetLottoVotes();
