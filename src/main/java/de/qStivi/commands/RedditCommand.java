@@ -29,8 +29,8 @@ public class RedditCommand implements ICommand {
 
     private static final Logger logger = getLogger(RedditCommand.class);
 
-    UserAgent userAgent = new UserAgent("Discord Bot", "qStivi.DerBot", "1", "de/qStivi");
-    Credentials credentials = Credentials.script("de/qStivi", Config.get("REDDIT_PASSWORD"), Config.get("REDDIT_ID"), Config.get("REDDIT_SECRET"));
+    UserAgent userAgent = new UserAgent("Discord Bot", "qStivi.DerBot", "1", "qStivi");
+    Credentials credentials = Credentials.script("qStivi", Config.get("REDDIT_PASSWORD"), Config.get("REDDIT_ID"), Config.get("REDDIT_SECRET"));
     NetworkAdapter adapter = new OkHttpNetworkAdapter(userAgent);
     RedditClient reddit = OAuthHelper.automatic(adapter, credentials);
     private long xp;

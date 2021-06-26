@@ -89,13 +89,13 @@ public class ReactionRoles extends ListenerAdapter {
             this.jda = event.getJDA();
         }
         if (guild == null) {
-            guild = this.jda.getGuildById(703363806356701295L);
+            guild = this.jda.getGuildById(Bot.GUILD_ID);
             while (guild == null) {
                 Thread.onSpinWait();
             }
         }
         if (channel == null) {
-            channel = guild.getTextChannelById(843093823366365184L);
+            channel = guild.getTextChannelById(Bot.CHANNEL_ID);
             while (channel == null) {
                 Thread.onSpinWait();
             }
