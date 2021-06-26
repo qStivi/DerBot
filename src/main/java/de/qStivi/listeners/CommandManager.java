@@ -60,6 +60,7 @@ public class CommandManager extends ListenerAdapter {
         commandList.add(new SalesCommand());
         commandList.add(new InfoCommand());
         commandList.add(new ScoreCommand());
+        commandList.add(new InventoryCommand());
 
         var timer = new Timer();
 

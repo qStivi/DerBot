@@ -104,6 +104,20 @@ public class DB {
                     );
                                 """;
 
+        String setupItemsTable = """
+                CREATE TABLE IF NOT EXISTS "Items"
+                (
+                    "UniqueItemID" INTEGER NOT NULL NOT NULL PRIMARY KEY,
+                    "UserID"       INTEGER NOT NULL,
+                    "ItemName"     TEXT    NOT NULL,
+                    "DisplayName"  TEXT    NOT NULL,
+                    "Category"     TEXT    NOT NULL,
+                    "Rarity"       TEXT    NOT NULL,
+                    "Price"        INTEGER NOT NULL DEFAULT 0,
+                    FOREIGN KEY ("UserID") REFERENCES "UserData" ("UserID") ON UPDATE CASCADE ON DELETE CASCADE
+                );
+                """;
+
 
         if (connection != null) {
             var stmt = connection.createStatement();
@@ -116,6 +130,7 @@ public class DB {
             stmt.addBatch(insertLottoPool);
             stmt.addBatch(setupSkillTree);
             stmt.addBatch(createWette);
+            stmt.addBatch(setupItemsTable);
             stmt.executeBatch();
         }
 
@@ -1128,13 +1143,13 @@ public class DB {
         for (int i = 0; i < teams.size(); i++) {
             var winner = CrawlerResult.isWinner(teams.get(i));
             var team = teams.get(i);
-            if (CrawlerResult.isFinished(url, new ArrayList<String>(), team) && winner) {
+            if (CrawlerResult.isFinished(url, new ArrayList<>(), team) && winner) {
                 String sql2 = "UPDATE UserData SET Money = Money + %s * %s WHERE UserID = %s"
                         .formatted(bet.get(i), quote.get(i), userID);
                 statement.executeUpdate(sql2);
                 String sql3 = "DELETE FROM Wette WHERE Mannschaft = '%s' AND UserID = %s".formatted(teams.get(i), userID);
                 statement.executeUpdate(sql3);
-            } else if (CrawlerResult.isFinished(url, new ArrayList<String>(), team)) {
+            } else if (CrawlerResult.isFinished(url, new ArrayList<>(), team)) {
                 String sql3 = "DELETE FROM Wette WHERE Mannschaft = '%s' AND UserID = %s".formatted(teams.get(i), userID);
                 statement.executeUpdate(sql3);
             }
@@ -1178,6 +1193,102 @@ public class DB {
             }
         }
         return a;
+    }
+
+    public List<Long> getUniqueItemIDs(long UserID) throws SQLException {
+        List<Long> list = new ArrayList<>();
+        var result = connection.createStatement().executeQuery("""
+                SELECT "UniqueItemID" FROM "Items" WHERE "UserID" == %s;
+                """.formatted(UserID));
+        while (result.next()) {
+            list.add(result.getLong("UniqueItemID"));
+        }
+        return list;
+    }
+
+    public long getItemOwnerID(long UniqueItemID) throws SQLException {
+        var owner = 0L;
+        var result = connection.createStatement().executeQuery("""
+                SELECT "UserID" FROM "Items" WHERE "UniqueItemID" == %s;
+                """.formatted(UniqueItemID));
+        while (result.next()) {
+            owner = result.getLong("UserID");
+        }
+        return owner;
+    }
+
+    public String getItemName(long UniqueItemID) throws SQLException {
+        var name = "";
+        var result = connection.createStatement().executeQuery("""
+                SELECT "ItemName" FROM "Items" WHERE "UniqueItemID" == %s;
+                """.formatted(UniqueItemID));
+        while (result.next()) {
+            name = result.getString("ItemName");
+        }
+        return name;
+    }
+
+    public String getItemDisplayName(long UniqueItemID) throws SQLException {
+        var name = "";
+        var result = connection.createStatement().executeQuery("""
+                SELECT "DisplayName" FROM "Items" WHERE "UniqueItemID" == %s;
+                """.formatted(UniqueItemID));
+        while (result.next()) {
+            name = result.getString("DisplayName");
+        }
+        return name;
+    }
+
+    public String getItemCategory(long UniqueItemID) throws SQLException {
+        var category = "";
+        var result = connection.createStatement().executeQuery("""
+                SELECT "Category" FROM "Items" WHERE "UniqueItemID" == %s;
+                """.formatted(UniqueItemID));
+        while (result.next()) {
+            category = result.getString("Category");
+        }
+        return category;
+    }
+
+    public String getItemRarity(long UniqueItemID) throws SQLException {
+        var rarity = "";
+        var result = connection.createStatement().executeQuery("""
+                SELECT "Rarity" FROM "Items" WHERE "UniqueItemID" == %s;
+                """.formatted(UniqueItemID));
+        while (result.next()) {
+            rarity = result.getString("Rarity");
+        }
+        return rarity;
+    }
+
+    public long getItemPrice(long UniqueItemID) throws SQLException {
+        var price = 0L;
+        var result = connection.createStatement().executeQuery("""
+                SELECT "Price" FROM "Items" WHERE "UniqueItemID" == %s;
+                """.formatted(UniqueItemID));
+        while (result.next()) {
+            price = result.getLong("Price");
+        }
+        return price;
+    }
+
+    public Item getItem(long UniqueItemID) throws SQLException {
+        Item item;
+        var result = connection.createStatement().executeQuery("""
+                SELECT "Price" FROM "Items" WHERE "UniqueItemID" == %s;
+                """.formatted(UniqueItemID));
+        while (result.next()) {
+            var itemID = result.getString("ItemName");
+
+        }
+        return item;
+    }
+
+    public void insertItem(long UserID, Item item) throws SQLException {
+        connection.createStatement().execute("""
+                INSERT INTO "Items"("UserID", "ItemName", "DisplayName", "Category", "Rarity", "Price")
+                VALUES (%s, '%s', '%s', '%s', '%s', %s);
+                """.formatted(UserID, item.getStaticItemName(), item.getDisplayName(), item.getCategory(), item.getRarity(), item.getPrice()));
     }
 
 }
