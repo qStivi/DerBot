@@ -1,10 +1,8 @@
 package de.qStivi;
 
 import de.qStivi.commands.rpg.BlackjackCommand;
-import de.qStivi.listeners.CommandManager;
-import de.qStivi.listeners.ControlsManager;
-import de.qStivi.listeners.Listener;
-import de.qStivi.listeners.ReactionRoles;
+import de.qStivi.items.DevItem;
+import de.qStivi.listeners.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -43,7 +41,7 @@ public class Bot {
 
         logger.info("Bot token: " + token);
         JDA jda = JDABuilder.createLight(token)
-                .addEventListeners(ControlsManager.getINSTANCE(), new Listener(), new BlackjackCommand(), new CommandManager(), new ReactionRoles())
+                .addEventListeners(ControlsManager.getINSTANCE(), new Listener(), new BlackjackCommand(), new CommandManager(), new ReactionRoles(), new InventoryButtonListener())
                 .enableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE)
                 .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
                 .setChunkingFilter(ChunkingFilter.NONE)
@@ -52,8 +50,11 @@ public class Bot {
                 .setActivity(getActivity())
                 .build();
 
-        DB.getInstance();
+        var db = DB.getInstance();
         new Events(jda);
+        new Items();
+
+        db.insertItem(219108246143631364L, new DevItem());
 
         if (DEV_MODE) return; // Don't continue if in development mode.
 

@@ -110,10 +110,6 @@ public class DB {
                     "UniqueItemID" INTEGER NOT NULL NOT NULL PRIMARY KEY,
                     "UserID"       INTEGER NOT NULL,
                     "ItemName"     TEXT    NOT NULL,
-                    "DisplayName"  TEXT    NOT NULL,
-                    "Category"     TEXT    NOT NULL,
-                    "Rarity"       TEXT    NOT NULL,
-                    "Price"        INTEGER NOT NULL DEFAULT 0,
                     FOREIGN KEY ("UserID") REFERENCES "UserData" ("UserID") ON UPDATE CASCADE ON DELETE CASCADE
                 );
                 """;
@@ -1217,78 +1213,38 @@ public class DB {
         return owner;
     }
 
-    public String getItemName(long UniqueItemID) throws SQLException {
-        var name = "";
+    public IItem getItem(long UniqueItemID) throws SQLException {
         var result = connection.createStatement().executeQuery("""
                 SELECT "ItemName" FROM "Items" WHERE "UniqueItemID" == %s;
                 """.formatted(UniqueItemID));
+        String itemID = null;
         while (result.next()) {
-            name = result.getString("ItemName");
+            itemID = result.getString("ItemName");
         }
-        return name;
+        String finalItemID = itemID;
+        return Items.items.stream().filter(item1 -> item1.getStaticItemName().equals(finalItemID)).findFirst().get();
     }
 
-    public String getItemDisplayName(long UniqueItemID) throws SQLException {
-        var name = "";
+    public List<IItem> getItems(long UserID) throws SQLException {
         var result = connection.createStatement().executeQuery("""
-                SELECT "DisplayName" FROM "Items" WHERE "UniqueItemID" == %s;
-                """.formatted(UniqueItemID));
+                SELECT "UniqueItemID" FROM "Items" WHERE "UserID" == %s;
+                """.formatted(UserID));
+        List<Long> itemIDs = new ArrayList<>();
         while (result.next()) {
-            name = result.getString("DisplayName");
+            itemIDs.add(result.getLong("UniqueItemID"));
         }
-        return name;
+        List<IItem> items = new ArrayList<>();
+        for (long itemID : itemIDs) {
+            items.add(getItem(itemID));
+        }
+        return items;
     }
 
-    public String getItemCategory(long UniqueItemID) throws SQLException {
-        var category = "";
-        var result = connection.createStatement().executeQuery("""
-                SELECT "Category" FROM "Items" WHERE "UniqueItemID" == %s;
-                """.formatted(UniqueItemID));
-        while (result.next()) {
-            category = result.getString("Category");
-        }
-        return category;
-    }
-
-    public String getItemRarity(long UniqueItemID) throws SQLException {
-        var rarity = "";
-        var result = connection.createStatement().executeQuery("""
-                SELECT "Rarity" FROM "Items" WHERE "UniqueItemID" == %s;
-                """.formatted(UniqueItemID));
-        while (result.next()) {
-            rarity = result.getString("Rarity");
-        }
-        return rarity;
-    }
-
-    public long getItemPrice(long UniqueItemID) throws SQLException {
-        var price = 0L;
-        var result = connection.createStatement().executeQuery("""
-                SELECT "Price" FROM "Items" WHERE "UniqueItemID" == %s;
-                """.formatted(UniqueItemID));
-        while (result.next()) {
-            price = result.getLong("Price");
-        }
-        return price;
-    }
-
-    public Item getItem(long UniqueItemID) throws SQLException {
-        Item item;
-        var result = connection.createStatement().executeQuery("""
-                SELECT "Price" FROM "Items" WHERE "UniqueItemID" == %s;
-                """.formatted(UniqueItemID));
-        while (result.next()) {
-            var itemID = result.getString("ItemName");
-
-        }
-        return item;
-    }
-
-    public void insertItem(long UserID, Item item) throws SQLException {
+    public void insertItem(long UserID, IItem item) throws SQLException {
         connection.createStatement().execute("""
-                INSERT INTO "Items"("UserID", "ItemName", "DisplayName", "Category", "Rarity", "Price")
-                VALUES (%s, '%s', '%s', '%s', '%s', %s);
-                """.formatted(UserID, item.getStaticItemName(), item.getDisplayName(), item.getCategory(), item.getRarity(), item.getPrice()));
+                INSERT INTO "Items"("UserID", "ItemName")
+                VALUES (%s, '%s');
+                """.formatted(UserID, item.getStaticItemName()));
     }
 
 }
