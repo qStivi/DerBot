@@ -54,7 +54,7 @@ public class Bot {
         new Events(jda);
         new Items();
 
-        db.insertItem(219108246143631364L, new DevItem());
+//        db.insertItem(219108246143631364L, new DevItem());
 
         if (DEV_MODE) return; // Don't continue if in development mode.
 

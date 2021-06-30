@@ -20,6 +20,12 @@ public class InventoryCommand implements ICommand {
 
         sortedItems.forEach(item -> embed.addField(item.getDisplayName(), String.valueOf(item.getPrice()), true));
 
+        if (sortedItems.isEmpty()) {
+            embed.addField("Empty!", "", false);
+        } else {
+            sortedItems.forEach(item -> embed.addField(item.getDisplayName(), String.valueOf(item.getPrice()), true));
+        }
+
         reply.editMessageEmbeds(embed.build()).queue();
         reply.editMessage(Category.CATEGORY1.name()).setActionRow(
                 Button.success(Category.CATEGORY1.name(), Category.CATEGORY1.name()).asDisabled(),
