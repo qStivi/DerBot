@@ -205,7 +205,7 @@ public class PlayCommand implements ICommand {
 //                    hook.sendMessage(playSong(event.getOption("query").getAsString(), true, event.getTextChannel(), event.getGuild())).queue();
 //                }
 //            } else {
-            var msg = playSong(args, false, event.getChannel(), event.getGuild(), reply);
+            var msg = playSong(args, true, event.getChannel(), event.getGuild(), reply);
             if (msg != null) {
                 reply.editMessage(msg).queue();
 

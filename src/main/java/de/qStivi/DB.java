@@ -1,5 +1,7 @@
 package de.qStivi;
 
+import de.qStivi.items.IItem;
+import de.qStivi.items.Items;
 import de.qStivi.sportBet.crawler.CrawlerInfo;
 import de.qStivi.sportBet.crawler.CrawlerResult;
 import de.qStivi.sportBet.objects.Match;
@@ -1222,7 +1224,8 @@ public class DB {
             itemID = result.getString("ItemName");
         }
         String finalItemID = itemID;
-        return Items.items.stream().filter(item1 -> item1.getStaticItemName().equals(finalItemID)).findFirst().get();
+        var first = Items.items.stream().filter(item1 -> item1.getStaticItemName().equals(finalItemID)).findFirst();
+        return first.get();
     }
 
     public List<IItem> getItems(long UserID) throws SQLException {

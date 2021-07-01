@@ -1,6 +1,4 @@
-package de.qStivi;
-
-import de.qStivi.items.DevItem;
+package de.qStivi.items;
 
 import java.util.ArrayList;
 import java.util.List;

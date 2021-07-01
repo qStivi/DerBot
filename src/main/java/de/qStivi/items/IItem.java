@@ -1,4 +1,7 @@
-package de.qStivi;
+package de.qStivi.items;
+
+import de.qStivi.Category;
+import de.qStivi.Rarity;
 
 public interface IItem {
     void use();

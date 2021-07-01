@@ -1,7 +1,7 @@
 package de.qStivi;
 
 import de.qStivi.commands.rpg.BlackjackCommand;
-import de.qStivi.items.DevItem;
+import de.qStivi.items.Items;
 import de.qStivi.listeners.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -41,22 +41,40 @@ public class Bot {
 
         logger.info("Bot token: " + token);
         JDA jda = JDABuilder.createLight(token)
-                .addEventListeners(ControlsManager.getINSTANCE(), new Listener(), new BlackjackCommand(), new CommandManager(), new ReactionRoles(), new InventoryButtonListener())
-                .enableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE)
-                .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
+                .addEventListeners(
+                        ControlsManager.getINSTANCE(),
+                        new Listener(),
+                        new BlackjackCommand(),
+                        new CommandManager(),
+                        new ReactionRoles(),
+                        new InventoryButtonListener()
+                )
+                .enableCache(
+                        CacheFlag.VOICE_STATE,
+                        CacheFlag.EMOTE
+                )
+                .enableIntents(
+                        GatewayIntent.GUILD_MESSAGE_REACTIONS,
+                        GatewayIntent.GUILD_MESSAGES,
+                        GatewayIntent.GUILD_VOICE_STATES,
+                        GatewayIntent.GUILD_MEMBERS,
+                        GatewayIntent.GUILD_PRESENCES
+                )
                 .setChunkingFilter(ChunkingFilter.NONE)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
-                .setLargeThreshold(50)
+                .setLargeThreshold(250)
                 .setActivity(getActivity())
                 .build();
 
         var db = DB.getInstance();
-        new Events(jda);
+
         new Items();
 
 //        db.insertItem(219108246143631364L, new DevItem());
 
         if (DEV_MODE) return; // Don't continue if in development mode.
+
+        new Events(jda);
 
         activityUpdate.schedule(new TimerTask() {
             @Override

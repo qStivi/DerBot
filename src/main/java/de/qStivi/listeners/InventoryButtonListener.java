@@ -9,71 +9,73 @@ import net.dv8tion.jda.api.interactions.components.Button;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class InventoryButtonListener extends ListenerAdapter {
 
     @Override
     public void onButtonClick(@NotNull ButtonClickEvent event) {
-        if (event.getMember().getIdLong() == event.getMessage().get)
+        var interactingUser = event.getUser();
+        var message = event.getMessage();
+        var owner = message.getMentionedUsers().get(0);
+        if (interactingUser.getIdLong() == owner.getIdLong())
 
-        try {
 
-            var items = DB.getInstance().getItems(event.getUser().getIdLong());
-            var embed = new EmbedBuilder();
-            var sortedItems = items.stream().filter(item -> item.getCategory().name().equals(Objects.requireNonNull(event.getButton()).getId())).toList();
+            try {
 
-            switch (Objects.requireNonNull(Objects.requireNonNull(event.getButton()).getId())) {
-                case "CATEGORY1" -> {
-                    event.editComponents().setActionRow(
-                            Button.success(Category.CATEGORY1.name(), Category.CATEGORY1.name()).asDisabled(),
-                            Button.primary(Category.CATEGORY2.name(), Category.CATEGORY2.name()),
-                            Button.primary(Category.CATEGORY3.name(), Category.CATEGORY3.name()),
-                            Button.primary(Category.CATEGORY4.name(), Category.CATEGORY4.name())
-                    ).queue();
-                    event.getHook().editOriginal(Category.CATEGORY1.name()).queue();
+                var items = DB.getInstance().getItems(event.getUser().getIdLong());
+                var embed = new EmbedBuilder();
+                var sortedItems = items.stream().filter(item -> item.getCategory().name().equals(Objects.requireNonNull(event.getButton()).getId())).toList();
+
+                switch (Objects.requireNonNull(Objects.requireNonNull(event.getButton()).getId())) {
+                    case "CATEGORY1" -> {
+                        event.editComponents().setActionRow(
+                                Button.success(Category.CATEGORY1.name(), Category.CATEGORY1.name()).asDisabled(),
+                                Button.primary(Category.CATEGORY2.name(), Category.CATEGORY2.name()),
+                                Button.primary(Category.CATEGORY3.name(), Category.CATEGORY3.name()),
+                                Button.primary(Category.CATEGORY4.name(), Category.CATEGORY4.name())
+                        ).complete();
+                        event.getMessage().editMessage(Category.CATEGORY1.name()).mentionUsers(owner.getIdLong()).complete();
+                    }
+                    case "CATEGORY2" -> {
+                        event.editComponents().setActionRow(
+                                Button.primary(Category.CATEGORY1.name(), Category.CATEGORY1.name()),
+                                Button.success(Category.CATEGORY2.name(), Category.CATEGORY2.name()).asDisabled(),
+                                Button.primary(Category.CATEGORY3.name(), Category.CATEGORY3.name()),
+                                Button.primary(Category.CATEGORY4.name(), Category.CATEGORY4.name())
+                        ).complete();
+                        event.getMessage().editMessage(Category.CATEGORY2.name()).mentionUsers(owner.getIdLong()).complete();
+                    }
+                    case "CATEGORY3" -> {
+                        event.editComponents().setActionRow(
+                                Button.primary(Category.CATEGORY1.name(), Category.CATEGORY1.name()),
+                                Button.primary(Category.CATEGORY2.name(), Category.CATEGORY2.name()),
+                                Button.success(Category.CATEGORY3.name(), Category.CATEGORY3.name()).asDisabled(),
+                                Button.primary(Category.CATEGORY4.name(), Category.CATEGORY4.name())
+                        ).complete();
+                        event.getMessage().editMessage(Category.CATEGORY3.name()).mentionUsers(owner.getIdLong()).complete();
+                    }
+                    case "CATEGORY4" -> {
+                        event.editComponents().setActionRow(
+                                Button.primary(Category.CATEGORY1.name(), Category.CATEGORY1.name()),
+                                Button.primary(Category.CATEGORY2.name(), Category.CATEGORY2.name()),
+                                Button.primary(Category.CATEGORY3.name(), Category.CATEGORY3.name()),
+                                Button.success(Category.CATEGORY4.name(), Category.CATEGORY4.name()).asDisabled()
+                        ).complete();
+                        event.getMessage().editMessage(Category.CATEGORY4.name()).mentionUsers(owner.getIdLong()).complete();
+                    }
                 }
-                case "CATEGORY2" -> {
-                    event.editComponents().setActionRow(
-                            Button.primary(Category.CATEGORY1.name(), Category.CATEGORY1.name()),
-                            Button.success(Category.CATEGORY2.name(), Category.CATEGORY2.name()).asDisabled(),
-                            Button.primary(Category.CATEGORY3.name(), Category.CATEGORY3.name()),
-                            Button.primary(Category.CATEGORY4.name(), Category.CATEGORY4.name())
-                    ).queue();
-                    event.getHook().editOriginal(Category.CATEGORY2.name()).queue();
+
+                if (sortedItems.isEmpty()) {
+                    embed.addField("Empty!", "", false);
+                } else {
+                    sortedItems.forEach(item -> embed.addField(item.getDisplayName(), String.valueOf(item.getPrice()), true));
                 }
-                case "CATEGORY3" -> {
-                    event.editComponents().setActionRow(
-                            Button.primary(Category.CATEGORY1.name(), Category.CATEGORY1.name()),
-                            Button.primary(Category.CATEGORY2.name(), Category.CATEGORY2.name()),
-                            Button.success(Category.CATEGORY3.name(), Category.CATEGORY3.name()).asDisabled(),
-                            Button.primary(Category.CATEGORY4.name(), Category.CATEGORY4.name())
-                    ).queue();
-                    event.getHook().editOriginal(Category.CATEGORY3.name()).queue();
-                }
-                case "CATEGORY4" -> {
-                    event.editComponents().setActionRow(
-                            Button.primary(Category.CATEGORY1.name(), Category.CATEGORY1.name()),
-                            Button.primary(Category.CATEGORY2.name(), Category.CATEGORY2.name()),
-                            Button.primary(Category.CATEGORY3.name(), Category.CATEGORY3.name()),
-                            Button.success(Category.CATEGORY4.name(), Category.CATEGORY4.name()).asDisabled()
-                    ).queue();
-                    event.getHook().editOriginal(Category.CATEGORY4.name()).queue();
-                }
+
+                Objects.requireNonNull(event.getMessage()).editMessageEmbeds(embed.build()).complete();
+
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
             }
-
-            if (sortedItems.isEmpty()) {
-                embed.addField("Empty!", "", false);
-            } else {
-                sortedItems.forEach(item -> embed.addField(item.getDisplayName(), String.valueOf(item.getPrice()), true));
-            }
-
-            Objects.requireNonNull(event.getMessage()).editMessageEmbeds(embed.build()).queue();
-
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 }

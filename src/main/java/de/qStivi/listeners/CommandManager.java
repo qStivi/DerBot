@@ -61,6 +61,7 @@ public class CommandManager extends ListenerAdapter {
         commandList.add(new InfoCommand());
         commandList.add(new ScoreCommand());
         commandList.add(new InventoryCommand());
+        commandList.add(new UseCommand());
 
         var timer = new Timer();
 
