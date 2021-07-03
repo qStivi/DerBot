@@ -62,6 +62,8 @@ public class CommandManager extends ListenerAdapter {
         commandList.add(new ScoreCommand());
         commandList.add(new InventoryCommand());
         commandList.add(new UseCommand());
+        commandList.add(new ShopCommand());
+        commandList.add(new BuyCommand());
 
         var timer = new Timer();
 
@@ -187,6 +189,8 @@ class Command {
         var reply = event.getMessage().reply("Loading...").complete();
 
         this.command.handle(this.event, this.args, this.db, reply);
+
+        getLogger(CommandManager.class).info(event.getAuthor().getAsTag() + " used /" + command.getName());
 
         var name = command.getName();
         var id = event.getAuthor().getIdLong();

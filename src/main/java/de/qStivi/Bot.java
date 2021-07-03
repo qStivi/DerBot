@@ -1,6 +1,7 @@
 package de.qStivi;
 
 import de.qStivi.commands.rpg.BlackjackCommand;
+import de.qStivi.items.DevItem;
 import de.qStivi.items.Items;
 import de.qStivi.listeners.*;
 import net.dv8tion.jda.api.JDA;
@@ -47,7 +48,8 @@ public class Bot {
                         new BlackjackCommand(),
                         new CommandManager(),
                         new ReactionRoles(),
-                        new InventoryButtonListener()
+                        new InventoryButtonListener(),
+                        new ButtonListener()
                 )
                 .enableCache(
                         CacheFlag.VOICE_STATE,
@@ -70,6 +72,8 @@ public class Bot {
 
         new Items();
 
+//        db.insertItem(219108246143631364L, new DevItem());
+//        db.insertItem(219108246143631364L, new DevItem());
 //        db.insertItem(219108246143631364L, new DevItem());
 
         if (DEV_MODE) return; // Don't continue if in development mode.

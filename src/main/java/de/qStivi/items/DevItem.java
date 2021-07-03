@@ -1,6 +1,8 @@
 package de.qStivi.items;
 
 import de.qStivi.*;
+import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
+import net.dv8tion.jda.api.events.message.guild.GenericGuildMessageEvent;
 import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -9,8 +11,9 @@ public class DevItem implements IItem {
     private static final Logger logger = getLogger(Bot.class);
 
     @Override
-    public void use() {
+    public void use(GenericGuildMessageEvent event) {
         logger.info(getStaticItemName() + " has been used.");
+        event.getChannel().sendMessage("yee").queue();
     }
 
     @Override
@@ -35,6 +38,6 @@ public class DevItem implements IItem {
 
     @Override
     public long getPrice() {
-        return 0;
+        return 17;
     }
 }
