@@ -48,7 +48,6 @@ public class Bot {
                         new BlackjackCommand(),
                         new CommandManager(),
                         new ReactionRoles(),
-                        new InventoryButtonListener(),
                         new ButtonListener()
                 )
                 .enableCache(

@@ -14,13 +14,9 @@ import java.util.NoSuchElementException;
 public class BuyCommand implements ICommand {
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException, InterruptedException {
-        StringBuilder argsBuilder = new StringBuilder();
-        for (int i = 1; i < args.length; i++) {
-            argsBuilder.append(args[i]).append(" ");
-        }
-        var userInput = argsBuilder.toString().strip();
+        var userInput = Integer.parseInt(args[1]);
         try {
-            var item = Items.items.stream().filter(iItem -> iItem.getDisplayName().equalsIgnoreCase(userInput)).findFirst().get();
+            var item = Items.items.get(userInput);
             reply.editMessage("Do you really want to buy " + item.getDisplayName() + " for " + item.getPrice() + ":gem: ?")
                     .setActionRow(
                             Button.success("buy " + item.getStaticItemName(), "Yes"),

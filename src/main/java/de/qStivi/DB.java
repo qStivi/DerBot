@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -1228,19 +1229,15 @@ public class DB {
         return first.get();
     }
 
-    public List<IItem> getItems(long UserID) throws SQLException {
+    public List<Long> getItems(long UserID) throws SQLException {
         var result = connection.createStatement().executeQuery("""
                 SELECT "UniqueItemID" FROM "Items" WHERE "UserID" == %s;
                 """.formatted(UserID));
-        List<Long> itemIDs = new ArrayList<>();
+        var uniqueItemIDs = new ArrayList<Long>();
         while (result.next()) {
-            itemIDs.add(result.getLong("UniqueItemID"));
+            uniqueItemIDs.add(result.getLong("UniqueItemID"));
         }
-        List<IItem> items = new ArrayList<>();
-        for (long itemID : itemIDs) {
-            items.add(getItem(itemID));
-        }
-        return items;
+        return uniqueItemIDs;
     }
 
     public void insertItem(long UserID, IItem item) throws SQLException {
@@ -1250,4 +1247,10 @@ public class DB {
                 """.formatted(UserID, item.getStaticItemName()));
     }
 
+    public void removeItem(long UserID, Long UniqueItemID) throws SQLException {
+        connection.createStatement().execute("""
+                DELETE FROM "Items"
+                WHERE "UserID" == %s AND "UniqueItemID" = %s;
+                """.formatted(UserID, UniqueItemID));
+    }
 }

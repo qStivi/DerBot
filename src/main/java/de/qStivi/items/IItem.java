@@ -1,12 +1,14 @@
 package de.qStivi.items;
 
 import de.qStivi.Category;
+import de.qStivi.DB;
 import de.qStivi.Rarity;
-import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
-import net.dv8tion.jda.api.events.message.guild.GenericGuildMessageEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+
+import java.sql.SQLException;
 
 public interface IItem {
-    void use(GenericGuildMessageEvent event);
+    void use(GuildMessageReceivedEvent event, DB db) throws SQLException, ClassNotFoundException;
 
     String getStaticItemName();
 
@@ -17,4 +19,6 @@ public interface IItem {
     Rarity getRarity();
 
     long getPrice();
+
+    String getDescription();
 }

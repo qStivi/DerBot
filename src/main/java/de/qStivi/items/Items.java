@@ -8,6 +8,11 @@ public class Items {
 
     public Items() {
         items.add(new DevItem());
+        items.add(new DevItem());
+        items.add(new DevItem());
+        items.add(new XPPotionItem());
+        items.add(new DevItem());
+        items.add(new DevItem());
     }
 
     public static IItem getItemByDisplayName(String displayName){

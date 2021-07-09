@@ -18,18 +18,12 @@ public class UseCommand implements ICommand {
     private static final Logger logger = getLogger(UseCommand.class);
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException, InterruptedException {
-        StringBuilder argsBuilder = new StringBuilder();
-        for (int i = 1; i < args.length; i++) {
-            argsBuilder.append(args[i]).append(" ");
-        }
-        var userInput = argsBuilder.toString().strip();
+        var userInput = Long.parseLong(args[1]);
         var message = "ERROR!";
-        try {
-            Items.items.stream().filter(iItem -> iItem.getDisplayName().equalsIgnoreCase(userInput)).findFirst().get().use(event);
+            var item = db.getItem(userInput);
+            item.use(event, db);
             message = "Item used.";
-        } catch (NoSuchElementException e) {
-            message = "I couldn't find any item with that name.";
-        }
+            db.removeItem(event.getAuthor().getIdLong(), userInput);
         reply.editMessage(message).queue();
     }
 
