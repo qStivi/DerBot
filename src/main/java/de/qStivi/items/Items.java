@@ -8,8 +8,8 @@ public class Items {
 
     public Items() {
         items.add(new DevItem());
-        items.add(new DevItem());
-        items.add(new DevItem());
+        items.add(new OutOfJailItem());
+        items.add(new LuckPotionItem());
         items.add(new XPPotionItem());
         items.add(new DevItem());
         items.add(new DevItem());
