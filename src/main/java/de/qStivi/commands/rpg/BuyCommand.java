@@ -16,7 +16,7 @@ public class BuyCommand implements ICommand {
     public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException, InterruptedException {
         var userInput = Integer.parseInt(args[1]);
         try {
-            var item = Items.items.get(userInput);
+            var item = Items.ITEMS.get(userInput);
             reply.editMessage("Do you really want to buy " + item.getDisplayName() + " for " + item.getPrice() + ":gem: ?")
                     .setActionRow(
                             Button.success("buy " + item.getStaticItemName(), "Yes"),

@@ -16,7 +16,7 @@ public class ShopCommand implements ICommand {
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException, InterruptedException {
         var embed = new EmbedBuilder();
-        List<IItem> items = Items.items;
+        List<IItem> items = Items.ITEMS;
         for (int i = 0; i < items.size(); i++) {
             IItem item = items.get(i);
             var description = item.getDescription();

@@ -21,7 +21,7 @@ public class UseCommand implements ICommand {
         var userInput = Long.parseLong(args[1]);
         var message = "ERROR!";
             var item = db.getItem(userInput);
-            item.use(event, db);
+            item.use(event, args, db, reply);
             message = "Item used.";
             db.removeItem(event.getAuthor().getIdLong(), userInput);
         reply.editMessage(message).queue();

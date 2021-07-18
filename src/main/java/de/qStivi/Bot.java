@@ -48,7 +48,8 @@ public class Bot {
                         new BlackjackCommand(),
                         new CommandManager(),
                         new ReactionRoles(),
-                        new ButtonListener()
+                        new ButtonListener(),
+                        new EventManager()
                 )
                 .enableCache(
                         CacheFlag.VOICE_STATE,

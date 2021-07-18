@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -1225,7 +1224,7 @@ public class DB {
             itemID = result.getString("ItemName");
         }
         String finalItemID = itemID;
-        var first = Items.items.stream().filter(item1 -> item1.getStaticItemName().equals(finalItemID)).findFirst();
+        var first = Items.ITEMS.stream().filter(item1 -> item1.getStaticItemName().equals(finalItemID)).findFirst();
         return first.get();
     }
 
