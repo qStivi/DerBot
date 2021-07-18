@@ -1,5 +1,8 @@
 package de.qStivi.listeners;
 
+import de.qStivi.Bot;
+import de.qStivi.DB;
+import de.qStivi.commands.rpg.SkillsCommand;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
@@ -9,17 +12,15 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
-import de.qStivi.Bot;
-import de.qStivi.DB;
-import de.qStivi.commands.rpg.SkillsCommand;
 
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.slf4j.LoggerFactory.getLogger;
 import static de.qStivi.Bot.CHANNEL_ID;
 import static de.qStivi.Bot.DEV_CHANNEL_ID;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class Listener extends ListenerAdapter {
 
@@ -52,8 +53,20 @@ public class Listener extends ListenerAdapter {
     @Override
     public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
         new Thread(() -> {
+
+
             if (Bot.DEV_MODE && event.getChannelJoined().getIdLong() != Bot.DEV_VOICE_CHANNEL_ID) return;
             if (event.getMember().getUser().isBot()) return;
+
+
+            // TODO also remove user from list if he already joined
+            try {
+                if (DB.getInstance().getLastJail(event.getMember().getIdLong()) + TimeUnit.HOURS.toMillis(1) > new Date().getTime()) {
+                    return;
+                }
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
 
             try {
                 DB.getInstance().setLastVoiceJoin(new Date().getTime(), event.getMember().getIdLong());
@@ -104,6 +117,9 @@ public class Listener extends ListenerAdapter {
     @SuppressWarnings({"ConstantConditions", "DuplicatedCode"})
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+
+
+
         new Thread(() -> {
 
             var channelID = event.getChannel().getIdLong();
@@ -114,6 +130,17 @@ public class Listener extends ListenerAdapter {
 
             if (author.isBot()) return;
             if (event.isWebhookMessage()) return;
+
+
+            try {
+                if (DB.getInstance().getLastJail(event.getAuthor().getIdLong()) + TimeUnit.HOURS.toMillis(1) > new Date().getTime()) {
+                    event.getMessage().reply("You can not do anything while in jail!").queue();
+                    return;
+                }
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
             if (Bot.DEV_MODE) {
                 if (channelID != DEV_CHANNEL_ID) {
                     return;
@@ -148,6 +175,14 @@ public class Listener extends ListenerAdapter {
     @SuppressWarnings({"DuplicatedCode", "ConstantConditions"})
     @Override
     public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
+
+        try {
+            if (DB.getInstance().getLastJail(event.getUser().getIdLong()) + TimeUnit.HOURS.toMillis(1) > new Date().getTime()){
+                return;
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         new Thread(() -> {
 
             var channelID = event.getChannel().getIdLong();

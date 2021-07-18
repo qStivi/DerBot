@@ -1,17 +1,17 @@
 package de.qStivi.listeners;
 
+import de.qStivi.Bot;
+import de.qStivi.DB;
+import de.qStivi.ICommand;
 import de.qStivi.Util;
 import de.qStivi.commands.*;
 import de.qStivi.commands.music.*;
 import de.qStivi.commands.rpg.*;
+import de.qStivi.commands.rpg.slots.SlotsCommand;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
-import de.qStivi.Bot;
-import de.qStivi.DB;
-import de.qStivi.ICommand;
-import de.qStivi.commands.rpg.slots.SlotsCommand;
 
 import java.sql.SQLException;
 import java.text.Normalizer;
@@ -20,8 +20,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import static org.slf4j.LoggerFactory.getLogger;
 import static de.qStivi.Bot.DEV_CHANNEL_ID;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class CommandManager extends ListenerAdapter {
     private static final Logger logger = getLogger(CommandManager.class);
@@ -98,6 +98,8 @@ public class CommandManager extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
 
+
+
         var channelID = event.getChannel().getIdLong();
         var channel = event.getChannel();
         var parent = channel.getParent();
@@ -106,6 +108,17 @@ public class CommandManager extends ListenerAdapter {
 
         if (author.isBot()) return;
         if (event.isWebhookMessage()) return;
+
+
+        try {
+            if (DB.getInstance().getLastJail(event.getAuthor().getIdLong()) + TimeUnit.HOURS.toMillis(1) > new Date().getTime()) {
+                event.getMessage().reply("You can not do anything while in jail!").queue();
+                return;
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
         if (Bot.DEV_MODE) {
             if (channelID != DEV_CHANNEL_ID) {
                 return;

@@ -35,7 +35,8 @@ public class DB {
                 "LastVoiceJoin" INTEGER             NOT NULL DEFAULT 0,
                 "XPChat"        INTEGER             NOT NULL DEFAULT 0,
                 "XPReaction"    INTEGER             NOT NULL DEFAULT 0,
-                "XPVoice"       INTEGER             NOT NULL DEFAULT 0
+                "XPVoice"       INTEGER             NOT NULL DEFAULT 0,
+                "LastJail"      INTEGER             NOT NULL DEFAULT 0
                 );
                                   """;
 
@@ -258,6 +259,15 @@ public class DB {
                 INSERT INTO "UserData"("UserID", "LastReaction")
                 VALUES (%s, %s)
                 ON CONFLICT("UserID") DO UPDATE SET "LastReaction" = %s
+                WHERE "UserID" = %s;
+                """.formatted(UserID, value, value, UserID));
+    }
+
+    public void setLastJail(long value, long UserID) throws SQLException {
+        connection.createStatement().execute("""
+                INSERT INTO "UserData"("UserID", "LastJail")
+                VALUES (%s, %s)
+                ON CONFLICT("UserID") DO UPDATE SET "LastJail" = %s
                 WHERE "UserID" = %s;
                 """.formatted(UserID, value, value, UserID));
     }
@@ -818,6 +828,18 @@ public class DB {
         long value = 0;
         while (result.next()) {
             value = result.getLong("LastReaction");
+        }
+        return value;
+    }
+
+    public Long getLastJail(long UserID) throws SQLException {
+        String sql = """
+                select "LastJail" from "UserData" where "UserID" = %s
+                """.formatted(UserID);
+        var result = connection.createStatement().executeQuery(sql);
+        long value = 0;
+        while (result.next()) {
+            value = result.getLong("LastJail");
         }
         return value;
     }
