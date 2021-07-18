@@ -1,7 +1,6 @@
 package de.qStivi;
 
 import de.qStivi.commands.rpg.BlackjackCommand;
-import de.qStivi.items.DevItem;
 import de.qStivi.items.Items;
 import de.qStivi.listeners.*;
 import net.dv8tion.jda.api.JDA;
@@ -46,10 +45,8 @@ public class Bot {
                         ControlsManager.getINSTANCE(),
                         new Listener(),
                         new BlackjackCommand(),
-                        new CommandManager(),
                         new ReactionRoles(),
-                        new ButtonListener(),
-                        new EventManager()
+                        new EventsPreprocessor()
                 )
                 .enableCache(
                         CacheFlag.VOICE_STATE,

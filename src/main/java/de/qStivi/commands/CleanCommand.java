@@ -1,7 +1,7 @@
 package de.qStivi.commands;
 
 import de.qStivi.commands.rpg.SkillsCommand;
-import de.qStivi.listeners.CommandManager;
+import de.qStivi.listeners.CommandHandler;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class CleanCommand implements ICommand {
-    private static final Logger logger = getLogger(CommandManager.class);
+    private static final Logger logger = getLogger(CommandHandler.class);
     private long xp;
 
     @SuppressWarnings("ConstantConditions")

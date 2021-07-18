@@ -5,7 +5,6 @@ import de.qStivi.DB;
 import de.qStivi.items.Items;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.Button;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -15,11 +14,11 @@ import java.util.ArrayList;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class ButtonListener extends ListenerAdapter {
-    private static final Logger logger = getLogger(ButtonListener.class);
+public class ButtonClickEventHandler implements IButtonClickEvent {
+    private static final Logger logger = getLogger(ButtonClickEventHandler.class);
 
     @Override
-    public void onButtonClick(@NotNull ButtonClickEvent event) {
+    public void handle(@NotNull ButtonClickEvent event) {
         try {
             event.deferEdit().complete();
             var button = event.getButton();

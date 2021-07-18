@@ -132,14 +132,6 @@ public class Listener extends ListenerAdapter {
             if (event.isWebhookMessage()) return;
 
 
-            try {
-                if (DB.getInstance().getLastJail(event.getAuthor().getIdLong()) + TimeUnit.HOURS.toMillis(1) > new Date().getTime()) {
-                    event.getMessage().reply("You can not do anything while in jail!").queue();
-                    return;
-                }
-            } catch (SQLException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
 
             if (Bot.DEV_MODE) {
                 if (channelID != DEV_CHANNEL_ID) {
@@ -175,14 +167,6 @@ public class Listener extends ListenerAdapter {
     @SuppressWarnings({"DuplicatedCode", "ConstantConditions"})
     @Override
     public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
-
-        try {
-            if (DB.getInstance().getLastJail(event.getUser().getIdLong()) + TimeUnit.HOURS.toMillis(1) > new Date().getTime()){
-                return;
-            }
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
         new Thread(() -> {
 
             var channelID = event.getChannel().getIdLong();

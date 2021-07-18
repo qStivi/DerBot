@@ -9,7 +9,6 @@ import de.qStivi.commands.music.*;
 import de.qStivi.commands.rpg.*;
 import de.qStivi.commands.rpg.slots.SlotsCommand;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -23,13 +22,13 @@ import java.util.concurrent.TimeUnit;
 import static de.qStivi.Bot.DEV_CHANNEL_ID;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class CommandManager extends ListenerAdapter {
-    private static final Logger logger = getLogger(CommandManager.class);
+public class CommandHandler implements IGuildMessageReceivedEvent {
+    private static final Logger logger = getLogger(CommandHandler.class);
 
     public final List<ICommand> commandList = new ArrayList<>();
     public final BlockingQueue<Command> queue = new LinkedBlockingQueue<>();
 
-    public CommandManager() {
+    public CommandHandler() {
         logger.debug("Registering commands.");
         commandList.add(new TestCommand());
         commandList.add(new RollCommand());
@@ -96,7 +95,7 @@ public class CommandManager extends ListenerAdapter {
 
     @SuppressWarnings({"ConstantConditions", "DuplicatedCode"})
     @Override
-    public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+    public void handle(@NotNull GuildMessageReceivedEvent event) {
 
 
 
@@ -105,19 +104,6 @@ public class CommandManager extends ListenerAdapter {
         var parent = channel.getParent();
         var categoryID = parent == null ? 0 : parent.getIdLong();
         var author = event.getAuthor();
-
-        if (author.isBot()) return;
-        if (event.isWebhookMessage()) return;
-
-
-        try {
-            if (DB.getInstance().getLastJail(event.getAuthor().getIdLong()) + TimeUnit.HOURS.toMillis(1) > new Date().getTime()) {
-                event.getMessage().reply("You can not do anything while in jail!").queue();
-                return;
-            }
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
 
         if (Bot.DEV_MODE) {
             if (channelID != DEV_CHANNEL_ID) {
@@ -184,38 +170,5 @@ public class CommandManager extends ListenerAdapter {
 
     private boolean isCommand(GuildMessageReceivedEvent event) {
         return event.getMessage().getContentRaw().toLowerCase().strip().startsWith("/");
-    }
-}
-
-class Command {
-    ICommand command;
-    GuildMessageReceivedEvent event;
-    String[] args;
-    DB db = DB.getInstance();
-
-    public Command(ICommand command, GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
-        this.command = command;
-        this.event = event;
-        this.args = args;
-    }
-
-    void handle() throws SQLException, ClassNotFoundException, InterruptedException {
-        var reply = event.getMessage().reply("Loading...").complete();
-
-        this.command.handle(this.event, this.args, this.db, reply);
-
-        getLogger(CommandManager.class).info(event.getAuthor().getAsTag() + " used /" + command.getName());
-
-        var name = command.getName();
-        var id = event.getAuthor().getIdLong();
-        var db = DB.getInstance();
-
-        var xp = command.getXp() * Bot.happyHour;
-        db.incrementXP(xp, id);
-        db.incrementCommandXP(name, xp, id);
-        if (!name.equalsIgnoreCase("slots")) db.incrementCommandTimesHandled(name, 1, id);
-        if (!name.equalsIgnoreCase("work")) db.setCommandLastHandled(name, new Date().getTime(), id);
-
-        System.gc(); // Because Memory usage gets crazy after a while
     }
 }
