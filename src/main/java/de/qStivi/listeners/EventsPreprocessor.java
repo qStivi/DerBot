@@ -2,6 +2,7 @@ package de.qStivi.listeners;
 
 import de.qStivi.Bot;
 import de.qStivi.DB;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -53,7 +54,11 @@ public class EventsPreprocessor extends ListenerAdapter {
     private boolean isUserPermitted(@NotNull GuildMessageReceivedEvent event) throws SQLException, ClassNotFoundException {
         var author = event.getAuthor();
         if (event.isWebhookMessage() || author.isBot()) return false;
-        if (DB.getInstance().getLastJail(author.getIdLong()) + TimeUnit.MINUTES.toMillis(1) > new Date().getTime()) return false;
+        if (DB.getInstance().getLastJail(author.getIdLong()) + TimeUnit.MINUTES.toMillis(1) > new Date().getTime()) {
+            event.getMessage().reply("You are still in Jail.").complete();
+            event.getMessage().delete().queue();
+            return false;
+        }
         return true;
     }
 

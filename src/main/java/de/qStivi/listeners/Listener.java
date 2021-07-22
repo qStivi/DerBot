@@ -164,7 +164,7 @@ public class Listener extends ListenerAdapter {
         }).start();
     }
 
-    @SuppressWarnings({"DuplicatedCode", "ConstantConditions"})
+    @SuppressWarnings({"ConstantConditions"})
     @Override
     public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
         new Thread(() -> {

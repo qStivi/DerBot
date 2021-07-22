@@ -1,6 +1,7 @@
 package de.qStivi.listeners;
 
 import de.qStivi.DB;
+import de.qStivi.events.ContestWinEvent;
 import de.qStivi.events.DevEvent;
 import de.qStivi.events.IEvent;
 import de.qStivi.events.JailEvent;
@@ -14,11 +15,12 @@ import java.util.List;
 
 public class EventsHandler implements IGuildMessageReceivedEvent {
     public static final List<IEvent> EVENTS = new ArrayList<>();
-    private static final double CHANCE = .5;
+    private static final double CHANCE = .1;
 
     public EventsHandler() {
         EVENTS.add(new DevEvent());
         EVENTS.add(new JailEvent());
+        EVENTS.add(new ContestWinEvent());
     }
 
     @Override
