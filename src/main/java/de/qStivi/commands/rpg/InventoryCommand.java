@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+// TODO add button for all items
 public class InventoryCommand implements ICommand {
     @Override
     public void handle(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException, InterruptedException {

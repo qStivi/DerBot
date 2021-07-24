@@ -1,10 +1,7 @@
 package de.qStivi.listeners;
 
 import de.qStivi.DB;
-import de.qStivi.events.ContestWinEvent;
-import de.qStivi.events.DevEvent;
-import de.qStivi.events.IEvent;
-import de.qStivi.events.JailEvent;
+import de.qStivi.events.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,6 +18,7 @@ public class EventsHandler implements IGuildMessageReceivedEvent {
         EVENTS.add(new DevEvent());
         EVENTS.add(new JailEvent());
         EVENTS.add(new ContestWinEvent());
+        EVENTS.add(new GettingSickEvent());
     }
 
     @Override
@@ -30,7 +28,7 @@ public class EventsHandler implements IGuildMessageReceivedEvent {
             try {
                 var db = DB.getInstance();
                 Collections.shuffle(EVENTS);
-                EVENTS.get(0).execute(event, db);
+                EVENTS.get(0).execute(event, db,event.getAuthor());
             } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
