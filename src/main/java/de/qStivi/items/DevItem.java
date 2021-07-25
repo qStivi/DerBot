@@ -2,6 +2,7 @@ package de.qStivi.items;
 
 import de.qStivi.*;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
 
@@ -11,7 +12,7 @@ public class DevItem implements IItem {
     private static final Logger logger = getLogger(Bot.class);
 
     @Override
-    public void use(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) {
+    public void use(GuildMessageReceivedEvent event, String[] args, DB db, Message reply, User author) {
         logger.info(getStaticItemName() + " has been used.");
         event.getChannel().sendMessage("yee").queue();
     }

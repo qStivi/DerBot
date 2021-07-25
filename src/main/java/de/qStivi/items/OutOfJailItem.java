@@ -4,13 +4,14 @@ import de.qStivi.Category;
 import de.qStivi.DB;
 import de.qStivi.Rarity;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.sql.SQLException;
 
 public class OutOfJailItem implements IItem{
     @Override
-    public void use(GuildMessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException {
+    public void use(GuildMessageReceivedEvent event, String[] args, DB db, Message reply, User author) throws SQLException, ClassNotFoundException {
         event.getChannel().sendMessage("TODO").queue();
     }
 

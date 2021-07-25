@@ -12,7 +12,7 @@ import java.util.List;
 
 public class EventsHandler implements IGuildMessageReceivedEvent {
     public static final List<IEvent> EVENTS = new ArrayList<>();
-    private static final double CHANCE = .1;
+    private static final double CHANCE = .8;
 
     public EventsHandler() {
         EVENTS.add(new DevEvent());
