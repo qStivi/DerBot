@@ -2,7 +2,6 @@ package de.qStivi.listeners;
 
 import de.qStivi.Bot;
 import de.qStivi.DB;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -64,8 +63,7 @@ public class EventsPreprocessor extends ListenerAdapter {
 
     private boolean isUserPermitted(@NotNull ButtonClickEvent event) throws SQLException, ClassNotFoundException {
         var author = event.getUser();
-        if (author.isBot()) return false;
-        if (DB.getInstance().getLastJail(author.getIdLong()) + TimeUnit.MINUTES.toMillis(1) > new Date().getTime()) return false;
-        return true;
+        return !author.isBot();
+        //if (DB.getInstance().getLastJail(author.getIdLong()) + TimeUnit.MINUTES.toMillis(1) > new Date().getTime()) return false;
     }
 }

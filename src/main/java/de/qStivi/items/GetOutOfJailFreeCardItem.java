@@ -9,11 +9,10 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.sql.SQLException;
 
-public class GetOutOfJailFreeCardItem implements IItem{
+public class GetOutOfJailFreeCardItem implements IItem {
     @Override
     public void use(GuildMessageReceivedEvent event, String[] args, DB db, Message reply, User author) throws SQLException, ClassNotFoundException {
-        db.setLastJail(0, author.getIdLong());
-        reply.editMessage("You have been freed.").queue();
+        reply.editMessage("TODO").queue();
     }
 
     @Override
