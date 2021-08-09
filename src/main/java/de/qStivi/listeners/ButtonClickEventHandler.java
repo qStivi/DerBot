@@ -62,13 +62,15 @@ public class ButtonClickEventHandler implements IButtonClickEvent {
                     var sortedItemIDs = new ArrayList<Long>();
                     for (long itemID : itemIDs) {
                         var item = db.getItem(itemID);
-                        if (item.getCategory().name().equals(buttonId)) sortedItemIDs.add(itemID);
+                        if (item.getCategory().name().equals(buttonId) || buttonId.equalsIgnoreCase("all")) {
+                            sortedItemIDs.add(itemID);
+                        }
                     }
 
                     switch (buttonId) {
                         case "CATEGORY1" -> {
                             hook.editOriginalComponents().setActionRow(
-                                    Button.success("inv " + Category.CATEGORY1.name(), Category.CATEGORY1.name()).asDisabled(),
+                                    Button.success("inv " + "ALL", "All").asDisabled(),
                                     Button.primary("inv " + Category.CATEGORY2.name(), Category.CATEGORY2.name()),
                                     Button.primary("inv " + Category.CATEGORY3.name(), Category.CATEGORY3.name()),
                                     Button.primary("inv " + Category.CATEGORY4.name(), Category.CATEGORY4.name())
@@ -77,7 +79,7 @@ public class ButtonClickEventHandler implements IButtonClickEvent {
                         }
                         case "CATEGORY2" -> {
                             hook.editOriginalComponents().setActionRow(
-                                    Button.primary("inv " + Category.CATEGORY1.name(), Category.CATEGORY1.name()),
+                                    Button.success("inv " + "ALL", "All").asDisabled(),
                                     Button.success("inv " + Category.CATEGORY2.name(), Category.CATEGORY2.name()).asDisabled(),
                                     Button.primary("inv " + Category.CATEGORY3.name(), Category.CATEGORY3.name()),
                                     Button.primary("inv " + Category.CATEGORY4.name(), Category.CATEGORY4.name())
@@ -86,7 +88,7 @@ public class ButtonClickEventHandler implements IButtonClickEvent {
                         }
                         case "CATEGORY3" -> {
                             hook.editOriginalComponents().setActionRow(
-                                    Button.primary("inv " + Category.CATEGORY1.name(), Category.CATEGORY1.name()),
+                                    Button.success("inv " + "ALL", "All").asDisabled(),
                                     Button.primary("inv " + Category.CATEGORY2.name(), Category.CATEGORY2.name()),
                                     Button.success("inv " + Category.CATEGORY3.name(), Category.CATEGORY3.name()).asDisabled(),
                                     Button.primary("inv " + Category.CATEGORY4.name(), Category.CATEGORY4.name())
@@ -95,7 +97,7 @@ public class ButtonClickEventHandler implements IButtonClickEvent {
                         }
                         case "CATEGORY4" -> {
                             hook.editOriginalComponents().setActionRow(
-                                    Button.primary("inv " + Category.CATEGORY1.name(), Category.CATEGORY1.name()),
+                                    Button.success("inv " + "ALL", "All").asDisabled(),
                                     Button.primary("inv " + Category.CATEGORY2.name(), Category.CATEGORY2.name()),
                                     Button.primary("inv " + Category.CATEGORY3.name(), Category.CATEGORY3.name()),
                                     Button.success("inv " + Category.CATEGORY4.name(), Category.CATEGORY4.name()).asDisabled()
