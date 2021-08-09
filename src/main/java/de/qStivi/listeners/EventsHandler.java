@@ -1,7 +1,8 @@
 package de.qStivi.listeners;
 
 import de.qStivi.DB;
-import de.qStivi.events.*;
+import de.qStivi.events.GetItemEvent;
+import de.qStivi.events.IEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -19,10 +20,7 @@ public class EventsHandler implements IGuildMessageReceivedEvent {
     private static final double CHANCE = .8;
 
     public EventsHandler() {
-        EVENTS.add(new DevEvent());
-        EVENTS.add(new JailEvent());
-        EVENTS.add(new ContestWinEvent());
-        EVENTS.add(new GettingSickEvent());
+        EVENTS.add(new GetItemEvent());
     }
 
     @Override
