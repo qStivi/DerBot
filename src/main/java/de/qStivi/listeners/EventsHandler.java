@@ -1,8 +1,7 @@
 package de.qStivi.listeners;
 
 import de.qStivi.DB;
-import de.qStivi.events.GetItemEvent;
-import de.qStivi.events.IEvent;
+import de.qStivi.events.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -21,6 +20,9 @@ public class EventsHandler implements IGuildMessageReceivedEvent {
 
     public EventsHandler() {
         EVENTS.add(new GetItemEvent());
+        EVENTS.add(new GetMoneyEvent());
+        EVENTS.add(new LooseMoneyEvent());
+        EVENTS.add(new JailEvent());
     }
 
     @Override
@@ -31,7 +33,7 @@ public class EventsHandler implements IGuildMessageReceivedEvent {
                 var db = DB.getInstance();
                 Collections.shuffle(EVENTS);
                 EVENTS.get(0).execute(event, db, event.getAuthor());
-                logger.info(EVENTS.get(0).getClass().getSimpleName() + "has been triggered.");
+                logger.info(EVENTS.get(0).getClass().getSimpleName() + " has been triggered.");
             } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
             }

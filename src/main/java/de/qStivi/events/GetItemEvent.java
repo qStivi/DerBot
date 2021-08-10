@@ -27,6 +27,7 @@ public class GetItemEvent implements IEvent {
     public void execute(GuildMessageReceivedEvent event, DB db, User author) throws SQLException {
         var rarity = getRandomWeightedRarity();
         var item = getRandomItemByRarity(rarity);
+        if (item == null) return;
 
         var messages = Arrays.stream(MESSAGES).collect(Collectors.toList());
         Collections.shuffle(messages);
@@ -57,6 +58,6 @@ public class GetItemEvent implements IEvent {
     public IItem getRandomItemByRarity(Rarity rarity) {
         var filteredItems = Arrays.stream(ITEMS).filter(iItem -> iItem.getRarity() == rarity).toList();
         Collections.shuffle(filteredItems);
-        return filteredItems.get(0);
+        return filteredItems.size() > 0 ? filteredItems.get(0) : null;
     }
 }
