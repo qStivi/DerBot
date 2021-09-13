@@ -67,12 +67,12 @@ public class PlayerManager {
 
             @Override
             public void noMatches() {
-
+                // TODO Do something here!
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
-
+                // TODO Do something here!
             }
 
 

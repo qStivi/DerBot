@@ -2,9 +2,7 @@ package de.qStivi.events;
 
 import de.qStivi.DB;
 import de.qStivi.Rarity;
-import de.qStivi.items.DevItem;
-import de.qStivi.items.GetOutOfJailFreeCardItem;
-import de.qStivi.items.IItem;
+import de.qStivi.items.*;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
@@ -15,12 +13,17 @@ import java.util.stream.Collectors;
 
 public class GetItemEvent implements IEvent {
     private final static String[] MESSAGES = {
-            "TODO",
-            "Some text"
+            "*Minecraft item pickup plop*",
+            "*Zelda item sound*",
+            "NPC: 'Thank you for helping me! Here, have this.",
+            "You found a hidden treasure! *Arrr!*",
+            "You stumbled upon a pokestop."
     };
     private final static IItem[] ITEMS = {
             new DevItem(),
-            new GetOutOfJailFreeCardItem()
+            new GetOutOfJailFreeCardItem(),
+            new XPPotionItem(),
+            new LootBoxItem()
     };
 
     @Override
@@ -33,9 +36,9 @@ public class GetItemEvent implements IEvent {
         Collections.shuffle(messages);
         var message = messages.get(0);
 
-        event.getMessage().reply(message + " You'll receive a(n) " + item.getDisplayName()).queue();
-
         db.insertItem(author.getIdLong(), item);
+
+        event.getMessage().reply(message + "\nYou received a(n) " + item.getDisplayName()).queue();
     }
 
     public Rarity getRandomWeightedRarity() {

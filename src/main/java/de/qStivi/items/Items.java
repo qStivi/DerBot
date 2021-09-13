@@ -11,7 +11,7 @@ public class Items {
         ITEMS.add(new LuckPotionItem());
         ITEMS.add(new XPPotionItem());
         ITEMS.add(new LootBoxItem());
-        ITEMS.add(new GetOutOfJailFreeCardItem());
+//        ITEMS.add(new GetOutOfJailFreeCardItem());
     }
 
     public static IItem getItemByDisplayName(String displayName) {

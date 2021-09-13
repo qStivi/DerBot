@@ -11,8 +11,10 @@ import java.util.stream.Collectors;
 
 public class LooseMoneyEvent implements IEvent {
     private static final String[] MESSAGES = {
-            "TODO",
-            "Some Text",
+            "Taxes...",
+            "You got robbed!",
+            "A Fa7al 3RR0R ha5 0ccurr3d!",
+            "You got robbed! Call Lamar to get your revenge.",
             "You hurt yourself in confusion."
     };
 
@@ -24,8 +26,6 @@ public class LooseMoneyEvent implements IEvent {
 
         var money = (long) (Math.random() * 100000);
 
-        event.getMessage().reply(message + " You'll have to pay " + money + ":gem:").queue();
-
         var id = author.getIdLong();
         var bank = db.getMoney(id);
         if (bank >= money) {
@@ -33,5 +33,7 @@ public class LooseMoneyEvent implements IEvent {
         } else {
             db.decrementMoney(bank, id);
         }
+
+        event.getMessage().reply(message + "\nYou lost " + money + ":gem:").queue();
     }
 }

@@ -11,9 +11,12 @@ import java.util.stream.Collectors;
 
 public class GetMoneyEvent implements IEvent {
     private static final String[] MESSAGES = {
-            "TODO",
-            "Some Text",
-            "Congratulations you won in a race!"
+            "Your piggy bank was getting quite heavy.",
+            "You found a purse and decided to keep the money.\n*Not nice...*",
+            "Congratulations you won in a race!",
+            "Free parking!",
+            "$$$ Tax returns $$$",
+            "You get vacation money."
     };
 
     @Override
@@ -24,8 +27,8 @@ public class GetMoneyEvent implements IEvent {
 
         var money = (long) (Math.random() * 1000000);
 
-        event.getMessage().reply(message + " You'll receive " + money + ":gem:").queue();
-
         db.incrementMoney(money, author.getIdLong());
+
+        event.getMessage().reply(message + "\nYou received " + money + ":gem:").queue();
     }
 }
