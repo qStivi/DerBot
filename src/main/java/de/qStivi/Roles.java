@@ -43,7 +43,7 @@ public class Roles {
     public static final Role VALORANT = new Role(VALORANT_ID, Emotes.VALORANT);
     private static final long CSGO_ID = 846819632161226803L;
     public static final Role CSGO = new Role(CSGO_ID, Emotes.CSGO);
-    private static final long RAINBOW_ID = 846819632161226803L;
+    private static final long RAINBOW_ID = 846827756767281182L;
     public static final Role RAINBOW = new Role(RAINBOW_ID, Emotes.RAINBOW);
     private static final long ROUNDS_ID = 846829319091126293L;
     public static final Role ROUNDS = new Role(ROUNDS_ID, Emotes.ROUNDS);
