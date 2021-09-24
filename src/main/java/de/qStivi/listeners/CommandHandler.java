@@ -1,17 +1,16 @@
 package de.qStivi.listeners;
 
+import de.qStivi.Bot;
+import de.qStivi.DB;
+import de.qStivi.ICommand;
 import de.qStivi.Util;
 import de.qStivi.commands.*;
 import de.qStivi.commands.music.*;
 import de.qStivi.commands.rpg.*;
+import de.qStivi.commands.rpg.slots.SlotsCommand;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
-import de.qStivi.Bot;
-import de.qStivi.DB;
-import de.qStivi.ICommand;
-import de.qStivi.commands.rpg.slots.SlotsCommand;
 
 import java.sql.SQLException;
 import java.text.Normalizer;
@@ -20,16 +19,16 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import static org.slf4j.LoggerFactory.getLogger;
 import static de.qStivi.Bot.DEV_CHANNEL_ID;
+import static org.slf4j.LoggerFactory.getLogger;
 
-public class CommandManager extends ListenerAdapter {
-    private static final Logger logger = getLogger(CommandManager.class);
+public class CommandHandler implements IGuildMessageReceivedEvent {
+    private static final Logger logger = getLogger(CommandHandler.class);
 
     public final List<ICommand> commandList = new ArrayList<>();
     public final BlockingQueue<Command> queue = new LinkedBlockingQueue<>();
 
-    public CommandManager() {
+    public CommandHandler() {
         logger.debug("Registering commands.");
         commandList.add(new TestCommand());
         commandList.add(new RollCommand());
@@ -60,6 +59,11 @@ public class CommandManager extends ListenerAdapter {
         commandList.add(new SalesCommand());
         commandList.add(new InfoCommand());
         commandList.add(new ScoreCommand());
+        commandList.add(new InventoryCommand());
+        commandList.add(new UseCommand());
+        commandList.add(new TradeCommand());
+        commandList.add(new ShopCommand());
+        commandList.add(new BuyCommand());
 
         var timer = new Timer();
 
@@ -91,7 +95,9 @@ public class CommandManager extends ListenerAdapter {
 
     @SuppressWarnings({"ConstantConditions", "DuplicatedCode"})
     @Override
-    public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+    public void handle(@NotNull GuildMessageReceivedEvent event) {
+
+
 
         var channelID = event.getChannel().getIdLong();
         var channel = event.getChannel();
@@ -99,8 +105,6 @@ public class CommandManager extends ListenerAdapter {
         var categoryID = parent == null ? 0 : parent.getIdLong();
         var author = event.getAuthor();
 
-        if (author.isBot()) return;
-        if (event.isWebhookMessage()) return;
         if (Bot.DEV_MODE) {
             if (channelID != DEV_CHANNEL_ID) {
                 return;
@@ -166,36 +170,5 @@ public class CommandManager extends ListenerAdapter {
 
     private boolean isCommand(GuildMessageReceivedEvent event) {
         return event.getMessage().getContentRaw().toLowerCase().strip().startsWith("/");
-    }
-}
-
-class Command {
-    ICommand command;
-    GuildMessageReceivedEvent event;
-    String[] args;
-    DB db = DB.getInstance();
-
-    public Command(ICommand command, GuildMessageReceivedEvent event, String[] args) throws SQLException, ClassNotFoundException {
-        this.command = command;
-        this.event = event;
-        this.args = args;
-    }
-
-    void handle() throws SQLException, ClassNotFoundException, InterruptedException {
-        var reply = event.getMessage().reply("Loading...").complete();
-
-        this.command.handle(this.event, this.args, this.db, reply);
-
-        var name = command.getName();
-        var id = event.getAuthor().getIdLong();
-        var db = DB.getInstance();
-
-        var xp = command.getXp() * Bot.happyHour;
-        db.incrementXP(xp, id);
-        db.incrementCommandXP(name, xp, id);
-        if (!name.equalsIgnoreCase("slots")) db.incrementCommandTimesHandled(name, 1, id);
-        if (!name.equalsIgnoreCase("work")) db.setCommandLastHandled(name, new Date().getTime(), id);
-
-        System.gc(); // Because Memory usage gets crazy after a while
     }
 }

@@ -60,7 +60,7 @@ public class CrawlerResult {
                 String team = name.toString();
                 team = team.replaceAll(pattern1, "");
                 team = cleanForCommand(team);
-                if (allReadyIn(team) == false && !team.startsWith("<")) {
+                if (!allReadyIn(team) && !team.startsWith("<")) {
                     teams.add(team);
                 }
             }
@@ -124,8 +124,7 @@ public class CrawlerResult {
     }
 
     private static boolean isNumber(String s) {
-        boolean condition = s.matches("[0-9]");
-        return condition;
+        return s.matches("[0-9]");
     }
 
 

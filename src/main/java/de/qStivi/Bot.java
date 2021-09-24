@@ -1,8 +1,10 @@
 package de.qStivi;
 
+import com.oblac.nomen.Nomen;
 import de.qStivi.commands.rpg.BlackjackCommand;
-import de.qStivi.listeners.CommandManager;
+import de.qStivi.items.Items;
 import de.qStivi.listeners.ControlsManager;
+import de.qStivi.listeners.EventsPreprocessor;
 import de.qStivi.listeners.Listener;
 import de.qStivi.listeners.ReactionRoles;
 import net.dv8tion.jda.api.JDA;
@@ -33,6 +35,11 @@ public class Bot {
     public static long happyHour = 1;
 
     public static void main(String[] args) throws LoginException, SQLException, ClassNotFoundException {
+
+        for (int i = 0; i < 50; i++) {
+            System.out.println(Nomen.randomName());
+        }
+
         logger.info(String.valueOf(Bot.DEV_MODE));
         var token = DEV_MODE ? Config.get("DEV_TOKEN") : Config.get("TOKEN");
 
@@ -43,19 +50,41 @@ public class Bot {
 
         logger.info("Bot token: " + token);
         JDA jda = JDABuilder.createLight(token)
-                .addEventListeners(ControlsManager.getINSTANCE(), new Listener(), new BlackjackCommand(), new CommandManager(), new ReactionRoles())
-                .enableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE)
-                .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
+                .addEventListeners(
+                        ControlsManager.getINSTANCE(),
+                        new Listener(),
+                        new BlackjackCommand(),
+                        new ReactionRoles(),
+                        new EventsPreprocessor()
+                )
+                .enableCache(
+                        CacheFlag.VOICE_STATE,
+                        CacheFlag.EMOTE
+                )
+                .enableIntents(
+                        GatewayIntent.GUILD_MESSAGE_REACTIONS,
+                        GatewayIntent.GUILD_MESSAGES,
+                        GatewayIntent.GUILD_VOICE_STATES,
+                        GatewayIntent.GUILD_MEMBERS,
+                        GatewayIntent.GUILD_PRESENCES
+                )
                 .setChunkingFilter(ChunkingFilter.NONE)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
-                .setLargeThreshold(50)
+                .setLargeThreshold(250)
                 .setActivity(getActivity())
                 .build();
 
-        DB.getInstance();
-        new Events(jda);
+        var db = DB.getInstance();
+
+        new Items();
+
+//        db.insertItem(219108246143631364L, new DevItem());
+//        db.insertItem(219108246143631364L, new DevItem());
+//        db.insertItem(219108246143631364L, new DevItem());
 
         if (DEV_MODE) return; // Don't continue if in development mode.
+
+        new Events(jda);
 
         activityUpdate.schedule(new TimerTask() {
             @Override

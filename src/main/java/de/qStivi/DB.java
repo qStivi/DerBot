@@ -1,5 +1,7 @@
 package de.qStivi;
 
+import de.qStivi.items.IItem;
+import de.qStivi.items.Items;
 import de.qStivi.sportBet.crawler.CrawlerInfo;
 import de.qStivi.sportBet.crawler.CrawlerResult;
 import de.qStivi.sportBet.objects.Match;
@@ -33,7 +35,8 @@ public class DB {
                 "LastVoiceJoin" INTEGER             NOT NULL DEFAULT 0,
                 "XPChat"        INTEGER             NOT NULL DEFAULT 0,
                 "XPReaction"    INTEGER             NOT NULL DEFAULT 0,
-                "XPVoice"       INTEGER             NOT NULL DEFAULT 0
+                "XPVoice"       INTEGER             NOT NULL DEFAULT 0,
+                "LastJail"      INTEGER             NOT NULL DEFAULT 0
                 );
                                   """;
 
@@ -104,6 +107,16 @@ public class DB {
                     );
                                 """;
 
+        String setupItemsTable = """
+                CREATE TABLE IF NOT EXISTS "Items"
+                (
+                    "UniqueItemID" INTEGER NOT NULL NOT NULL PRIMARY KEY,
+                    "UserID"       INTEGER NOT NULL,
+                    "ItemName"     TEXT    NOT NULL,
+                    FOREIGN KEY ("UserID") REFERENCES "UserData" ("UserID") ON UPDATE CASCADE ON DELETE CASCADE
+                );
+                """;
+
 
         if (connection != null) {
             var stmt = connection.createStatement();
@@ -116,6 +129,7 @@ public class DB {
             stmt.addBatch(insertLottoPool);
             stmt.addBatch(setupSkillTree);
             stmt.addBatch(createWette);
+            stmt.addBatch(setupItemsTable);
             stmt.executeBatch();
         }
 
@@ -245,6 +259,15 @@ public class DB {
                 INSERT INTO "UserData"("UserID", "LastReaction")
                 VALUES (%s, %s)
                 ON CONFLICT("UserID") DO UPDATE SET "LastReaction" = %s
+                WHERE "UserID" = %s;
+                """.formatted(UserID, value, value, UserID));
+    }
+
+    public void setLastJail(long value, long UserID) throws SQLException {
+        connection.createStatement().execute("""
+                INSERT INTO "UserData"("UserID", "LastJail")
+                VALUES (%s, %s)
+                ON CONFLICT("UserID") DO UPDATE SET "LastJail" = %s
                 WHERE "UserID" = %s;
                 """.formatted(UserID, value, value, UserID));
     }
@@ -809,6 +832,18 @@ public class DB {
         return value;
     }
 
+    public Long getLastJail(long UserID) throws SQLException {
+        String sql = """
+                select "LastJail" from "UserData" where "UserID" = %s
+                """.formatted(UserID);
+        var result = connection.createStatement().executeQuery(sql);
+        long value = 0;
+        while (result.next()) {
+            value = result.getLong("LastJail");
+        }
+        return value;
+    }
+
     public Long getLastVoiceJoin(long UserID) throws SQLException {
         String sql = """
                 select "LastVoiceJoin" from "UserData" where "UserID" = %s
@@ -1128,13 +1163,13 @@ public class DB {
         for (int i = 0; i < teams.size(); i++) {
             var winner = CrawlerResult.isWinner(teams.get(i));
             var team = teams.get(i);
-            if (CrawlerResult.isFinished(url, new ArrayList<String>(), team) && winner) {
+            if (CrawlerResult.isFinished(url, new ArrayList<>(), team) && winner) {
                 String sql2 = "UPDATE UserData SET Money = Money + %s * %s WHERE UserID = %s"
                         .formatted(bet.get(i), quote.get(i), userID);
                 statement.executeUpdate(sql2);
                 String sql3 = "DELETE FROM Wette WHERE Mannschaft = '%s' AND UserID = %s".formatted(teams.get(i), userID);
                 statement.executeUpdate(sql3);
-            } else if (CrawlerResult.isFinished(url, new ArrayList<String>(), team)) {
+            } else if (CrawlerResult.isFinished(url, new ArrayList<>(), team)) {
                 String sql3 = "DELETE FROM Wette WHERE Mannschaft = '%s' AND UserID = %s".formatted(teams.get(i), userID);
                 statement.executeUpdate(sql3);
             }
@@ -1180,4 +1215,63 @@ public class DB {
         return a;
     }
 
+    public List<Long> getUniqueItemIDs(long UserID) throws SQLException {
+        List<Long> list = new ArrayList<>();
+        var result = connection.createStatement().executeQuery("""
+                SELECT "UniqueItemID" FROM "Items" WHERE "UserID" == %s;
+                """.formatted(UserID));
+        while (result.next()) {
+            list.add(result.getLong("UniqueItemID"));
+        }
+        return list;
+    }
+
+    public long getItemOwnerID(long UniqueItemID) throws SQLException {
+        var owner = 0L;
+        var result = connection.createStatement().executeQuery("""
+                SELECT "UserID" FROM "Items" WHERE "UniqueItemID" == %s;
+                """.formatted(UniqueItemID));
+        while (result.next()) {
+            owner = result.getLong("UserID");
+        }
+        return owner;
+    }
+
+    public IItem getItem(long UniqueItemID) throws SQLException {
+        var result = connection.createStatement().executeQuery("""
+                SELECT "ItemName" FROM "Items" WHERE "UniqueItemID" == %s;
+                """.formatted(UniqueItemID));
+        String itemID = null;
+        while (result.next()) {
+            itemID = result.getString("ItemName");
+        }
+        String finalItemID = itemID;
+        var first = Items.ITEMS.stream().filter(item1 -> item1.getStaticItemName().equals(finalItemID)).findFirst();
+        return first.get();
+    }
+
+    public List<Long> getItems(long UserID) throws SQLException {
+        var result = connection.createStatement().executeQuery("""
+                SELECT "UniqueItemID" FROM "Items" WHERE "UserID" == %s;
+                """.formatted(UserID));
+        var uniqueItemIDs = new ArrayList<Long>();
+        while (result.next()) {
+            uniqueItemIDs.add(result.getLong("UniqueItemID"));
+        }
+        return uniqueItemIDs;
+    }
+
+    public void insertItem(long UserID, IItem item) throws SQLException {
+        connection.createStatement().execute("""
+                INSERT INTO "Items"("UserID", "ItemName")
+                VALUES (%s, '%s');
+                """.formatted(UserID, item.getStaticItemName()));
+    }
+
+    public void removeItem(long UserID, Long UniqueItemID) throws SQLException {
+        connection.createStatement().execute("""
+                DELETE FROM "Items"
+                WHERE "UserID" == %s AND "UniqueItemID" = %s;
+                """.formatted(UserID, UniqueItemID));
+    }
 }

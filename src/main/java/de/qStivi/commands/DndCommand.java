@@ -31,12 +31,12 @@ public class DndCommand implements ICommand {
         happyList.add("https://www.youtube.com/watch?v=gzdqmYrtOl0"); // Sword Art Online Original Soundtrack Vol 1 30 with my friend
         happyList.add("https://www.youtube.com/watch?v=x0q1u6YDoO0"); // Sword Art Online OST - The First Town
         happyList.add("https://www.youtube.com/watch?v=_pGaz_qN0cw"); // Lord of the Rings - Concerning Hobbits
-        happyList.add("https://www.youtube.com/watch?v=l5hbBL9h1GI"); // Goblin Slayer OST - 04 - Written Request Notice
-        happyList.add("https://www.youtube.com/watch?v=cL6IglpnI2Y"); // Goblin Slayer OST - 06 - Ushikai Musume's Morning
-        happyList.add("https://www.youtube.com/watch?v=ywVhbtysZ9o"); // Goblin Slayer OST - 08 - The Days of Orcbolg
-        happyList.add("https://www.youtube.com/watch?v=57pmN8ZSP0M"); // Goblin Slayer OST - 03 - Remoted Street
-        happyList.add("https://www.youtube.com/watch?v=pzuWlTRmWJc"); // Goblin Slayer OST - 05 - Guild
-        happyList.add("https://www.youtube.com/watch?v=-uHjKeWkZOM"); // Goblin Slayer OST - 07 - Meal with Comrade~Sweet!!
+        happyList.add("https://www.youtube.com/watch?v=l5hbBL9h1GI"); // Goblin Slayer OST - 04 - Written Request Notice (broken)
+        happyList.add("https://www.youtube.com/watch?v=cL6IglpnI2Y"); // Goblin Slayer OST - 06 - Ushikai Musume's Morning (broken)
+        happyList.add("https://www.youtube.com/watch?v=ywVhbtysZ9o"); // Goblin Slayer OST - 08 - The Days of Orcbolg (broken)
+        happyList.add("https://www.youtube.com/watch?v=57pmN8ZSP0M"); // Goblin Slayer OST - 03 - Remoted Street (broken)
+        happyList.add("https://www.youtube.com/watch?v=pzuWlTRmWJc"); // Goblin Slayer OST - 05 - Guild (broken)
+        happyList.add("https://www.youtube.com/watch?v=-uHjKeWkZOM"); // Goblin Slayer OST - 07 - Meal with Comrade~Sweet!! (broken)
         happyList.add("https://youtu.be/xoRv-ygQs-s"); // Danmachi I OST - Meikyuu Toshi Orario
         happyList.add("https://youtu.be/zSao8Q7ngTE"); // Danmachi I OST - Yasashisa ni Tsutsumareta nara
         happyList.add("https://youtu.be/rgP4DgevQzs"); // Danmachi I OST - Eizokusuru Toki no Naka de

@@ -5,7 +5,7 @@
     <option name="VM_PARAMETERS" value="-Xmx8G" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="de.qStivi.*" />
+        <option name="PATTERN" value="de.qStivi.items.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
