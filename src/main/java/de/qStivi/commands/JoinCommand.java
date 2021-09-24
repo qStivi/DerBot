@@ -1,13 +1,13 @@
 package de.qStivi.commands;
 
+import de.qStivi.DB;
+import de.qStivi.ICommand;
 import de.qStivi.commands.rpg.SkillsCommand;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
-import de.qStivi.DB;
-import de.qStivi.ICommand;
 
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -22,7 +22,6 @@ public class JoinCommand implements ICommand {
                 (channel) -> channel.getMembers().forEach(
                         (member) -> {
                             if (member.getId().equals(author.getId())) {
-                                //audioManager = guild.getAudioManager();
                                 guild.getAudioManager().openAudioConnection(channel);
                                 successful.set(true);
                             }
