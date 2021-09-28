@@ -54,8 +54,8 @@
     <orderEntry type="library" name="Maven: org.apache.httpcomponents.client5:httpclient5:5.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents.core5:httpcore5:5.0.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents.core5:httpcore5-h2:5.0.2" level="project" />
-    <orderEntry type="library" name="Maven: com.oblac:nomen-est-omen:2.1.0" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.7.30" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.7.31" level="project" />
     <orderEntry type="library" name="Maven: org.jsoup:jsoup:1.14.2" level="project" />
+    <orderEntry type="library" name="Maven: com.oblac:nomen-est-omen:2.1.0" level="project" />
   </component>
 </module>
