@@ -13,7 +13,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: net.dv8tion:JDA:4.2.1_253" level="project" />
+    <orderEntry type="library" name="Maven: net.dv8tion:JDA:4.3.0_283" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.2" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains:annotations:16.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
@@ -56,5 +56,6 @@
     <orderEntry type="library" name="Maven: org.apache.httpcomponents.core5:httpcore5-h2:5.0.2" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.7.32" level="project" />
     <orderEntry type="library" name="Maven: org.jsoup:jsoup:1.14.2" level="project" />
+    <orderEntry type="library" name="Maven: com.oblac:nomen-est-omen:2.1.0" level="project" />
   </component>
 </module>
