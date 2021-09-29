@@ -117,6 +117,74 @@ public class DB {
                 );
                 """;
 
+        String petsTable = """
+                CREATE TABLE IF NOT EXISTS "Pets"
+                (
+                    "PetID" INTEGER PRIMARY KEY NOT NULL,
+                    "Name"  TEXT                NOT NULL,
+                    "Level" INTEGER             NOT NULL DEFAULT 0,
+                    "Sex"   INTEGER             NOT NULL,
+                    "Type"  INTEGER             NOT NULL
+                );
+                """;
+
+        String petSkillTree = """
+                CREATE TABLE IF NOT EXISTS "PetSkillTree"
+                (
+                    "PetID"      INTEGER PRIMARY KEY NOT NULL,
+                    "Health"     INTEGER             NOT NULL DEFAULT 0,
+                    "Mana"       INTEGER             NOT NULL DEFAULT 0,
+                    "Exhaustion" INTEGER             NOT NULL DEFAULT 0,
+                    "Food"       INTEGER             NOT NULL DEFAULT 0,
+                    "Happiness"  INTEGER             NOT NULL DEFAULT 0,
+                    FOREIGN KEY ("PetID") REFERENCES "Pets" ("PetID") ON UPDATE CASCADE ON DELETE CASCADE
+                );
+                """;
+
+        String petMaxStats = """
+                CREATE TABLE IF NOT EXISTS "PetMaxStats"
+                (
+                    "PetID"      INTEGER PRIMARY KEY NOT NULL,
+                    "Health"     INTEGER             NOT NULL DEFAULT 0,
+                    "Mana"       INTEGER             NOT NULL DEFAULT 0,
+                    "Exhaustion" INTEGER             NOT NULL DEFAULT 0,
+                    "Food"       INTEGER             NOT NULL DEFAULT 0,
+                    "Happiness"  INTEGER             NOT NULL DEFAULT 0,
+                    FOREIGN KEY ("PetID") REFERENCES "Pets" ("PetID") ON UPDATE CASCADE ON DELETE CASCADE
+                );
+                """;
+
+        String petCurrentStats = """
+                CREATE TABLE IF NOT EXISTS "PetCurrentStats"
+                (
+                    "PetID"      INTEGER PRIMARY KEY NOT NULL,
+                    "Health"     INTEGER             NOT NULL DEFAULT 0,
+                    "Mana"       INTEGER             NOT NULL DEFAULT 0,
+                    "Exhaustion" INTEGER             NOT NULL DEFAULT 0,
+                    "Food"       INTEGER             NOT NULL DEFAULT 0,
+                    "Happiness"  INTEGER             NOT NULL DEFAULT 0,
+                    FOREIGN KEY ("PetID") REFERENCES "Pets" ("PetID") ON UPDATE CASCADE ON DELETE CASCADE
+                );
+                """;
+
+        String petInventory = """
+                CREATE TABLE IF NOT EXISTS "PetInventory"
+                (
+                    "PetID"  INTEGER PRIMARY KEY NOT NULL,
+                    "ItemID" INTEGER,
+                    FOREIGN KEY ("PetID") REFERENCES "Pets" ("PetID") ON UPDATE CASCADE ON DELETE CASCADE
+                );
+                """;
+
+        String petAbilityList = """
+                CREATE TABLE IF NOT EXISTS "PetAbilityList"
+                (
+                    "PetID"     INTEGER PRIMARY KEY NOT NULL,
+                    "AbilityID" INTEGER,
+                    FOREIGN KEY ("PetID") REFERENCES "Pets" ("PetID") ON UPDATE CASCADE ON DELETE CASCADE
+                );
+                """;
+
 
         if (connection != null) {
             var stmt = connection.createStatement();
@@ -130,6 +198,12 @@ public class DB {
             stmt.addBatch(setupSkillTree);
             stmt.addBatch(createWette);
             stmt.addBatch(setupItemsTable);
+            stmt.addBatch(petsTable);
+            stmt.addBatch(petSkillTree);
+            stmt.addBatch(petMaxStats);
+            stmt.addBatch(petCurrentStats);
+            stmt.addBatch(petInventory);
+            stmt.addBatch(petAbilityList);
             stmt.executeBatch();
         }
 
