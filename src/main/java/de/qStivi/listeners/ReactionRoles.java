@@ -1,5 +1,9 @@
 package de.qStivi.listeners;
 
+import de.qStivi.Bot;
+import de.qStivi.Emotes;
+import de.qStivi.Role;
+import de.qStivi.Roles;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -10,10 +14,6 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemove
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
-import de.qStivi.Bot;
-import de.qStivi.Emotes;
-import de.qStivi.Role;
-import de.qStivi.Roles;
 
 import java.util.Objects;
 
@@ -66,7 +66,7 @@ public class ReactionRoles extends ListenerAdapter {
                 case "Epic" -> addRoleToMember(event, Roles.EPIC);
                 case "Reddit" -> addRoleToMember(event, Roles.REDDIT);
                 case "NewWorld" -> addRoleToMember(event, Roles.NEWWORLD);
-                case "Disney+" -> addRoleToMember(event, Roles.DISNEY);
+                case "Disney" -> addRoleToMember(event, Roles.DISNEY);
                 case "Prime" -> addRoleToMember(event, Roles.PRIME);
                 case "Netflix" -> addRoleToMember(event, Roles.NETFLIX);
                 case "Stonks" -> addRoleToMember(event, Roles.STONKS);
@@ -228,7 +228,6 @@ public class ReactionRoles extends ListenerAdapter {
         addField(event, games, Roles.CIV);
         addField(event, games, Roles.ARK);
         addField(event, games, Roles.GTA);
-        addField(event, games, Roles.HEARTHSTONE);
         addField(event, games, Roles.ROCKETLEAGUE);
         addField(event, games, Roles.AMONGUS);
         addField(event, games, Roles.VALORANT);
@@ -275,7 +274,7 @@ public class ReactionRoles extends ListenerAdapter {
 
         channel.editMessageById(846850718462902272L, "@everyone\nIn this Channel you can give yourself roles which will be pinged when something relevant happens or someone wants to talk to you. Simply react with the corresponding emote and your role will be granted. If you want to remove a role simply remove your reaction.").queue();
 
-        channel.editMessageById(846850719305695272L, games.build()
+        channel.editMessageEmbedsById(846850719305695272L, games.build()
         ).queue(message -> {
             message.addReaction(Emotes.LOL).queue();
             message.addReaction(Emotes.MINECRAFT).queue();
@@ -285,7 +284,6 @@ public class ReactionRoles extends ListenerAdapter {
             message.addReaction(Emotes.CIV).queue();
             message.addReaction(Emotes.ARK).queue();
             message.addReaction(Emotes.GTA).queue();
-            message.addReaction(Emotes.HEARTHSTONE).queue();
             message.addReaction(Emotes.ROCKETLEAGUE).queue();
             message.addReaction(Emotes.AMONGUS).queue();
             message.addReaction(Emotes.VALORANT).queue();
@@ -299,7 +297,7 @@ public class ReactionRoles extends ListenerAdapter {
             message.addReaction(Emotes.DIABLO).queue();
             message.addReaction(Emotes.NEWWORLD).queue();
         });
-        channel.editMessageById(846850723395928144L, other.build()
+        channel.editMessageEmbedsById(846850723395928144L, other.build()
         ).queue(message -> {
             message.addReaction(Emotes.PLAYSTATION).queue();
             message.addReaction(Emotes.BOT).queue();
@@ -318,7 +316,7 @@ public class ReactionRoles extends ListenerAdapter {
             message.addReaction(Emotes.STONKS).queue();
             message.addReaction("\uD83C\uDF7E").queue();
         });
-        channel.editMessageById(846850724528914463L, colors.build()
+        channel.editMessageEmbedsById(846850724528914463L, colors.build()
         ).queue(message -> {
             message.addReaction("\uD83D\uDFE4").queue();
             message.addReaction("\uD83D\uDFE2").queue();
