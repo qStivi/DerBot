@@ -81,4 +81,14 @@ public class Roles {
     public static final Role NINTENDO = new Role(NINTENDO_ID, Emotes.SWITCH);
     private static final long REDDIT_ID = 854633174544941106L;
     public static final Role REDDIT = new Role(REDDIT_ID, Emotes.REDDIT);
+    private static final long NEWWORLD_ID = 894631786552897546L;
+    public static final Role NEWWORLD = new Role(NEWWORLD_ID, Emotes.NEWWORLD);
+    private static final long DISNEY_ID = 894649454257385493L;
+    public static final Role DISNEY = new Role(DISNEY_ID, Emotes.DISNEY);
+    private static final long PRIME_ID = 894649937038561311L;
+    public static final Role PRIME = new Role(PRIME_ID, Emotes.PRIME);
+    private static final long NETFLIX_ID = 894650445077831773L;
+    public static final Role NETFLIX = new Role(NETFLIX_ID, Emotes.NETFLIX);
+    private static final long STONKS_ID = 894650732492517376L;
+    public static final Role STONKS = new Role(STONKS_ID, Emotes.STONKS);
 }

@@ -65,6 +65,11 @@ public class ReactionRoles extends ListenerAdapter {
                 case "Steam" -> addRoleToMember(event, Roles.STEAM);
                 case "Epic" -> addRoleToMember(event, Roles.EPIC);
                 case "Reddit" -> addRoleToMember(event, Roles.REDDIT);
+                case "NewWorld" -> addRoleToMember(event, Roles.NEWWORLD);
+                case "Disney+" -> addRoleToMember(event, Roles.DISNEY);
+                case "Prime" -> addRoleToMember(event, Roles.PRIME);
+                case "Netflix" -> addRoleToMember(event, Roles.NETFLIX);
+                case "Stonks" -> addRoleToMember(event, Roles.STONKS);
                 case "♟" -> addRoleToMember(event, Roles.TABLETOP);
                 case "\uD83C\uDF7E" -> addRoleToMember(event, Roles.ALCOHOL);
                 case "\uD83D\uDFE4" -> addRoleToMember(event, Roles.BROWN);
@@ -176,6 +181,11 @@ public class ReactionRoles extends ListenerAdapter {
                 case "Steam" -> removeRoleFromMember(event, Roles.STEAM);
                 case "Epic" -> removeRoleFromMember(event, Roles.EPIC);
                 case "Reddit" -> removeRoleFromMember(event, Roles.REDDIT);
+                case "NewWorld" -> removeRoleFromMember(event, Roles.NEWWORLD);
+                case "Disney" -> removeRoleFromMember(event, Roles.DISNEY);
+                case "Prime" -> removeRoleFromMember(event, Roles.PRIME);
+                case "Netflix" -> removeRoleFromMember(event, Roles.NETFLIX);
+                case "Stonks" -> removeRoleFromMember(event, Roles.STONKS);
                 case "♟" -> removeRoleFromMember(event, Roles.TABLETOP);
                 case "\uD83C\uDF7E" -> removeRoleFromMember(event, Roles.ALCOHOL);
                 case "\uD83D\uDFE4" -> removeRoleFromMember(event, Roles.BROWN);
@@ -230,6 +240,7 @@ public class ReactionRoles extends ListenerAdapter {
         addField(event, games, Roles.FORTNITE);
         games.addField(Roles.TABLETOP.getEmoteID(), guild.getRoleById(Roles.TABLETOP.getRoleID()).getAsMention(), true);
         addField(event, games, Roles.DIABLO);
+        addField(event, games, Roles.NEWWORLD);
 
         EmbedBuilder other = new EmbedBuilder();
         other.setTitle("Other");
@@ -245,6 +256,10 @@ public class ReactionRoles extends ListenerAdapter {
         addField(event, other, Roles.STEAM);
         addField(event, other, Roles.EPIC);
         addField(event, other, Roles.REDDIT);
+        addField(event, other, Roles.DISNEY);
+        addField(event, other, Roles.PRIME);
+        addField(event, other, Roles.NETFLIX);
+        addField(event, other, Roles.STONKS);
         other.addField(Roles.ALCOHOL.getEmoteID(), guild.getRoleById(Roles.ALCOHOL.getRoleID()).getAsMention(), true);
 
         EmbedBuilder colors = new EmbedBuilder();
@@ -282,6 +297,7 @@ public class ReactionRoles extends ListenerAdapter {
             message.addReaction(Emotes.FORTNITE).queue();
             message.addReaction("♟").queue();
             message.addReaction(Emotes.DIABLO).queue();
+            message.addReaction(Emotes.NEWWORLD).queue();
         });
         channel.editMessageById(846850723395928144L, other.build()
         ).queue(message -> {
@@ -296,6 +312,10 @@ public class ReactionRoles extends ListenerAdapter {
             message.addReaction(Emotes.STEAM).queue();
             message.addReaction(Emotes.EPIC).queue();
             message.addReaction(Emotes.REDDIT).queue();
+            message.addReaction(Emotes.DISNEY).queue();
+            message.addReaction(Emotes.PRIME).queue();
+            message.addReaction(Emotes.NETFLIX).queue();
+            message.addReaction(Emotes.STONKS).queue();
             message.addReaction("\uD83C\uDF7E").queue();
         });
         channel.editMessageById(846850724528914463L, colors.build()

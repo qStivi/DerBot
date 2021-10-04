@@ -89,6 +89,11 @@ public class Emotes {
     public final static String STEAM = "Steam:854628425095839754";
     public final static String EPIC = "Epic:854630286943191050";
     public final static String REDDIT = "Reddit:856821271248502815";
+    public static final String NEWWORLD = "NewWorld:894633335576481792";
+    public static final String DISNEY = "Disney:894643148221992982";
+    public static final String PRIME = "Prime:894643869692620860";
+    public static final String NETFLIX = "Netflix:894648447548940378";
+    public static final String STONKS = "Stonks:894648973313327154";
     public final static String TABLETOP = "♟";
     public final static String ALCOHOL = "\uD83C\uDF7E";
     public final static String BROWN = "\uD83D\uDFE4";
