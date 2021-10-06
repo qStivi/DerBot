@@ -155,4 +155,22 @@ public class Pets {
     public void setHappiness(int happiness) {
         this.happiness = happiness;
     }
+
+    enum Sex {
+        MALE,
+        FEMALE
+    }
+
+    enum Type {
+        FIRE,
+        WATER,
+        EARTH,
+        AIR,
+        GRASS,
+        CRYSTAL,
+        PSYCHIC,
+        GHOST,
+        ELECTRIC,
+        ICE
+    }
 }
