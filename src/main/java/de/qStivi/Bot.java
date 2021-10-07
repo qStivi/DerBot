@@ -1,6 +1,5 @@
 package de.qStivi;
 
-import com.oblac.nomen.Nomen;
 import de.qStivi.commands.rpg.BlackjackCommand;
 import de.qStivi.items.Items;
 import de.qStivi.listeners.ControlsManager;
@@ -35,10 +34,6 @@ public class Bot {
     public static long happyHour = 1;
 
     public static void main(String[] args) throws LoginException, SQLException, ClassNotFoundException {
-
-        for (int i = 0; i < 50; i++) {
-            System.out.println(Nomen.randomName());
-        }
 
         logger.info(String.valueOf(Bot.DEV_MODE));
         var token = DEV_MODE ? Config.get("DEV_TOKEN") : Config.get("TOKEN");

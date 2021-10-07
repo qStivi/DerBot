@@ -1348,4 +1348,34 @@ public class DB {
                 WHERE "UserID" == %s AND "UniqueItemID" = %s;
                 """.formatted(UserID, UniqueItemID));
     }
+
+    public void createPet(String name, int level, int sex, int type, int maxHealth, int maxMana, int maxStamina, int maxFood, int maxHappiness) throws SQLException {
+        var id = getHighestPetID() + 1;
+        connection.createStatement().execute("""
+                INSERT INTO "Pets"("PetID", "Name", "Level", "Sex", "Type")
+                VALUES (%s, '%s', %s, %s, %s);
+                """.formatted(id, name, level, sex, type));
+        connection.createStatement().execute("""
+                INSERT INTO "PetMaxStats"(PetID, Health, Mana, Exhaustion, Food, Happiness)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                """.formatted(id, maxHealth, maxMana, maxStamina, maxFood, maxHappiness));
+        connection.createStatement().execute("""
+                INSERT INTO "PetCurrentStats"(PetID, Health, Mana, Exhaustion, Food, Happiness)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                """.formatted(id, maxHealth, maxMana, maxStamina, maxFood, maxHappiness));
+    }
+
+    public int getHighestPetID() throws SQLException {
+        var result = connection.createStatement().executeQuery("""
+                SELECT *
+                FROM "Pets"
+                ORDER BY "PetID" DESC
+                LIMIT 1
+                """);
+        var id = 0;
+        while (result.next()) {
+            id = result.getInt("PetID");
+        }
+        return id;
+    }
 }

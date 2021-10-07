@@ -7,6 +7,7 @@ import de.qStivi.Util;
 import de.qStivi.commands.*;
 import de.qStivi.commands.music.*;
 import de.qStivi.commands.rpg.*;
+import de.qStivi.commands.rpg.pets.FindPetCommand;
 import de.qStivi.commands.rpg.slots.SlotsCommand;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -64,6 +65,7 @@ public class CommandHandler implements IGuildMessageReceivedEvent {
         commandList.add(new TradeCommand());
         commandList.add(new ShopCommand());
         commandList.add(new BuyCommand());
+        commandList.add(new FindPetCommand());
 
         var timer = new Timer();
 
