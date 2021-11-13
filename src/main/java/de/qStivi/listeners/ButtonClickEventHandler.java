@@ -118,8 +118,17 @@ public class ButtonClickEventHandler implements IButtonClickEvent {
                     event.getMessage().editMessageEmbeds(embed.build()).complete();
                 }
             }
+
+            if (prefix.equals("catchPet")) {
+                usePokeball(buttonId);
+            }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
+
+    private void usePokeball(String id) {
+
+    }
+
 }

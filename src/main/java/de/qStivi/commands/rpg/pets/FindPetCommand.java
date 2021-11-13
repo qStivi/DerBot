@@ -7,6 +7,7 @@ import de.qStivi.Pet;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.components.Button;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
@@ -41,7 +42,10 @@ public class FindPetCommand implements ICommand {
         embed.addField("Food", String.valueOf(pet.getFood()), false);
         embed.addField("Happiness", String.valueOf(pet.getHappiness()), false);
         embed.setFooter("Sex: " + pet.getSex() + " | Type: " + pet.getType());
-        reply.editMessageEmbeds(embed.build()).queue();
+        reply.editMessageEmbeds(embed.build())
+                .setActionRow(
+                        Button.primary("catchPet " + pet.getID(), "Catch")
+                ).queue();
     }
 
     @NotNull
