@@ -1,10 +1,7 @@
 package de.qStivi.listeners;
 
 import de.qStivi.DB;
-import de.qStivi.events.GetItemEvent;
-import de.qStivi.events.GetMoneyEvent;
 import de.qStivi.events.IEvent;
-import de.qStivi.events.LooseMoneyEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -15,9 +12,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class EventsHandler implements IGuildMessageReceivedEvent {
     private static final Event[] EVENTS = new Event[]{
-            new Event(new GetItemEvent(), .05f),
-            new Event(new GetMoneyEvent(), .4f),
-            new Event(new LooseMoneyEvent(), .55f),
+//            new Event(new GetItemEvent(), .05f),
+//            new Event(new GetMoneyEvent(), .4f),
+//            new Event(new LooseMoneyEvent(), .55f),
 //            new Event(new JailEvent(), .1f)
     };
     private static final Logger logger = getLogger(EventsHandler.class);
