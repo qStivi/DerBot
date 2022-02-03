@@ -75,7 +75,7 @@ public class Bot {
 
         var db = DB.getInstance();
 
-        new Items();
+        var yee = new Items();
 
 //        db.insertItem(219108246143631364L, new DevItem());
 //        db.insertItem(219108246143631364L, new DevItem());
