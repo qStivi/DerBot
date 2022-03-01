@@ -82,7 +82,7 @@ public class Emotes {
     public final static String ROUNDS = "Rounds:846829130795581470";
     public final static String PUMMELPARTY = "Pummel:846832039697449007";
     public final static String SATISFACTORY = "Satisfactory:846833471947407410";
-    public final static String FORTNITE = "Fortnite:846836183748706354";
+    public final static String LOSTARK = "LostArk:943268240761712710";
     public final static String ANIME = "ayaya:846839910862028811";
     public final static String DIABLO = "Diablo3:846841047954096188";
     public final static String CODING = "Coding:849929211263057950";

@@ -58,7 +58,7 @@ public class ReactionRoles extends ListenerAdapter {
                 case "Rounds" -> addRoleToMember(event, Roles.ROUNDS);
                 case "Pummel" -> addRoleToMember(event, Roles.PUMMELPARTY);
                 case "Satisfactory" -> addRoleToMember(event, Roles.SATISFACTORY);
-                case "Fortnite" -> addRoleToMember(event, Roles.FORTNITE);
+                case "LostArk" -> addRoleToMember(event, Roles.LOSTARK);
                 case "ayaya" -> addRoleToMember(event, Roles.ANIME);
                 case "Diablo3" -> addRoleToMember(event, Roles.DIABLO);
                 case "Coding" -> addRoleToMember(event, Roles.CODING);
@@ -174,7 +174,7 @@ public class ReactionRoles extends ListenerAdapter {
                 case "Rounds" -> removeRoleFromMember(event, Roles.ROUNDS);
                 case "Pummel" -> removeRoleFromMember(event, Roles.PUMMELPARTY);
                 case "Satisfactory" -> removeRoleFromMember(event, Roles.SATISFACTORY);
-                case "Fortnite" -> removeRoleFromMember(event, Roles.FORTNITE);
+                case "LostArk" -> removeRoleFromMember(event, Roles.LOSTARK);
                 case "ayaya" -> removeRoleFromMember(event, Roles.ANIME);
                 case "Diablo3" -> removeRoleFromMember(event, Roles.DIABLO);
                 case "Coding" -> removeRoleFromMember(event, Roles.CODING);
@@ -236,7 +236,7 @@ public class ReactionRoles extends ListenerAdapter {
         addField(event, games, Roles.ROUNDS);
         addField(event, games, Roles.PUMMELPARTY);
         addField(event, games, Roles.SATISFACTORY);
-        addField(event, games, Roles.FORTNITE);
+        addField(event, games, Roles.LOSTARK);
         games.addField(Roles.TABLETOP.getEmoteID(), guild.getRoleById(Roles.TABLETOP.getRoleID()).getAsMention(), true);
         addField(event, games, Roles.DIABLO);
         addField(event, games, Roles.NEWWORLD);
@@ -292,7 +292,7 @@ public class ReactionRoles extends ListenerAdapter {
             message.addReaction(Emotes.ROUNDS).queue();
             message.addReaction(Emotes.PUMMELPARTY).queue();
             message.addReaction(Emotes.SATISFACTORY).queue();
-            message.addReaction(Emotes.FORTNITE).queue();
+            message.addReaction(Emotes.LOSTARK).queue();
             message.addReaction("♟").queue();
             message.addReaction(Emotes.DIABLO).queue();
             message.addReaction(Emotes.NEWWORLD).queue();

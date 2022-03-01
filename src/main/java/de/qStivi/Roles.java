@@ -51,8 +51,8 @@ public class Roles {
     public static final Role PUMMELPARTY = new Role(PUMMELPARTY_ID, Emotes.PUMMELPARTY);
     private static final long SATISFACTORY_ID = 846833665191051314L;
     public static final Role SATISFACTORY = new Role(SATISFACTORY_ID, Emotes.SATISFACTORY);
-    private static final long FORTNITE_ID = 846836340729315379L;
-    public static final Role FORTNITE = new Role(FORTNITE_ID, Emotes.FORTNITE);
+    private static final long LOSTARK_ID = 943267341184159744L;
+    public static final Role LOSTARK = new Role(LOSTARK_ID, Emotes.LOSTARK);
     private static final long ANIME_ID = 846838972093300786L;
     public static final Role ANIME = new Role(ANIME_ID, Emotes.ANIME);
     private static final long DIABLO_ID = 846830616129175642L;
