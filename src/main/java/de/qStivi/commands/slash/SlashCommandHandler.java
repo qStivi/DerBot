@@ -42,7 +42,7 @@ public class SlashCommandHandler extends ListenerAdapter {
         for (var command : commands) {
             if (command.getCommand().getName().equals(event.getName())) {
                 logger.debug("Handling command...");
-                command.handle(event);
+                new Thread(() -> command.handle(event)).start();
                 logger.debug("Command handled!");
                 return;
             }

@@ -12,15 +12,13 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.time.Instant;
 import java.util.List;
 
 public class TestCommand implements ISlashCommand {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+//    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public void handle(SlashCommandInteractionEvent event) {

@@ -7,10 +7,6 @@ import de.qStivi.events.SelectMenuTestEvent;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.utils.ChunkingFilter;
-import net.dv8tion.jda.api.utils.MemberCachePolicy;
-import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 
 import javax.security.auth.login.LoginException;
@@ -65,12 +61,12 @@ public class Bot {
                         SlashCommandHandler.getInstance(),
                         new SelectMenuTestEvent(),
                         new ButtonTestEvent())
-                .enableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE)
-                .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
-                .setChunkingFilter(ChunkingFilter.NONE)
-                .setMemberCachePolicy(MemberCachePolicy.ALL)
-                .setLargeThreshold(250)
-                .setActivity(getActivity())
+//                .enableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE)
+//                .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
+//                .setChunkingFilter(ChunkingFilter.NONE)
+//                .setMemberCachePolicy(MemberCachePolicy.ALL)
+//                .setLargeThreshold(250)
+//                .setActivity(getActivity())
                 .build();
 
         DB.getInstance();
