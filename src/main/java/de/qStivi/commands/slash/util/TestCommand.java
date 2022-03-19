@@ -18,10 +18,12 @@ import java.time.Instant;
 import java.util.List;
 
 public class TestCommand implements ISlashCommand {
+
 //    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public void handle(SlashCommandInteractionEvent event) {
+
         var hook = event.getHook();
         hook.editOriginal("Select menu with default").queue();
 
@@ -79,18 +81,21 @@ public class TestCommand implements ISlashCommand {
     @NotNull
     @Override
     public CommandData getCommand() {
+
         return Commands.slash(getName(), getDescription());
     }
 
     @NotNull
     @Override
     public String getName() {
+
         return "test";
     }
 
     @NotNull
     @Override
     public String getDescription() {
+
         return "For testing purposes.";
     }
 }

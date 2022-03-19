@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SlashCommandHandler extends ListenerAdapter {
+
     private static SlashCommandHandler instance;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final List<ISlashCommand> commands = new ArrayList<>();
