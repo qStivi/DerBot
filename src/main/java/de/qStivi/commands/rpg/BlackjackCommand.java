@@ -1,10 +1,11 @@
 //package de.qStivi.commands.rpg;
 //
-//import de.qStivi.*;
+//import de.qStivi.BlackJack;
+//import de.qStivi.Bot;
+//import de.qStivi.Card;
+//import de.qStivi.DB;
 //import net.dv8tion.jda.api.entities.Message;
 //import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-//import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-//import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 //import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 //import net.dv8tion.jda.api.hooks.ListenerAdapter;
 //import org.jetbrains.annotations.NotNull;
@@ -72,6 +73,66 @@
 //        xp = 3 + (long) (3 * SkillsCommand.getGambleXPMultiplier(event.getAuthor().getIdLong()));
 //    }
 //
+//    @NotNull
+//    @Override
+//    public String getName() {
+//        return "bj";
+//    }
+//
+//    private void displayGameState(BlackJack bj) {
+//        bj.embed.setFooter(bj.user.getName());
+//        bj.embed.clearFields();
+//        bj.embed.addField("Dealer", String.valueOf(bj.count(bj.dealer)), true);
+//
+//        StringBuilder dealerCards = new StringBuilder();
+//        var dealer = bj.dealer;
+//        for (Card card : dealer) {
+//            dealerCards.append("<:").append(card.emote).append("> ");
+//        }
+//
+//        bj.embed.addField("", dealerCards.toString(), true);
+//
+//
+//        bj.embed.addBlankField(false);
+//
+//
+//        bj.embed.addField("Player", String.valueOf(bj.count(bj.player)), true);
+//
+//        StringBuilder playerCards = new StringBuilder();
+//        var player = bj.player;
+//        for (Card card : player) {
+//            playerCards.append("<:").append(card.emote).append("> ");
+//        }
+//
+//        bj.embed.addField("", playerCards.toString(), true);
+//        bj.reply.editMessage(bj.embed.build()).queue();
+//    }
+//
+//    @SuppressWarnings("SameParameterValue")
+//    private void endGame(@NotNull MessageReceivedEvent event, DB db, BlackJack bj, long reward, String title) throws SQLException {
+//        reward = reward * Bot.happyHour;
+//        var id = event.getMessage().getAuthor().getIdLong();
+//        var messageId = event.getMessageId();
+//        bj.embed.setTitle(title);
+//        db.incrementMoney(reward, id);
+//        db.incrementCommandMoney(getName(), reward, id);
+//        db.setGameLastPlayed(getName(), new Date().getTime(), id);
+//        event.getChannel().clearReactionsById(messageId).queue();
+//        BlackJack.games.remove(bj);
+//        if (title.equalsIgnoreCase("you won!")) {
+//            bj.embed.setColor(Color.green.brighter());
+//            db.incrementGameWins(getName(), 1, id);
+//        }
+//        if (title.equalsIgnoreCase("you lost!")) {
+//            bj.embed.setColor(Color.red.brighter());
+//            db.incrementGameLoses(getName(), 1, id);
+//        }
+//        if (title.equalsIgnoreCase("draw.")) {
+//            bj.embed.setColor(Color.magenta.darker());
+//            db.incrementGameDraws(getName(), 1, id);
+//        }
+//    }
+//
 //    @Override
 //    public void onGuildMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
 //        var user = event.getUser();
@@ -105,8 +166,7 @@
 //                        var dealerHandValue = bj.stand();
 //                        var playerHandValue = bj.count(bj.player);
 //
-//                        if (dealerHandValue > 21 && playerHandValue <= 21)
-//                            endGame(event, db, bj, bj.bet * 2, "You won!");
+//                        if (dealerHandValue > 21 && playerHandValue <= 21) endGame(event, db, bj, bj.bet * 2, "You won!");
 //                        else if (dealerHandValue < playerHandValue) endGame(event, db, bj, bj.bet * 2, "You won!");
 //
 //                        else if (playerHandValue > 21 && dealerHandValue <= 21) {
@@ -147,66 +207,6 @@
 //            bj.embed.setColor(Color.magenta.darker());
 //            db.incrementGameDraws(getName(), 1, id);
 //        }
-//    }
-//
-//    @SuppressWarnings("SameParameterValue")
-//    private void endGame(@NotNull MessageReceivedEvent event, DB db, BlackJack bj, long reward, String title) throws SQLException {
-//        reward = reward * Bot.happyHour;
-//        var id = event.getMessage().getAuthor().getIdLong();
-//        var messageId = event.getMessageId();
-//        bj.embed.setTitle(title);
-//        db.incrementMoney(reward, id);
-//        db.incrementCommandMoney(getName(), reward, id);
-//        db.setGameLastPlayed(getName(), new Date().getTime(), id);
-//        event.getChannel().clearReactionsById(messageId).queue();
-//        BlackJack.games.remove(bj);
-//        if (title.equalsIgnoreCase("you won!")) {
-//            bj.embed.setColor(Color.green.brighter());
-//            db.incrementGameWins(getName(), 1, id);
-//        }
-//        if (title.equalsIgnoreCase("you lost!")) {
-//            bj.embed.setColor(Color.red.brighter());
-//            db.incrementGameLoses(getName(), 1, id);
-//        }
-//        if (title.equalsIgnoreCase("draw.")) {
-//            bj.embed.setColor(Color.magenta.darker());
-//            db.incrementGameDraws(getName(), 1, id);
-//        }
-//    }
-//
-//    private void displayGameState(BlackJack bj) {
-//        bj.embed.setFooter(bj.user.getName());
-//        bj.embed.clearFields();
-//        bj.embed.addField("Dealer", String.valueOf(bj.count(bj.dealer)), true);
-//
-//        StringBuilder dealerCards = new StringBuilder();
-//        var dealer = bj.dealer;
-//        for (Card card : dealer) {
-//            dealerCards.append("<:").append(card.emote).append("> ");
-//        }
-//
-//        bj.embed.addField("", dealerCards.toString(), true);
-//
-//
-//        bj.embed.addBlankField(false);
-//
-//
-//        bj.embed.addField("Player", String.valueOf(bj.count(bj.player)), true);
-//
-//        StringBuilder playerCards = new StringBuilder();
-//        var player = bj.player;
-//        for (Card card : player) {
-//            playerCards.append("<:").append(card.emote).append("> ");
-//        }
-//
-//        bj.embed.addField("", playerCards.toString(), true);
-//        bj.reply.editMessage(bj.embed.build()).queue();
-//    }
-//
-//    @NotNull
-//    @Override
-//    public String getName() {
-//        return "bj";
 //    }
 //
 //    @NotNull

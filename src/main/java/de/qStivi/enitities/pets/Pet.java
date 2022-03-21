@@ -11,12 +11,12 @@ public class Pet extends Entity {
     private final Date age;
     private final Stats baseStats;
     private final Stats trainingStats;
-    private final ArrayList<StatusEffects> statusEffects;
-    private final ArrayList<Abilities> abilities;
+    private final ArrayList<StatusEffect> statusEffects;
+    private final ArrayList<Ability> abilities;
     private double xp;
     private double currentHealth;
 
-    private Pet(String displayName, long id, PetType[] types, Date age, double xp, Stats baseStats, Stats trainingStats, ArrayList<StatusEffects> statusEffects, ArrayList<Abilities> abilities) {
+    private Pet(String displayName, long id, PetType[] types, Date age, double xp, Stats baseStats, Stats trainingStats, ArrayList<StatusEffect> statusEffects, ArrayList<Ability> abilities) {
         super(displayName, id);
         this.types = types;
         this.age = age;
@@ -26,6 +26,10 @@ public class Pet extends Entity {
         this.statusEffects = statusEffects;
         this.abilities = abilities;
         this.currentHealth = getMaxHealth();
+    }
+
+    private double getMaxHealth() {
+        return 0;
     }
 
     private PetType[] getTypes() {
@@ -60,11 +64,11 @@ public class Pet extends Entity {
         return trainingStats;
     }
 
-    private ArrayList<StatusEffects> getStatusEffects() {
+    private ArrayList<StatusEffect> getStatusEffects() {
         return statusEffects;
     }
 
-    private ArrayList<Abilities> getAbilities() {
+    private ArrayList<Ability> getAbilities() {
         return abilities;
     }
 }

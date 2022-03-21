@@ -1,5 +1,6 @@
 package de.qStivi.commands.slash;
 
+import de.qStivi.commands.slash.gamble.blackjack.BlackjackCommand;
 import de.qStivi.commands.slash.util.ShutdownCommand;
 import de.qStivi.commands.slash.util.TestCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -21,6 +22,7 @@ public class SlashCommandHandler extends ListenerAdapter {
         logger.debug("Registering commands.");
         commands.add(new TestCommand());
         commands.add(new ShutdownCommand());
+        commands.add(new BlackjackCommand());
     }
 
     public static SlashCommandHandler getInstance() {

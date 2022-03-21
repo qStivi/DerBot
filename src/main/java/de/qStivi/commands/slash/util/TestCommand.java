@@ -1,7 +1,5 @@
 package de.qStivi.commands.slash.util;
 
-import com.github.koraktor.steamcondenser.exceptions.SteamCondenserException;
-import com.github.koraktor.steamcondenser.steam.community.SteamId;
 import de.qStivi.commands.slash.ISlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -58,14 +56,6 @@ public class TestCommand implements ISlashCommand {
 
         var embed = new EmbedBuilder().setColor(Color.yellow).setTitle("Title", "https://youtu.be/dQw4w9WgXcQ").setFooter("Footer", "https://i.imgur.com/92G7Xbu.gif").setAuthor("Author", "https://youtu.be/dQw4w9WgXcQ", "https://i.imgur.com/92G7Xbu.gif").setDescription("Description").setImage("https://i.imgur.com/92G7Xbu.gif").setThumbnail("https://i.imgur.com/92G7Xbu.gif").setTimestamp(Instant.now()).addField(fieldInlineChecked).addField(fieldInlineChecked).addField(fieldInlineChecked).addField(fieldInline).addField(fieldInline).addField(fieldInline).addField(fieldInline).addBlankField(true).addField(fieldInline).addBlankField(false).addField(fieldChecked).addField(fieldChecked).addField(field).addField(field).build();
 
-        String name = "null";
-        try {
-            SteamId id = SteamId.create("qStivi");
-            name = id.getNickname();
-        } catch (SteamCondenserException e) {
-            e.printStackTrace();
-        }
-
         hook.editOriginalComponents().setActionRow(selectMenuWithDefault).queue();
         hook.getInteraction().getTextChannel().sendMessage("Select menu with placeholder").setActionRow(selectMenuWithPlaceholder).queue();
         hook.getInteraction().getTextChannel().sendMessage("Select menu with multiple").setActionRow(selectMenuWithMultipleValues).queue();
@@ -74,8 +64,6 @@ public class TestCommand implements ISlashCommand {
         hook.getInteraction().getTextChannel().sendMessage("Disabled buttons").setActionRow(disabledPrimaryButton, disabledSecondaryButton, disabledDangerButton, disabledLinkButton, disabledSuccessButton).queue();
 
         hook.getInteraction().getTextChannel().sendMessageEmbeds(embed).queue();
-
-        hook.getInteraction().getTextChannel().sendMessage(name).queue();
     }
 
     @NotNull

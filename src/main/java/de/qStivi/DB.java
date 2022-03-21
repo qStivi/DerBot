@@ -17,113 +17,121 @@ public class DB {
         Class.forName("org.sqlite.JDBC");
 
         String enableForeignKeys = "PRAGMA foreign_keys = ON;";
-        String setupUserDataTable = """
-                CREATE TABLE IF NOT EXISTS "UserData"
+        String setupPlayerTable = """
+                CREATE TABLE IF NOT EXISTS "Players"
                 (
-                "UserID"        INTEGER PRIMARY KEY NOT NULL,
-                "XP"            INTEGER             NOT NULL DEFAULT 0,
-                "Money"         INTEGER             NOT NULL DEFAULT 0,
-                "LastChat"      INTEGER             NOT NULL DEFAULT 0,
-                "LastReaction"  INTEGER             NOT NULL DEFAULT 0,
-                "LastVoiceJoin" INTEGER             NOT NULL DEFAULT 0,
-                "XPChat"        INTEGER             NOT NULL DEFAULT 0,
-                "XPReaction"    INTEGER             NOT NULL DEFAULT 0,
-                "XPVoice"       INTEGER             NOT NULL DEFAULT 0,
-                "LastJail"      INTEGER             NOT NULL DEFAULT 0
-                );
-                                  """;
-
-        String setupSkillTree = """
-                CREATE TABLE IF NOT EXISTS "SkillTrees"
-                (
-                "UserID"      INTEGER PRIMARY KEY NOT NULL,
-                "SkillPoints" INTEGER             NOT NULL DEFAULT 0,
-                "WorkXP"      INTEGER             NOT NULL DEFAULT 0,
-                "WorkMoney"   INTEGER             NOT NULL DEFAULT 0,
-                "GambleXP"    INTEGER             NOT NULL DEFAULT 0,
-                "SocialXP"    INTEGER             NOT NULL DEFAULT 0,
-                "LastReset"   INTEGER             NOT NULL DEFAULT 0,
-                FOREIGN KEY ("UserID") REFERENCES "UserData" ("UserID") ON UPDATE CASCADE ON DELETE CASCADE
-                );
-                                """;
-
-        String setupCommandsStatisticsTable = """
-                CREATE TABLE IF NOT EXISTS "CommandStatistics"
-                (
-                "UserID"       INTEGER NOT NULL,
-                "CommandName"  TEXT    NOT NULL,
-                "TimesHandled" INTEGER NOT NULL DEFAULT 0,
-                "LastHandled"  INTEGER NOT NULL DEFAULT 0,
-                "XP"           INTEGER NOT NULL DEFAULT 0,
-                "Money"        INTEGER NOT NULL DEFAULT 0,
-                FOREIGN KEY ("UserID") REFERENCES "UserData" ("UserID") ON UPDATE CASCADE ON DELETE CASCADE
-                );
-                                """;
-        String setupGameStatisticsTable = """
-                CREATE TABLE IF NOT EXISTS "GameStatistics"
-                (
-                "UserID"     INTEGER NOT NULL,
-                "GameName"   TEXT    NOT NULL,
-                "Plays"      INTEGER NOT NULL DEFAULT 0,
-                "Wins"       INTEGER NOT NULL DEFAULT 0,
-                "Loses"      INTEGER NOT NULL DEFAULT 0,
-                "Draws"      INTEGER NOT NULL DEFAULT 0,
-                "LastPlayed" INTEGER NOT NULL DEFAULT 0,
-                FOREIGN KEY ("UserID") REFERENCES "UserData" ("UserID") ON UPDATE CASCADE ON DELETE CASCADE
-                );
-                                """;
-        String setupLottoTable = """
-                CREATE TABLE IF NOT EXISTS "Lotto"
-                (
-                    "UserID" INTEGER PRIMARY KEY NOT NULL,
-                    "Vote"   INTEGER             NOT NULL DEFAULT 0,
-                    FOREIGN KEY ("UserID") REFERENCES "UserData" ("UserID") ON UPDATE CASCADE ON DELETE CASCADE
-                );
-                  """;
-        String insertLottoPool = """
-                INSERT INTO "Lotto"("UserID", "Vote") VALUES (0, 0) ON CONFLICT DO NOTHING;
-                                """;
-        String insertLottoPoolUser = """
-                INSERT INTO "UserData"("UserID") VALUES (0) ON CONFLICT DO NOTHING;
-                                """;
-
-        String createWette = """
-                create table if not exists Wette(
-                    UserID   int
-                    references UserData,
-                    Mannschaft TEXT,
-                    Einsatz    int,
-                    WettID     INTEGER
-                    constraint Wette_pk
-                    primary key autoincrement,
-                    Quote      double
-                    );
-                                """;
-
-        String setupItemsTable = """
-                CREATE TABLE IF NOT EXISTS "Items"
-                (
-                    "UniqueItemID" INTEGER NOT NULL NOT NULL PRIMARY KEY,
-                    "UserID"       INTEGER NOT NULL,
-                    "ItemName"     TEXT    NOT NULL,
-                    FOREIGN KEY ("UserID") REFERENCES "UserData" ("UserID") ON UPDATE CASCADE ON DELETE CASCADE
+                "ID" INTEGER PRIMARY KEY NOT NULL,
+                "Money" INTEGER NOT NULL DEFAULT 0,
+                "XP" INTEGER NOT NULL DEFAULT 0
                 );
                 """;
+//        String setupUserDataTable = """
+//                CREATE TABLE IF NOT EXISTS "UserData"
+//                (
+//                "UserID"        INTEGER PRIMARY KEY NOT NULL,
+//                "XP"            INTEGER             NOT NULL DEFAULT 0,
+//                "Money"         INTEGER             NOT NULL DEFAULT 0,
+//                "LastChat"      INTEGER             NOT NULL DEFAULT 0,
+//                "LastReaction"  INTEGER             NOT NULL DEFAULT 0,
+//                "LastVoiceJoin" INTEGER             NOT NULL DEFAULT 0,
+//                "XPChat"        INTEGER             NOT NULL DEFAULT 0,
+//                "XPReaction"    INTEGER             NOT NULL DEFAULT 0,
+//                "XPVoice"       INTEGER             NOT NULL DEFAULT 0,
+//                "LastJail"      INTEGER             NOT NULL DEFAULT 0
+//                );
+//                                  """;
+//
+//        String setupSkillTree = """
+//                CREATE TABLE IF NOT EXISTS "SkillTrees"
+//                (
+//                "UserID"      INTEGER PRIMARY KEY NOT NULL,
+//                "SkillPoints" INTEGER             NOT NULL DEFAULT 0,
+//                "WorkXP"      INTEGER             NOT NULL DEFAULT 0,
+//                "WorkMoney"   INTEGER             NOT NULL DEFAULT 0,
+//                "GambleXP"    INTEGER             NOT NULL DEFAULT 0,
+//                "SocialXP"    INTEGER             NOT NULL DEFAULT 0,
+//                "LastReset"   INTEGER             NOT NULL DEFAULT 0,
+//                FOREIGN KEY ("UserID") REFERENCES "UserData" ("UserID") ON UPDATE CASCADE ON DELETE CASCADE
+//                );
+//                                """;
+//
+//        String setupCommandsStatisticsTable = """
+//                CREATE TABLE IF NOT EXISTS "CommandStatistics"
+//                (
+//                "UserID"       INTEGER NOT NULL,
+//                "CommandName"  TEXT    NOT NULL,
+//                "TimesHandled" INTEGER NOT NULL DEFAULT 0,
+//                "LastHandled"  INTEGER NOT NULL DEFAULT 0,
+//                "XP"           INTEGER NOT NULL DEFAULT 0,
+//                "Money"        INTEGER NOT NULL DEFAULT 0,
+//                FOREIGN KEY ("UserID") REFERENCES "UserData" ("UserID") ON UPDATE CASCADE ON DELETE CASCADE
+//                );
+//                                """;
+//        String setupGameStatisticsTable = """
+//                CREATE TABLE IF NOT EXISTS "GameStatistics"
+//                (
+//                "UserID"     INTEGER NOT NULL,
+//                "GameName"   TEXT    NOT NULL,
+//                "Plays"      INTEGER NOT NULL DEFAULT 0,
+//                "Wins"       INTEGER NOT NULL DEFAULT 0,
+//                "Loses"      INTEGER NOT NULL DEFAULT 0,
+//                "Draws"      INTEGER NOT NULL DEFAULT 0,
+//                "LastPlayed" INTEGER NOT NULL DEFAULT 0,
+//                FOREIGN KEY ("UserID") REFERENCES "UserData" ("UserID") ON UPDATE CASCADE ON DELETE CASCADE
+//                );
+//                                """;
+//        String setupLottoTable = """
+//                CREATE TABLE IF NOT EXISTS "Lotto"
+//                (
+//                    "UserID" INTEGER PRIMARY KEY NOT NULL,
+//                    "Vote"   INTEGER             NOT NULL DEFAULT 0,
+//                    FOREIGN KEY ("UserID") REFERENCES "UserData" ("UserID") ON UPDATE CASCADE ON DELETE CASCADE
+//                );
+//                  """;
+//        String insertLottoPool = """
+//                INSERT INTO "Lotto"("UserID", "Vote") VALUES (0, 0) ON CONFLICT DO NOTHING;
+//                                """;
+//        String insertLottoPoolUser = """
+//                INSERT INTO "UserData"("UserID") VALUES (0) ON CONFLICT DO NOTHING;
+//                                """;
+//
+//        String createWette = """
+//                create table if not exists Wette(
+//                    UserID   int
+//                    references UserData,
+//                    Mannschaft TEXT,
+//                    Einsatz    int,
+//                    WettID     INTEGER
+//                    constraint Wette_pk
+//                    primary key autoincrement,
+//                    Quote      double
+//                    );
+//                                """;
+//
+//        String setupItemsTable = """
+//                CREATE TABLE IF NOT EXISTS "Items"
+//                (
+//                    "UniqueItemID" INTEGER NOT NULL NOT NULL PRIMARY KEY,
+//                    "UserID"       INTEGER NOT NULL,
+//                    "ItemName"     TEXT    NOT NULL,
+//                    FOREIGN KEY ("UserID") REFERENCES "UserData" ("UserID") ON UPDATE CASCADE ON DELETE CASCADE
+//                );
+//                """;
 
 
         var connection = connect();
         if (connection != null) {
             var stmt = connection.createStatement();
             stmt.addBatch(enableForeignKeys);
-            stmt.addBatch(setupUserDataTable);
-            stmt.addBatch(setupCommandsStatisticsTable);
-            stmt.addBatch(setupGameStatisticsTable);
-            stmt.addBatch(setupLottoTable);
-            stmt.addBatch(insertLottoPoolUser);
-            stmt.addBatch(insertLottoPool);
-            stmt.addBatch(setupSkillTree);
-            stmt.addBatch(createWette);
-            stmt.addBatch(setupItemsTable);
+//            stmt.addBatch(setupUserDataTable);
+//            stmt.addBatch(setupCommandsStatisticsTable);
+//            stmt.addBatch(setupGameStatisticsTable);
+//            stmt.addBatch(setupLottoTable);
+//            stmt.addBatch(insertLottoPoolUser);
+//            stmt.addBatch(insertLottoPool);
+//            stmt.addBatch(setupSkillTree);
+//            stmt.addBatch(createWette);
+//            stmt.addBatch(setupItemsTable);
             stmt.executeBatch();
             connection.close();
         }
@@ -151,25 +159,60 @@ public class DB {
         }
     }
 
-    public static ArrayList<Integer> getIntegers(String select, String from, String whereColumn, String whereCompare) {
+    public static ArrayList<Integer> getIntegers(String select, String from, String whereColumn, String whereCompare) throws SQLException {
         var connection = connect();
         var integers = new ArrayList<Integer>(1);
         if (connection != null) {
-            try {
-                var ps = connection.prepareStatement("SELECT ? FROM ? WHERE ? == ?");
-                ps.setString(1, select);
-                ps.setString(2, from);
-                ps.setString(3, whereColumn);
-                ps.setString(4, whereCompare);
-                var resultSet = ps.executeQuery();
-                while (resultSet.next()) {
-                    integers.add(resultSet.getInt(select));
-                }
-            } catch (SQLException e) {
-                return null;
+            var ps = connection.prepareStatement("SELECT ? FROM ? WHERE ? == ?");
+            ps.setString(1, select);
+            ps.setString(2, from);
+            ps.setString(3, whereColumn);
+            ps.setString(4, whereCompare);
+            var resultSet = ps.executeQuery();
+            while (resultSet.next()) {
+                integers.add(resultSet.getInt(select));
             }
         }
         return integers;
+    }
+
+    public static Integer getFirstInteger(String select, String from, String whereColumn, String whereCompare) throws SQLException {
+        var connection = connect();
+        if (connection != null) {
+            var ps = connection.prepareStatement("SELECT ? FROM ? WHERE ? == ?");
+            ps.setString(1, select);
+            ps.setString(2, from);
+            ps.setString(3, whereColumn);
+            ps.setString(4, whereCompare);
+            var resultSet = ps.executeQuery();
+            resultSet.next();
+            return resultSet.getInt(select);
+        }
+        return null;
+    }
+
+    public static void insertInto(String table, String col1, Object val1) throws SQLException {
+        var connection = connect();
+        if (connection != null) {
+            var ps = connection.prepareStatement("INSERT INTO ? (?) VALUES (?)");
+            ps.setString(1, table);
+            ps.setString(2, col1);
+            ps.setObject(3, val1);
+            var resultSet = ps.executeQuery();
+        }
+    }
+
+    public static void update(String table, String setColName, Object newColValue, String whereColName, Object whereColValue) throws SQLException {
+        var connection = connect();
+        if (connection != null) {
+            var ps = connection.prepareStatement("UPDATE ? SET ? = ? WHERE ? = ?");
+            ps.setString(1, table);
+            ps.setString(2, setColName);
+            ps.setObject(3, newColValue);
+            ps.setObject(4, whereColName);
+            ps.setObject(5, whereColValue);
+            var resultSet = ps.executeQuery();
+        }
     }
 //
 //    public void setLottoVote(long value, long UserID) throws SQLException {
