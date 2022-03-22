@@ -5,6 +5,7 @@ import de.qStivi.Cards;
 import de.qStivi.enitities.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Game {
@@ -78,6 +79,16 @@ public class Game {
         this.dealerHand = new ArrayList<>();
         this.bettingBox = bettingBox;
         this.player = player;
+
+        Collections.shuffle(deck);
+        draw(playerHand);
+        draw(playerHand);
+        draw(dealerHand);
+        draw(dealerHand);
+    }
+
+    public void draw(List<Card> hand) {
+        hand.add(deck.remove(0));
     }
 
     public List<Card> getDeck() {
@@ -100,14 +111,30 @@ public class Game {
         return player;
     }
 
-    public WinState hasWon() {
+    public WinState hasWon(boolean end) {
         var playerValue = getHandValue(playerHand);
         var dealerValue = getHandValue(dealerHand);
-        var diff = playerValue - dealerValue;
-        if (diff == 0) return WinState.DRAW;
-        if (diff < 0 && isBusted(dealerHand)) return WinState.LOOSE;
-        if (diff > 0 && isBusted(playerHand)) return WinState.WIN;
-        return null;
+        if (end) {
+            if (playerValue == dealerValue) {
+                return WinState.DRAW;
+            } else if (playerValue > dealerValue || isBusted(dealerHand)) {
+                return WinState.WIN;
+            } else {
+                return WinState.LOOSE;
+            }
+        } else {
+            if (playerValue == 21 && dealerValue != playerValue) return WinState.WIN;
+            if (dealerValue == 21 && playerValue != dealerValue) return WinState.LOOSE;
+            if (playerValue == dealerValue) {
+                if (playerValue == 21) return WinState.DRAW;
+            }
+            if (!isBusted(playerHand)) {
+                if (isBusted(dealerHand)) return WinState.WIN;
+            } else if (!isBusted(dealerHand)) {
+                if (isBusted(playerHand)) return WinState.LOOSE;
+            }
+        }
+        return WinState.NONE;
     }
 
     public double getHandValue(List<Card> hand) {
@@ -130,5 +157,4 @@ public class Game {
     public boolean isBusted(List<Card> hand) {
         return getHandValue(hand) > 21;
     }
-
 }

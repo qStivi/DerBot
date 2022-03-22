@@ -15,8 +15,8 @@ public class Player extends Entity {
 
     public Player(String displayName, long id) throws SQLException {
         super(displayName, id);
-        var money = DB.getFirstInteger("Money", "Players", "ID", String.valueOf(id));
-        var xp = DB.getFirstInteger("XP", "Players", "ID", String.valueOf(id));
+        var money = DB.getIntegers("Money", "Players", "ID", String.valueOf(id)).get(0);
+        var xp = DB.getIntegers("XP", "Players", "ID", String.valueOf(id)).get(0);
         if (money == null || xp == null) {
             logger.info("Player does not Exist! Creating new one...");
             DB.insertInto("Players", "ID", id);
@@ -33,12 +33,12 @@ public class Player extends Entity {
     }
 
     public void setMoney(double money) throws SQLException {
-        DB.update("Player", "Money", money, "ID", getId());
+        DB.update("Players", "Money", money, "ID", getId());
         this.money = money;
     }
 
     public double getXp() throws SQLException {
-        DB.update("Player", "XP", xp, "ID", getId());
+        DB.update("Players", "XP", xp, "ID", getId());
         return xp;
     }
 

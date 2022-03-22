@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings("unused")
 public class DB {
+
     private static DB instance;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -123,6 +124,7 @@ public class DB {
         if (connection != null) {
             var stmt = connection.createStatement();
             stmt.addBatch(enableForeignKeys);
+            stmt.addBatch(setupPlayerTable);
 //            stmt.addBatch(setupUserDataTable);
 //            stmt.addBatch(setupCommandsStatisticsTable);
 //            stmt.addBatch(setupGameStatisticsTable);
@@ -136,13 +138,6 @@ public class DB {
             connection.close();
         }
 
-    }
-
-    public static DB getInstance() throws SQLException, ClassNotFoundException {
-        if (instance == null) {
-            instance = new DB();
-        }
-        return instance;
     }
 
     /**
@@ -159,15 +154,18 @@ public class DB {
         }
     }
 
+    public static DB getInstance() throws SQLException, ClassNotFoundException {
+        if (instance == null) {
+            instance = new DB();
+        }
+        return instance;
+    }
+
     public static ArrayList<Integer> getIntegers(String select, String from, String whereColumn, String whereCompare) throws SQLException {
         var connection = connect();
         var integers = new ArrayList<Integer>(1);
         if (connection != null) {
-            var ps = connection.prepareStatement("SELECT ? FROM ? WHERE ? == ?");
-            ps.setString(1, select);
-            ps.setString(2, from);
-            ps.setString(3, whereColumn);
-            ps.setString(4, whereCompare);
+            var ps = connection.prepareStatement("SELECT " + select + " FROM " + from + " WHERE " + whereColumn + " == " + whereCompare);
             var resultSet = ps.executeQuery();
             while (resultSet.next()) {
                 integers.add(resultSet.getInt(select));
@@ -176,42 +174,17 @@ public class DB {
         return integers;
     }
 
-    public static Integer getFirstInteger(String select, String from, String whereColumn, String whereCompare) throws SQLException {
-        var connection = connect();
-        if (connection != null) {
-            var ps = connection.prepareStatement("SELECT ? FROM ? WHERE ? == ?");
-            ps.setString(1, select);
-            ps.setString(2, from);
-            ps.setString(3, whereColumn);
-            ps.setString(4, whereCompare);
-            var resultSet = ps.executeQuery();
-            resultSet.next();
-            return resultSet.getInt(select);
-        }
-        return null;
-    }
-
     public static void insertInto(String table, String col1, Object val1) throws SQLException {
         var connection = connect();
         if (connection != null) {
-            var ps = connection.prepareStatement("INSERT INTO ? (?) VALUES (?)");
-            ps.setString(1, table);
-            ps.setString(2, col1);
-            ps.setObject(3, val1);
-            var resultSet = ps.executeQuery();
+            connection.createStatement().execute("INSERT INTO " + table + " (" + col1 + ") VALUES (" + val1 + ")");
         }
     }
 
     public static void update(String table, String setColName, Object newColValue, String whereColName, Object whereColValue) throws SQLException {
         var connection = connect();
         if (connection != null) {
-            var ps = connection.prepareStatement("UPDATE ? SET ? = ? WHERE ? = ?");
-            ps.setString(1, table);
-            ps.setString(2, setColName);
-            ps.setObject(3, newColValue);
-            ps.setObject(4, whereColName);
-            ps.setObject(5, whereColValue);
-            var resultSet = ps.executeQuery();
+            connection.createStatement().execute("UPDATE " + table + " SET " + setColName + " = " + newColValue + " WHERE " + whereColName + " = " + whereColValue);
         }
     }
 //

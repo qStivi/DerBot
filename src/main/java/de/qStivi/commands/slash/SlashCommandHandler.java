@@ -49,7 +49,7 @@ public class SlashCommandHandler extends ListenerAdapter {
                 logger.debug("Command handled!");
                 return;
             }
-            logger.error("NO COMMAND FOUND! (Why did this happen?! This should not be possible!)");
         }
+        logger.error("NO COMMAND FOUND! (Why did this happen?! This should not be possible!) ");
     }
 }

@@ -11,9 +11,7 @@ public class Games {
         return GAME_MAP.get(id);
     }
 
-    public static boolean putGameByPlayerId(long id, Game game) {
-        if (GAME_MAP.get(id) != null) return false;
+    public static void putGameByPlayerId(long id, Game game) {
         GAME_MAP.put(id, game);
-        return true;
     }
 }

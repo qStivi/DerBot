@@ -2,6 +2,7 @@ package de.qStivi;
 
 import de.qStivi.commands.slash.ISlashCommand;
 import de.qStivi.commands.slash.SlashCommandHandler;
+import de.qStivi.commands.slash.gamble.blackjack.BlackJackButtonHandler;
 import de.qStivi.events.ButtonTestEvent;
 import de.qStivi.events.SelectMenuTestEvent;
 import de.qStivi.listeners.Hmmm;
@@ -63,7 +64,7 @@ public class Bot {
 //                        new Listener(),
                 new ReactionRoles(),
 //                        new EventsPreprocessor(),
-                SlashCommandHandler.getInstance(), new SelectMenuTestEvent(), new ButtonTestEvent(), new Hmmm()).enableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE).enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES).setChunkingFilter(ChunkingFilter.NONE).setMemberCachePolicy(MemberCachePolicy.ALL).setLargeThreshold(250).setActivity(getActivity()).build();
+                SlashCommandHandler.getInstance(), new SelectMenuTestEvent(), new ButtonTestEvent(), new Hmmm(), new BlackJackButtonHandler(), new MemberCountUpdater()).enableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE).enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES).setChunkingFilter(ChunkingFilter.NONE).setMemberCachePolicy(MemberCachePolicy.ALL).setLargeThreshold(250).setActivity(getActivity()).build();
 
         DB.getInstance();
 

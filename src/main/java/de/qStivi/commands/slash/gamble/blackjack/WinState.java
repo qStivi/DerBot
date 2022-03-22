@@ -1,5 +1,5 @@
 package de.qStivi.commands.slash.gamble.blackjack;
 
 public enum WinState {
-    WIN, LOOSE, DRAW
+    WIN, LOOSE, NONE, DRAW
 }
