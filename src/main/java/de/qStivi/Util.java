@@ -1,7 +1,10 @@
 package de.qStivi;
 
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.interactions.Interaction;
+
 public class Util {
-    public static boolean isValidLink(String link) {
-        return link.matches("(.*)open.spotify.com(.*)|spotify(.*)|(.*)youtube.com(.*)|(.*)youtu.be(.*)");
+    public static Member getMember(Interaction event) {
+        return event.getMember();
     }
 }

@@ -9,8 +9,8 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -21,189 +21,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @SuppressWarnings("DuplicatedCode")
 public class ReactionRoles extends ListenerAdapter {
+
     private static final Logger logger = getLogger(ReactionRoles.class);
 
     volatile Guild guild;
     volatile TextChannel channel;
     volatile JDA jda;
-
-    @Override
-    public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
-
-        if (Bot.DEV_MODE) return;
-
-        if (event.getChannel().getIdLong() == 843093823366365184L) {
-            var emote = event.getReactionEmote().getName();
-            switch (emote) {
-                case "LoL" -> addRoleToMember(event, Roles.LOL);
-                case "Minecraft" -> addRoleToMember(event, Roles.MINECRAFT);
-                case "AmongUs" -> addRoleToMember(event, Roles.AMONGUS);
-                case "Warzone" -> addRoleToMember(event, Roles.WARZONE);
-                case "Apex" -> addRoleToMember(event, Roles.APEX);
-                case "Playstation" -> addRoleToMember(event, Roles.PLAYSTATION);
-                case "Bot" -> addRoleToMember(event, Roles.BOT);
-                case "GMod" -> addRoleToMember(event, Roles.GMOD);
-                case "Switch" -> addRoleToMember(event, Roles.SWITCH);
-                case "Civ" -> addRoleToMember(event, Roles.CIV);
-                case "Xbox" -> addRoleToMember(event, Roles.XBOX);
-                case "ARK" -> addRoleToMember(event, Roles.ARK);
-                case "GTA5" -> addRoleToMember(event, Roles.GTA);
-                case "Hearthstone" -> addRoleToMember(event, Roles.HEARTHSTONE);
-                case "VR" -> addRoleToMember(event, Roles.VR);
-                case "RocketLeague" -> addRoleToMember(event, Roles.ROCKETLEAGUE);
-                case "Shisha" -> addRoleToMember(event, Roles.SHISHA);
-                case "Valorant" -> addRoleToMember(event, Roles.VALORANT);
-                case "CSGO" -> addRoleToMember(event, Roles.CSGO);
-                case "RainbowSixSiege" -> addRoleToMember(event, Roles.RAINBOW);
-                case "Rounds" -> addRoleToMember(event, Roles.ROUNDS);
-                case "Pummel" -> addRoleToMember(event, Roles.PUMMELPARTY);
-                case "Satisfactory" -> addRoleToMember(event, Roles.SATISFACTORY);
-                case "LostArk" -> addRoleToMember(event, Roles.LOSTARK);
-                case "ayaya" -> addRoleToMember(event, Roles.ANIME);
-                case "Diablo3" -> addRoleToMember(event, Roles.DIABLO);
-                case "Coding" -> addRoleToMember(event, Roles.CODING);
-                case "Steam" -> addRoleToMember(event, Roles.STEAM);
-                case "Epic" -> addRoleToMember(event, Roles.EPIC);
-                case "Reddit" -> addRoleToMember(event, Roles.REDDIT);
-                case "NewWorld" -> addRoleToMember(event, Roles.NEWWORLD);
-                case "Disney" -> addRoleToMember(event, Roles.DISNEY);
-                case "Prime" -> addRoleToMember(event, Roles.PRIME);
-                case "Netflix" -> addRoleToMember(event, Roles.NETFLIX);
-                case "Stonks" -> addRoleToMember(event, Roles.STONKS);
-                case "♟" -> addRoleToMember(event, Roles.TABLETOP);
-                case "\uD83C\uDF7E" -> addRoleToMember(event, Roles.ALCOHOL);
-                case "\uD83D\uDFE4" -> addRoleToMember(event, Roles.BROWN);
-                case "\uD83D\uDFE2" -> addRoleToMember(event, Roles.GREEN);
-                case "\uD83D\uDD35" -> addRoleToMember(event, Roles.BLUE);
-                case "\uD83D\uDFE3" -> addRoleToMember(event, Roles.PURPLE);
-                case "\uD83D\uDFE1" -> addRoleToMember(event, Roles.YELLOW);
-                case "\uD83D\uDFE0" -> addRoleToMember(event, Roles.ORANGE);
-                case "\uD83D\uDD34" -> addRoleToMember(event, Roles.RED);
-            }
-        }
-    }
-
-    private void addRoleToMember(@NotNull GuildMessageReactionAddEvent event, @NotNull Role role) {
-
-        getGuildChannelJDA(event);
-        guild.addRoleToMember(event.getMember(), Objects.requireNonNull(guild.getRoleById(role.getRoleID()))).queue();
-    }
-
-    private void getGuildChannelJDA(@NotNull GuildMessageReactionAddEvent event) {
-        if (this.jda == null) {
-            this.jda = event.getJDA();
-        }
-        if (guild == null) {
-            guild = this.jda.getGuildById(Bot.GUILD_ID);
-            while (guild == null) {
-                Thread.onSpinWait();
-            }
-        }
-        if (channel == null) {
-            channel = guild.getTextChannelById(Bot.CHANNEL_ID);
-            while (channel == null) {
-                Thread.onSpinWait();
-            }
-        }
-    }
-
-    private void getGuildChannelJDA(@NotNull GuildMessageReactionRemoveEvent event) {
-        if (this.jda == null) {
-            this.jda = event.getJDA();
-        }
-        if (guild == null) {
-            guild = this.jda.getGuildById(703363806356701295L);
-            while (guild == null) {
-                Thread.onSpinWait();
-            }
-        }
-        if (channel == null) {
-            channel = guild.getTextChannelById(843093823366365184L);
-            while (channel == null) {
-                Thread.onSpinWait();
-            }
-        }
-    }
-
-    private void getGuildChannelJDA(@NotNull ReadyEvent event) {
-        if (this.jda == null) {
-            this.jda = event.getJDA();
-        }
-        if (guild == null) {
-            guild = this.jda.getGuildById(703363806356701295L);
-            while (guild == null) {
-                Thread.onSpinWait();
-            }
-        }
-        if (channel == null) {
-            channel = guild.getTextChannelById(843093823366365184L);
-            while (channel == null) {
-                Thread.onSpinWait();
-            }
-        }
-    }
-
-    @Override
-    public void onGuildMessageReactionRemove(@NotNull GuildMessageReactionRemoveEvent event) {
-
-        if (Bot.DEV_MODE) return;
-
-        if (event.getChannel().getIdLong() == 843093823366365184L) {
-            var emote = event.getReactionEmote().getName();
-            switch (emote) {
-                case "LoL" -> removeRoleFromMember(event, Roles.LOL);
-                case "Minecraft" -> removeRoleFromMember(event, Roles.MINECRAFT);
-                case "AmongUs" -> removeRoleFromMember(event, Roles.AMONGUS);
-                case "Warzone" -> removeRoleFromMember(event, Roles.WARZONE);
-                case "Apex" -> removeRoleFromMember(event, Roles.APEX);
-                case "Playstation" -> removeRoleFromMember(event, Roles.PLAYSTATION);
-                case "Bot" -> removeRoleFromMember(event, Roles.BOT);
-                case "GMod" -> removeRoleFromMember(event, Roles.GMOD);
-                case "Switch" -> removeRoleFromMember(event, Roles.SWITCH);
-                case "Civ" -> removeRoleFromMember(event, Roles.CIV);
-                case "Xbox" -> removeRoleFromMember(event, Roles.XBOX);
-                case "ARK" -> removeRoleFromMember(event, Roles.ARK);
-                case "GTA5" -> removeRoleFromMember(event, Roles.GTA);
-                case "Hearthstone" -> removeRoleFromMember(event, Roles.HEARTHSTONE);
-                case "VR" -> removeRoleFromMember(event, Roles.VR);
-                case "RocketLeague" -> removeRoleFromMember(event, Roles.ROCKETLEAGUE);
-                case "Shisha" -> removeRoleFromMember(event, Roles.SHISHA);
-                case "Valorant" -> removeRoleFromMember(event, Roles.VALORANT);
-                case "CSGO" -> removeRoleFromMember(event, Roles.CSGO);
-                case "RainbowSixSiege" -> removeRoleFromMember(event, Roles.RAINBOW);
-                case "Rounds" -> removeRoleFromMember(event, Roles.ROUNDS);
-                case "Pummel" -> removeRoleFromMember(event, Roles.PUMMELPARTY);
-                case "Satisfactory" -> removeRoleFromMember(event, Roles.SATISFACTORY);
-                case "LostArk" -> removeRoleFromMember(event, Roles.LOSTARK);
-                case "ayaya" -> removeRoleFromMember(event, Roles.ANIME);
-                case "Diablo3" -> removeRoleFromMember(event, Roles.DIABLO);
-                case "Coding" -> removeRoleFromMember(event, Roles.CODING);
-                case "Steam" -> removeRoleFromMember(event, Roles.STEAM);
-                case "Epic" -> removeRoleFromMember(event, Roles.EPIC);
-                case "Reddit" -> removeRoleFromMember(event, Roles.REDDIT);
-                case "NewWorld" -> removeRoleFromMember(event, Roles.NEWWORLD);
-                case "Disney" -> removeRoleFromMember(event, Roles.DISNEY);
-                case "Prime" -> removeRoleFromMember(event, Roles.PRIME);
-                case "Netflix" -> removeRoleFromMember(event, Roles.NETFLIX);
-                case "Stonks" -> removeRoleFromMember(event, Roles.STONKS);
-                case "♟" -> removeRoleFromMember(event, Roles.TABLETOP);
-                case "\uD83C\uDF7E" -> removeRoleFromMember(event, Roles.ALCOHOL);
-                case "\uD83D\uDFE4" -> removeRoleFromMember(event, Roles.BROWN);
-                case "\uD83D\uDFE2" -> removeRoleFromMember(event, Roles.GREEN);
-                case "\uD83D\uDD35" -> removeRoleFromMember(event, Roles.BLUE);
-                case "\uD83D\uDFE3" -> removeRoleFromMember(event, Roles.PURPLE);
-                case "\uD83D\uDFE1" -> removeRoleFromMember(event, Roles.YELLOW);
-                case "\uD83D\uDFE0" -> removeRoleFromMember(event, Roles.ORANGE);
-                case "\uD83D\uDD34" -> removeRoleFromMember(event, Roles.RED);
-            }
-        }
-    }
-
-    private void removeRoleFromMember(@NotNull GuildMessageReactionRemoveEvent event, @NotNull Role role) {
-
-        getGuildChannelJDA(event);
-        guild.removeRoleFromMember(Objects.requireNonNull(event.getMember()), Objects.requireNonNull(guild.getRoleById(role.getRoleID()))).queue();
-    }
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -274,8 +97,7 @@ public class ReactionRoles extends ListenerAdapter {
 
         channel.editMessageById(846850718462902272L, "@everyone\nIn this Channel you can give yourself roles which will be pinged when something relevant happens or someone wants to talk to you. Simply react with the corresponding emote and your role will be granted. If you want to remove a role simply remove your reaction.").queue();
 
-        channel.editMessageEmbedsById(846850719305695272L, games.build()
-        ).queue(message -> {
+        channel.editMessageEmbedsById(846850719305695272L, games.build()).queue(message -> {
             message.addReaction(Emotes.LOL).queue();
             message.addReaction(Emotes.MINECRAFT).queue();
             message.addReaction(Emotes.WARZONE).queue();
@@ -292,13 +114,11 @@ public class ReactionRoles extends ListenerAdapter {
             message.addReaction(Emotes.ROUNDS).queue();
             message.addReaction(Emotes.PUMMELPARTY).queue();
             message.addReaction(Emotes.SATISFACTORY).queue();
-            message.addReaction(Emotes.LOSTARK).queue();
             message.addReaction("♟").queue();
             message.addReaction(Emotes.DIABLO).queue();
             message.addReaction(Emotes.NEWWORLD).queue();
         });
-        channel.editMessageEmbedsById(846850723395928144L, other.build()
-        ).queue(message -> {
+        channel.editMessageEmbedsById(846850723395928144L, other.build()).queue(message -> {
             message.addReaction(Emotes.PLAYSTATION).queue();
             message.addReaction(Emotes.BOT).queue();
             message.addReaction(Emotes.SWITCH).queue();
@@ -316,8 +136,7 @@ public class ReactionRoles extends ListenerAdapter {
             message.addReaction(Emotes.STONKS).queue();
             message.addReaction("\uD83C\uDF7E").queue();
         });
-        channel.editMessageEmbedsById(846850724528914463L, colors.build()
-        ).queue(message -> {
+        channel.editMessageEmbedsById(846850724528914463L, colors.build()).queue(message -> {
             message.addReaction("\uD83D\uDFE4").queue();
             message.addReaction("\uD83D\uDFE2").queue();
             message.addReaction("\uD83D\uDD35").queue();
@@ -328,9 +147,190 @@ public class ReactionRoles extends ListenerAdapter {
         });
     }
 
+    @Override
+    public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
+
+        if (Bot.DEV_MODE) return;
+
+        if (event.getChannel().getIdLong() == 843093823366365184L) {
+            var emote = event.getReactionEmote().getName();
+            switch (emote) {
+                case "LoL" -> addRoleToMember(event, Roles.LOL);
+                case "Minecraft" -> addRoleToMember(event, Roles.MINECRAFT);
+                case "AmongUs" -> addRoleToMember(event, Roles.AMONGUS);
+                case "Warzone" -> addRoleToMember(event, Roles.WARZONE);
+                case "Apex" -> addRoleToMember(event, Roles.APEX);
+                case "Playstation" -> addRoleToMember(event, Roles.PLAYSTATION);
+                case "Bot" -> addRoleToMember(event, Roles.BOT);
+                case "GMod" -> addRoleToMember(event, Roles.GMOD);
+                case "Switch" -> addRoleToMember(event, Roles.SWITCH);
+                case "Civ" -> addRoleToMember(event, Roles.CIV);
+                case "Xbox" -> addRoleToMember(event, Roles.XBOX);
+                case "ARK" -> addRoleToMember(event, Roles.ARK);
+                case "GTA5" -> addRoleToMember(event, Roles.GTA);
+                case "Hearthstone" -> addRoleToMember(event, Roles.HEARTHSTONE);
+                case "VR" -> addRoleToMember(event, Roles.VR);
+                case "RocketLeague" -> addRoleToMember(event, Roles.ROCKETLEAGUE);
+                case "Shisha" -> addRoleToMember(event, Roles.SHISHA);
+                case "Valorant" -> addRoleToMember(event, Roles.VALORANT);
+                case "CSGO" -> addRoleToMember(event, Roles.CSGO);
+                case "RainbowSixSiege" -> addRoleToMember(event, Roles.RAINBOW);
+                case "Rounds" -> addRoleToMember(event, Roles.ROUNDS);
+                case "Pummel" -> addRoleToMember(event, Roles.PUMMELPARTY);
+                case "Satisfactory" -> addRoleToMember(event, Roles.SATISFACTORY);
+                case "LostArk" -> addRoleToMember(event, Roles.LOSTARK);
+                case "ayaya" -> addRoleToMember(event, Roles.ANIME);
+                case "Diablo3" -> addRoleToMember(event, Roles.DIABLO);
+                case "Coding" -> addRoleToMember(event, Roles.CODING);
+                case "Steam" -> addRoleToMember(event, Roles.STEAM);
+                case "Epic" -> addRoleToMember(event, Roles.EPIC);
+                case "Reddit" -> addRoleToMember(event, Roles.REDDIT);
+                case "NewWorld" -> addRoleToMember(event, Roles.NEWWORLD);
+                case "Disney" -> addRoleToMember(event, Roles.DISNEY);
+                case "Prime" -> addRoleToMember(event, Roles.PRIME);
+                case "Netflix" -> addRoleToMember(event, Roles.NETFLIX);
+                case "Stonks" -> addRoleToMember(event, Roles.STONKS);
+                case "♟" -> addRoleToMember(event, Roles.TABLETOP);
+                case "\uD83C\uDF7E" -> addRoleToMember(event, Roles.ALCOHOL);
+                case "\uD83D\uDFE4" -> addRoleToMember(event, Roles.BROWN);
+                case "\uD83D\uDFE2" -> addRoleToMember(event, Roles.GREEN);
+                case "\uD83D\uDD35" -> addRoleToMember(event, Roles.BLUE);
+                case "\uD83D\uDFE3" -> addRoleToMember(event, Roles.PURPLE);
+                case "\uD83D\uDFE1" -> addRoleToMember(event, Roles.YELLOW);
+                case "\uD83D\uDFE0" -> addRoleToMember(event, Roles.ORANGE);
+                case "\uD83D\uDD34" -> addRoleToMember(event, Roles.RED);
+            }
+        }
+    }
+
+    private void addRoleToMember(@NotNull MessageReactionAddEvent event, @NotNull Role role) {
+
+        getGuildChannelJDA(event);
+        guild.addRoleToMember(event.getMember(), Objects.requireNonNull(guild.getRoleById(role.getRoleID()))).queue();
+    }
+
+    private void getGuildChannelJDA(@NotNull MessageReactionAddEvent event) {
+        if (this.jda == null) {
+            this.jda = event.getJDA();
+        }
+        if (guild == null) {
+            guild = this.jda.getGuildById(Bot.GUILD_ID);
+            while (guild == null) {
+                Thread.onSpinWait();
+            }
+        }
+        if (channel == null) {
+            channel = guild.getTextChannelById(Bot.CHANNEL_ID);
+            while (channel == null) {
+                Thread.onSpinWait();
+            }
+        }
+    }
+
+    @Override
+    public void onMessageReactionRemove(@NotNull MessageReactionRemoveEvent event) {
+
+        if (Bot.DEV_MODE) return;
+
+        if (event.getChannel().getIdLong() == 843093823366365184L) {
+            var emote = event.getReactionEmote().getName();
+            switch (emote) {
+                case "LoL" -> removeRoleFromMember(event, Roles.LOL);
+                case "Minecraft" -> removeRoleFromMember(event, Roles.MINECRAFT);
+                case "AmongUs" -> removeRoleFromMember(event, Roles.AMONGUS);
+                case "Warzone" -> removeRoleFromMember(event, Roles.WARZONE);
+                case "Apex" -> removeRoleFromMember(event, Roles.APEX);
+                case "Playstation" -> removeRoleFromMember(event, Roles.PLAYSTATION);
+                case "Bot" -> removeRoleFromMember(event, Roles.BOT);
+                case "GMod" -> removeRoleFromMember(event, Roles.GMOD);
+                case "Switch" -> removeRoleFromMember(event, Roles.SWITCH);
+                case "Civ" -> removeRoleFromMember(event, Roles.CIV);
+                case "Xbox" -> removeRoleFromMember(event, Roles.XBOX);
+                case "ARK" -> removeRoleFromMember(event, Roles.ARK);
+                case "GTA5" -> removeRoleFromMember(event, Roles.GTA);
+                case "Hearthstone" -> removeRoleFromMember(event, Roles.HEARTHSTONE);
+                case "VR" -> removeRoleFromMember(event, Roles.VR);
+                case "RocketLeague" -> removeRoleFromMember(event, Roles.ROCKETLEAGUE);
+                case "Shisha" -> removeRoleFromMember(event, Roles.SHISHA);
+                case "Valorant" -> removeRoleFromMember(event, Roles.VALORANT);
+                case "CSGO" -> removeRoleFromMember(event, Roles.CSGO);
+                case "RainbowSixSiege" -> removeRoleFromMember(event, Roles.RAINBOW);
+                case "Rounds" -> removeRoleFromMember(event, Roles.ROUNDS);
+                case "Pummel" -> removeRoleFromMember(event, Roles.PUMMELPARTY);
+                case "Satisfactory" -> removeRoleFromMember(event, Roles.SATISFACTORY);
+                case "LostArk" -> removeRoleFromMember(event, Roles.LOSTARK);
+                case "ayaya" -> removeRoleFromMember(event, Roles.ANIME);
+                case "Diablo3" -> removeRoleFromMember(event, Roles.DIABLO);
+                case "Coding" -> removeRoleFromMember(event, Roles.CODING);
+                case "Steam" -> removeRoleFromMember(event, Roles.STEAM);
+                case "Epic" -> removeRoleFromMember(event, Roles.EPIC);
+                case "Reddit" -> removeRoleFromMember(event, Roles.REDDIT);
+                case "NewWorld" -> removeRoleFromMember(event, Roles.NEWWORLD);
+                case "Disney" -> removeRoleFromMember(event, Roles.DISNEY);
+                case "Prime" -> removeRoleFromMember(event, Roles.PRIME);
+                case "Netflix" -> removeRoleFromMember(event, Roles.NETFLIX);
+                case "Stonks" -> removeRoleFromMember(event, Roles.STONKS);
+                case "♟" -> removeRoleFromMember(event, Roles.TABLETOP);
+                case "\uD83C\uDF7E" -> removeRoleFromMember(event, Roles.ALCOHOL);
+                case "\uD83D\uDFE4" -> removeRoleFromMember(event, Roles.BROWN);
+                case "\uD83D\uDFE2" -> removeRoleFromMember(event, Roles.GREEN);
+                case "\uD83D\uDD35" -> removeRoleFromMember(event, Roles.BLUE);
+                case "\uD83D\uDFE3" -> removeRoleFromMember(event, Roles.PURPLE);
+                case "\uD83D\uDFE1" -> removeRoleFromMember(event, Roles.YELLOW);
+                case "\uD83D\uDFE0" -> removeRoleFromMember(event, Roles.ORANGE);
+                case "\uD83D\uDD34" -> removeRoleFromMember(event, Roles.RED);
+            }
+        }
+    }
+
+    private void removeRoleFromMember(@NotNull MessageReactionRemoveEvent event, @NotNull Role role) {
+
+        getGuildChannelJDA(event);
+        guild.removeRoleFromMember(Objects.requireNonNull(event.getMember()), Objects.requireNonNull(guild.getRoleById(role.getRoleID()))).queue();
+    }
+
+    private void getGuildChannelJDA(@NotNull MessageReactionRemoveEvent event) {
+        if (this.jda == null) {
+            this.jda = event.getJDA();
+        }
+        if (guild == null) {
+            guild = this.jda.getGuildById(703363806356701295L);
+            while (guild == null) {
+                Thread.onSpinWait();
+            }
+        }
+        if (channel == null) {
+            channel = guild.getTextChannelById(843093823366365184L);
+            while (channel == null) {
+                Thread.onSpinWait();
+            }
+        }
+    }
+
+    private void getGuildChannelJDA(@NotNull ReadyEvent event) {
+        if (this.jda == null) {
+            this.jda = event.getJDA();
+        }
+        if (guild == null) {
+            guild = this.jda.getGuildById(703363806356701295L);
+            while (guild == null) {
+                Thread.onSpinWait();
+            }
+        }
+        if (channel == null) {
+            channel = guild.getTextChannelById(843093823366365184L);
+            while (channel == null) {
+                Thread.onSpinWait();
+            }
+        }
+    }
+
     private void addField(@NotNull ReadyEvent event, @NotNull EmbedBuilder embed, @NotNull Role role) {
         getGuildChannelJDA(event);
 
-        embed.addField(Objects.requireNonNull(jda.getEmoteById(role.getEmoteIDLong())).getAsMention(), Objects.requireNonNull(guild.getRoleById(role.getRoleID())).getAsMention(), true);
+        var mention = Objects.requireNonNull(jda.getEmoteById(role.getEmoteIDLong())).getAsMention();
+        var mention2 = Objects.requireNonNull(guild.getRoleById(role.getRoleID())).getAsMention();
+
+        embed.addField(mention, mention2, true);
     }
 }
