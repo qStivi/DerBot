@@ -101,6 +101,7 @@ public class BlackjackCommand implements ISlashCommand {
         embed.setTitle("YOU WON!");
         embed.setColor(Color.GREEN);
         game.getPlayer().setMoney(game.getPlayer().getMoney() + (game.getBettingBox() * 2));
+        game.getPlayer().setXp(game.getPlayer().getXp() + 1);
         hook.editOriginal("You won " + game.getBettingBox() + " \uD83D\uDC8E").queue();
     }
 
