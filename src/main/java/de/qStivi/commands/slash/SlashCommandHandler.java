@@ -1,6 +1,7 @@
 package de.qStivi.commands.slash;
 
 import de.qStivi.commands.slash.gamble.blackjack.BlackjackCommand;
+import de.qStivi.commands.slash.gamble.slots.SlotsCommand;
 import de.qStivi.commands.slash.util.ShutdownCommand;
 import de.qStivi.commands.slash.util.TestCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -23,6 +24,30 @@ public class SlashCommandHandler extends ListenerAdapter {
         commands.add(new TestCommand());
         commands.add(new ShutdownCommand());
         commands.add(new BlackjackCommand());
+        commands.add(new SlotsCommand());
+    }
+
+    @Override
+    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        logger.debug("Deferring reply...");
+        event.deferReply().complete();
+        logger.debug("Reply deferred!");
+        for (var command : commands) {
+            if (command.getCommand().getName().equals(event.getName())) {
+                logger.debug("Handling command...");
+                new Thread(() -> {
+                    try {
+                        command.handle(event);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        event.getHook().sendMessage(e.getMessage()).queue();
+                    }
+                }).start();
+                logger.debug("Command handled!");
+                return;
+            }
+        }
+        logger.error("NO COMMAND FOUND! (Why did this happen?! This should not be possible!) ");
     }
 
     public static SlashCommandHandler getInstance() {
@@ -35,21 +60,5 @@ public class SlashCommandHandler extends ListenerAdapter {
     public List<ISlashCommand> getCommands() {
         logger.debug("Getting commands...");
         return commands;
-    }
-
-    @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        logger.debug("Deferring reply...");
-        event.deferReply().complete();
-        logger.debug("Reply deferred!");
-        for (var command : commands) {
-            if (command.getCommand().getName().equals(event.getName())) {
-                logger.debug("Handling command...");
-                new Thread(() -> command.handle(event)).start();
-                logger.debug("Command handled!");
-                return;
-            }
-        }
-        logger.error("NO COMMAND FOUND! (Why did this happen?! This should not be possible!) ");
     }
 }

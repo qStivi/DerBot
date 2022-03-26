@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 public interface ISlashCommand {
 
-    void handle(SlashCommandInteractionEvent event);
+    void handle(SlashCommandInteractionEvent event) throws Exception;
 
     @NotNull CommandData getCommand();
 

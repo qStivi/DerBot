@@ -1,20 +1,21 @@
 //package de.qStivi.commands.rpg.slots;
 //
+//import de.qStivi.Bot;
+//import de.qStivi.DB;
+//import de.qStivi.commands.rpg.SkillsCommand;
+//import de.qStivi.commands.slash.gamble.slots.Symbol;
 //import net.dv8tion.jda.api.EmbedBuilder;
 //import net.dv8tion.jda.api.entities.Message;
 //import net.dv8tion.jda.api.entities.TextChannel;
-//import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+//import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 //import org.jetbrains.annotations.NotNull;
-//import de.qStivi.Bot;
-//import de.qStivi.DB;
-//import de.qStivi.ICommand;
-//import de.qStivi.commands.rpg.SkillsCommand;
 //
 //import java.awt.*;
 //import java.sql.SQLException;
 //import java.util.Date;
 //
-//public class SlotsCommand implements ICommand {
+//public class SlotsCommandOLD {
+//
 //    static final Symbol[] symbols = new Symbol[]{
 //            new Symbol(0.0933666574889f, ":gem:", 2),
 //            new Symbol(0.321829794869f, "<:seven:836662334729617517>", 5),
@@ -37,7 +38,6 @@
 //        return symbols[idx];
 //    }
 //
-//    @Override
 //    public void handle(MessageReceivedEvent event, String[] args, DB db, Message reply) throws SQLException, ClassNotFoundException, InterruptedException {
 //        xp = 0;
 //        if (event.isWebhookMessage()) return;
@@ -134,20 +134,16 @@
 //    }
 //
 //    @NotNull
-//    @Override
 //    public String getName() {
 //        return "slots";
 //    }
 //
 //    @NotNull
-//    @Override
 //    public String getDescription() {
 //        return "Slots";
 //    }
 //
-//    @Override
 //    public long getXp() {
 //        return xp;
 //    }
 //}
-//

@@ -3,7 +3,6 @@ package de.qStivi.commands.slash.gamble.blackjack;
 import de.qStivi.Card;
 import de.qStivi.commands.slash.ISlashCommand;
 import de.qStivi.enitities.Players;
-import de.qStivi.exceptions.BlackJackBetNegativeOrNullException;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -23,35 +22,31 @@ public class BlackjackCommand implements ISlashCommand {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public void handle(SlashCommandInteractionEvent event) {
-        try {
+    public void handle(SlashCommandInteractionEvent event) throws SQLException {
+        var hook = event.getHook();
 
-            var option = event.getOption("bet");
-            if (option == null) throw new NullPointerException("A command option was not present when it should have been!");
+        var option = event.getOption("bet");
+        if (option == null) throw new NullPointerException("A command option was not present when it should have been!");
 
-            var bet = option.getAsLong();
-            if (bet <= 0) throw new BlackJackBetNegativeOrNullException();
-
-            var member = event.getMember();
-            if (member == null) throw new NullPointerException("Error while getting member!");
-            var player = Players.getPlayer(member.getIdLong());
-
-            var hook = event.getHook();
-
-            var newBalance = player.getMoney() - bet;
-            if (newBalance < 0) {
-                hook.editOriginal("I'm sorry but you don't have enough money to do that. Try working or sell something.").queue();
-                return;
-            } else {
-                player.setMoney(newBalance);
-            }
-            Games.putGameByPlayerId(player.getId(), new Game(bet, player));
-            displayGameState(Games.getGameByPlayerId(player.getId()), hook, false);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            event.getHook().editOriginal(e.getMessage()).queue();
+        var bet = option.getAsLong();
+        if (bet <= 0) {
+            hook.editOriginal("Bet can't be 0 or less!").queue();
+            return;
         }
+
+        var member = event.getMember();
+        if (member == null) throw new NullPointerException("Error while getting member!");
+        var player = Players.getPlayer(member.getIdLong());
+
+        var newBalance = player.getMoney() - bet;
+        if (newBalance < 0) {
+            hook.editOriginal("I'm sorry but you don't have enough money to do that. Try working or sell something.").queue();
+            return;
+        } else {
+            player.setMoney(newBalance);
+        }
+        Games.putGameByPlayerId(player.getId(), new Game(bet, player));
+        displayGameState(Games.getGameByPlayerId(player.getId()), hook, false);
     }
 
     @Override
@@ -88,7 +83,6 @@ public class BlackjackCommand implements ISlashCommand {
         }
 
         hook.editOriginalEmbeds(embed.build()).setActionRows().queue();
-        hook.sendMessage(String.valueOf(game.getPlayer().getMoney())).queue();
     }
 
     private static void draw(Game game, EmbedBuilder embed) throws SQLException {
