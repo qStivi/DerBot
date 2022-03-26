@@ -25,6 +25,7 @@ public class SlashCommandHandler extends ListenerAdapter {
         commands.add(new ShutdownCommand());
         commands.add(new BlackjackCommand());
         commands.add(new SlotsCommand());
+        commands.add(new ClearChatCommand());
     }
 
     @Override
