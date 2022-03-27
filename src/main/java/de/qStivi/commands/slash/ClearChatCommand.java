@@ -33,7 +33,7 @@ public class ClearChatCommand implements ISlashCommand {
         }
 
         var channel = hook.getInteraction().getTextChannel();
-        var messages = channel.getIterableHistory().takeAsync(number).get();
+        var messages = channel.getIterableHistory().takeAsync(number + 1).get();
         channel.deleteMessages(messages).queue();
         channel.sendMessage("Deleting messages...").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
     }
