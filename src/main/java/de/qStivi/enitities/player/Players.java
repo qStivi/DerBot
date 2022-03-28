@@ -1,4 +1,4 @@
-package de.qStivi.enitities;
+package de.qStivi.enitities.player;
 
 import de.qStivi.Bot;
 

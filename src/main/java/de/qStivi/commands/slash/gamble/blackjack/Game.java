@@ -2,7 +2,7 @@ package de.qStivi.commands.slash.gamble.blackjack;
 
 import de.qStivi.Card;
 import de.qStivi.Cards;
-import de.qStivi.enitities.Player;
+import de.qStivi.enitities.player.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;

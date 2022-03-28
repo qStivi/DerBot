@@ -2,6 +2,7 @@ package de.qStivi.commands.slash;
 
 import de.qStivi.commands.slash.gamble.blackjack.BlackjackCommand;
 import de.qStivi.commands.slash.gamble.slots.SlotsCommand;
+import de.qStivi.commands.slash.util.ClearChatCommand;
 import de.qStivi.commands.slash.util.ShutdownCommand;
 import de.qStivi.commands.slash.util.TestCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -26,6 +27,7 @@ public class SlashCommandHandler extends ListenerAdapter {
         commands.add(new BlackjackCommand());
         commands.add(new SlotsCommand());
         commands.add(new ClearChatCommand());
+        commands.add(new WorkCommand());
     }
 
     @Override

@@ -2,7 +2,7 @@ package de.qStivi.commands.slash.gamble.blackjack;
 
 import de.qStivi.Card;
 import de.qStivi.commands.slash.ISlashCommand;
-import de.qStivi.enitities.Players;
+import de.qStivi.enitities.player.Players;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;

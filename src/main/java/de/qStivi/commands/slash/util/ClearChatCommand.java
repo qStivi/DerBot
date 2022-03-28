@@ -1,5 +1,6 @@
-package de.qStivi.commands.slash;
+package de.qStivi.commands.slash.util;
 
+import de.qStivi.commands.slash.ISlashCommand;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

@@ -1,5 +1,6 @@
 package de.qStivi;
 
+import org.intellij.lang.annotations.Language;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,13 +18,21 @@ public class DB {
     private DB() throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
 
-        String enableForeignKeys = "PRAGMA foreign_keys = ON;";
-        String setupPlayerTable = """
+        @Language("SQLite") String enableForeignKeys = "PRAGMA foreign_keys = ON;";
+        @Language("SQLite") String setupPlayerTable = """
                 CREATE TABLE IF NOT EXISTS "Players"
                 (
                 "ID" INTEGER PRIMARY KEY NOT NULL,
                 "Money" INTEGER NOT NULL DEFAULT 0,
                 "XP" INTEGER NOT NULL DEFAULT 0
+                );
+                """;
+        @Language("SQLite") String setupSkillsTable = """
+                CREATE TABLE IF NOT EXISTS "Skills"
+                (
+                "ID" INTEGER PRIMARY KEY NOT NULL,
+                "WorkEfficiency" INTEGER NOT NULL DEFAULT 0,
+                "WorkSpeed" INTEGER NOT NULL DEFAULT 0
                 );
                 """;
 //        String setupUserDataTable = """
@@ -125,6 +134,7 @@ public class DB {
             var stmt = connection.createStatement();
             stmt.addBatch(enableForeignKeys);
             stmt.addBatch(setupPlayerTable);
+            stmt.addBatch(setupSkillsTable);
 //            stmt.addBatch(setupUserDataTable);
 //            stmt.addBatch(setupCommandsStatisticsTable);
 //            stmt.addBatch(setupGameStatisticsTable);
