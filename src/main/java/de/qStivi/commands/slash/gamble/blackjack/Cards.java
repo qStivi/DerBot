@@ -1,4 +1,6 @@
-package de.qStivi;
+package de.qStivi.commands.slash.gamble.blackjack;
+
+import de.qStivi.Emotes;
 
 public class Cards {
 

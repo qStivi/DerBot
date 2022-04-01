@@ -65,4 +65,8 @@ public class Player extends Entity {
     public long getLevel() {
         return Math.floorDiv((int) getXp(), 1000);
     }
+
+    public long getAvailableSkillPoints() {
+        return getLevel() - this.skills.getTotal();
+    }
 }

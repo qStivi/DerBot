@@ -1,4 +1,4 @@
-package de.qStivi;
+package de.qStivi.commands.slash.gamble.blackjack;
 
 public enum Suit {
     Clubs,

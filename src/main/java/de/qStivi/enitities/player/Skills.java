@@ -6,8 +6,8 @@ import java.sql.SQLException;
 
 public class Skills {
 
-    private double workEfficiency;
-    private double workSpeed;
+    private long workEfficiency;
+    private long workSpeed;
 
     Skills() {
         this.workEfficiency = 0;
@@ -18,7 +18,7 @@ public class Skills {
         return workEfficiency;
     }
 
-    public void setWorkEfficiency(double workEfficiency, long id) throws SQLException {
+    public void setWorkEfficiency(long workEfficiency, long id) throws SQLException {
         DB.update("Skills", "WorkEfficiency", workEfficiency, "ID", id);
         this.workEfficiency = workEfficiency;
     }
@@ -27,8 +27,12 @@ public class Skills {
         return workSpeed;
     }
 
-    public void setWorkSpeed(double workSpeed, long id) throws SQLException {
+    public void setWorkSpeed(long workSpeed, long id) throws SQLException {
         DB.update("Skills", "WorkSpeed", workSpeed, "ID", id);
         this.workSpeed = workSpeed;
+    }
+
+    public long getTotal() {
+        return this.workEfficiency + this.workSpeed;
     }
 }
