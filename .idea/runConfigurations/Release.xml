@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Release" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="de.qStivi.Bot" />
+    <module name="DerBot" />
+    <option name="VM_PARAMETERS" value="-Xmx8G" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="de.qStivi.items.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
