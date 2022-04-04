@@ -35,6 +35,42 @@ public class DB {
                 "WorkSpeed" INTEGER NOT NULL DEFAULT 0
                 );
                 """;
+        @Language("SQLite") String setupPetsTable = """
+                CREATE TABLE IF NOT EXISTS "Pets"
+                (
+                "ID" INTEGER PRIMARY KEY NOT NULL,
+                "Types" TEXT NOT NULL,
+                "Age" INTEGER NOT NULL,
+                "XP" INTEGER NOT NULL DEFAULT 0,
+                "BaseStats" INTEGER NOT NULL,
+                "TrainingStats" INTEGER NOT NULL,
+                "Abilities" TEXT
+                );
+                """;
+        @Language("SQLite") String setupBaseStatsTable = """
+                CREATE TABLE IF NOT EXISTS "BaseStats"
+                (
+                "ID" INTEGER PRIMARY KEY NOT NULL,
+                "Health" INTEGER NOT NULL DEFAULT 0,
+                "Speed" INTEGER NOT NULL DEFAULT 0,
+                "Attack" INTEGER NOT NULL DEFAULT 0,
+                "Defense" INTEGER NOT NULL DEFAULT 0,
+                "SpecialAttack" INTEGER NOT NULL DEFAULT 0,
+                "SpecialDefense" INTEGER NOT NULL DEFAULT 0
+                );
+                """;
+        @Language("SQLite") String setupTrainingStatsTable = """
+                CREATE TABLE IF NOT EXISTS "TrainingStats"
+                (
+                "ID" INTEGER PRIMARY KEY NOT NULL,
+                "Health" INTEGER NOT NULL DEFAULT 0,
+                "Speed" INTEGER NOT NULL DEFAULT 0,
+                "Attack" INTEGER NOT NULL DEFAULT 0,
+                "Defense" INTEGER NOT NULL DEFAULT 0,
+                "SpecialAttack" INTEGER NOT NULL DEFAULT 0,
+                "SpecialDefense" INTEGER NOT NULL DEFAULT 0
+                );
+                """;
 //        String setupUserDataTable = """
 //                CREATE TABLE IF NOT EXISTS "UserData"
 //                (
@@ -135,6 +171,9 @@ public class DB {
             stmt.addBatch(enableForeignKeys);
             stmt.addBatch(setupPlayerTable);
             stmt.addBatch(setupSkillsTable);
+            stmt.addBatch(setupPetsTable);
+            stmt.addBatch(setupBaseStatsTable);
+            stmt.addBatch(setupTrainingStatsTable);
 //            stmt.addBatch(setupUserDataTable);
 //            stmt.addBatch(setupCommandsStatisticsTable);
 //            stmt.addBatch(setupGameStatisticsTable);
@@ -189,6 +228,23 @@ public class DB {
         if (connection != null) {
             connection.createStatement().execute("INSERT INTO " + table + " (" + col1 + ") VALUES (" + val1 + ")");
         }
+    }
+
+    public static Long getSmallestFreeID(String table) throws SQLException {
+        var connection = connect();
+        if (connection != null) {
+            var ps = connection.prepareStatement("""
+                    SELECT MIN(t1.ID + 1) AS nextID
+                    FROM %s t1
+                             LEFT JOIN %s t2
+                                       ON t1.ID + 1 = t2.ID
+                    WHERE t2.ID IS NULL;
+                    """.formatted(table, table));
+            var resultSet = ps.executeQuery();
+            resultSet.next();
+            return resultSet.getLong(0);
+        }
+        return null;
     }
 
     public static void update(String table, String setColName, Object newColValue, String whereColName, Object whereColValue) throws SQLException {

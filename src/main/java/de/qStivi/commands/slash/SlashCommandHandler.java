@@ -2,6 +2,7 @@ package de.qStivi.commands.slash;
 
 import de.qStivi.commands.slash.gamble.blackjack.BlackjackCommand;
 import de.qStivi.commands.slash.gamble.slots.SlotsCommand;
+import de.qStivi.commands.slash.pets.StarterCommand;
 import de.qStivi.commands.slash.skills.SkillsCommand;
 import de.qStivi.commands.slash.util.ClearChatCommand;
 import de.qStivi.commands.slash.util.ShutdownCommand;
@@ -30,6 +31,7 @@ public class SlashCommandHandler extends ListenerAdapter {
         commands.add(new ClearChatCommand());
         commands.add(new WorkCommand());
         commands.add(new SkillsCommand());
+        commands.add(new StarterCommand());
     }
 
     @Override

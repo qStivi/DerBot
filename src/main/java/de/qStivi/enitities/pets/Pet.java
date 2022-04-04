@@ -16,7 +16,7 @@ public class Pet extends Entity {
     private double xp;
     private double currentHealth;
 
-    private Pet(String displayName, long id, PetType[] types, Date age, double xp, Stats baseStats, Stats trainingStats, ArrayList<StatusEffect> statusEffects, ArrayList<Ability> abilities) {
+    public Pet(String displayName, long id, PetType[] types, Date age, double xp, Stats baseStats, Stats trainingStats, ArrayList<StatusEffect> statusEffects, ArrayList<Ability> abilities) {
         super(displayName, id);
         this.types = types;
         this.age = age;
@@ -28,47 +28,47 @@ public class Pet extends Entity {
         this.currentHealth = getMaxHealth();
     }
 
-    private double getMaxHealth() {
+    public double getMaxHealth() {
         return 0;
     }
 
-    private PetType[] getTypes() {
+    public PetType[] getTypes() {
         return types;
     }
 
-    private Date getAge() {
+    public Date getAge() {
         return age;
     }
 
-    private double getXp() {
+    public double getXp() {
         return xp;
     }
 
-    private void setXp(double xp) {
+    public void setXp(double xp) {
         this.xp = xp;
     }
 
-    private double getCurrentHealth() {
+    public double getCurrentHealth() {
         return currentHealth;
     }
 
-    private void setCurrentHealth(double currentHealth) {
+    public void setCurrentHealth(double currentHealth) {
         this.currentHealth = currentHealth;
     }
 
-    private Stats getBaseStats() {
+    public Stats getBaseStats() {
         return baseStats;
     }
 
-    private Stats getTrainingStats() {
+    public Stats getTrainingStats() {
         return trainingStats;
     }
 
-    private ArrayList<StatusEffect> getStatusEffects() {
+    public ArrayList<StatusEffect> getStatusEffects() {
         return statusEffects;
     }
 
-    private ArrayList<Ability> getAbilities() {
+    public ArrayList<Ability> getAbilities() {
         return abilities;
     }
 }
